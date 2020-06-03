@@ -13,8 +13,6 @@ class Stanza {
   }
 }
 
-// TODO check if attributes work
-
 module.exports = function (fn) {
   class StanzaElement extends HTMLElement {
     constructor() {
@@ -24,9 +22,17 @@ module.exports = function (fn) {
       shadowRoot.appendChild(main);
 
       const s = new Stanza(__metadata__, main);
-      fn(s, this.attributes);
+
+      const params = {};
+      for (const { name, value } of this.attributes) {
+        params[name] = value;
+      }
+
+      fn(s, params);
     }
   }
 
   customElements.define("togostanza-" + __metadata__["@id"], StanzaElement);
 };
+
+// TODO check attribute updates
