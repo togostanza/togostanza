@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head> </head>
+
+  <body>
+    <script src="./hello.js" type="module"></script>
+    <ul>
+      <% Object.entries(stanzas).forEach(([stanza, path]) => { %>
+      <li><%= stanza %> <%= path %></li>
+      <% }); %>
+    </ul>
+  </body>
+</html>

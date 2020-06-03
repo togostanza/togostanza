@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const outputPath = path.resolve(__dirname, "dist");
 const providerPath = path.resolve(__dirname, "cypress/fixtures/provider");
@@ -32,6 +33,13 @@ module.exports = {
       provider: providerPath,
     },
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: false,
+      template: "index.html.ejs",
+      templateParameters: { stanzas },
+    }),
+  ],
 };
 
 // TODO generate dist/index.html
