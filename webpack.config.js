@@ -1,6 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
 const outputPath = path.resolve(__dirname, "dist");
 const providerPath = path.resolve(__dirname, "cypress/fixtures/provider");
@@ -39,7 +40,6 @@ const stanzaEntryPoints = stanzas.map((metadata) => {
     },
     resolve: {
       alias: {
-        stanza: path.resolve(__dirname, "stanza.js"),
         provider: providerPath,
       },
     },
@@ -49,6 +49,10 @@ const stanzaEntryPoints = stanzas.map((metadata) => {
         inject: false,
         template: "help.html.hbs",
         templateParameters: { metadata },
+      }),
+      new webpack.ProvidePlugin({
+        Stanza: path.resolve(__dirname, "stanza.js"),
+        __metadata__: path.join(providerPath, id, "./metadata.json"),
       }),
     ],
   };

@@ -1,7 +1,4 @@
-import Stanza from "stanza";
-import metadata from "./metadata.json";
-
-Stanza(metadata, function (stanza, params) {
+Stanza(function (stanza, params) {
   stanza.render({
     template: "stanza.html",
     parameters: {

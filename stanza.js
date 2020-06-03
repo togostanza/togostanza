@@ -15,7 +15,7 @@ class Stanza {
 
 // TODO check if attributes work
 
-export default function (metadata, fn) {
+module.exports = function (fn) {
   class StanzaElement extends HTMLElement {
     constructor() {
       super();
@@ -23,10 +23,10 @@ export default function (metadata, fn) {
       const main = document.createElement("main");
       shadowRoot.appendChild(main);
 
-      const s = new Stanza(metadata, main);
+      const s = new Stanza(__metadata__, main);
       fn(s, this.attributes);
     }
   }
 
-  customElements.define("togostanza-" + metadata["@id"], StanzaElement);
-}
+  customElements.define("togostanza-" + __metadata__["@id"], StanzaElement);
+};
