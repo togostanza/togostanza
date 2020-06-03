@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head> </head>
+
+<body>
+  <h1>List Stanza</h1>
+  <ul>
+    {{#each stanzas as |stanza|}}
+      <li>
+        <a href="./{{stanza.[@id]}}.html">{{stanza.[stanza:label]}}</a>
+      </li>
+    {{/each}}
+  </ul>
+</body>
+
+</html>
