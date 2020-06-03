@@ -14,33 +14,43 @@ fs.readdirSync(providerPath, {
     stanzas[dirent.name] = path.join(providerPath, dirent.name, "index.js");
   });
 
-module.exports = {
-  entry: stanzas,
-  output: {
-    path: outputPath,
-    filename: "[name].js",
-  },
-  mode: "development",
-  module: {
-    rules: [{ test: /templates\/.+\.html$/, loader: "handlebars-loader" }],
-  },
-  devServer: {
-    contentBase: outputPath,
-  },
-  resolve: {
-    alias: {
-      stanza: path.resolve(__dirname, "stanza.js"),
-      provider: providerPath,
+module.exports = [
+  {
+    entry: stanzas,
+    output: {
+      path: outputPath,
+      filename: "[name].js",
+    },
+    mode: "development",
+    module: {
+      rules: [{ test: /templates\/.+\.html$/, loader: "handlebars-loader" }],
+    },
+    devServer: {
+      contentBase: outputPath,
+    },
+    resolve: {
+      alias: {
+        stanza: path.resolve(__dirname, "stanza.js"),
+        provider: providerPath,
+      },
     },
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      inject: false,
-      template: "index.html.ejs",
-      templateParameters: { stanzas },
-    }),
-  ],
-};
+  {
+    entry: "./index.js",
+    output: {
+      path: outputPath,
+    },
+    mode: "development",
+    plugins: [
+      new HtmlWebpackPlugin({
+        filename: "index.html",
+        inject: false,
+        template: "index.html.ejs",
+        templateParameters: { stanzas },
+      }),
+    ],
+  },
+];
 
 // TODO generate dist/index.html
 // TODO generate stanza-name/index.html (help page)
