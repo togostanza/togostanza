@@ -1,38 +1,35 @@
 class Stanza {
-  constructor(metadata, main) {
-    this.main = main;
+  constructor(main, metadata) {
+    this.main     = main;
     this.metadata = metadata;
   }
 
   async render(params) {
-    const htmlTemplate = await import(
-      "provider/" + this.metadata["@id"] + "/templates/" + params.template
-    );
-    const html = htmlTemplate.default(params.parameters);
+    const template = await import(`provider/${this.metadata["@id"]}/templates/${params.template}`);
+    const html     = template.default(params.parameters);
+
     this.main.innerHTML = html;
   }
 }
 
-module.exports = function (fn) {
+module.exports = function(init) {
   class StanzaElement extends HTMLElement {
     constructor() {
       super();
-      let shadowRoot = this.attachShadow({ mode: "open" });
+
+      const root = this.attachShadow({mode: "open"});
       const main = document.createElement("main");
-      shadowRoot.appendChild(main);
 
-      const s = new Stanza(__metadata__, main);
+      root.appendChild(main);
 
-      const params = {};
-      for (const { name, value } of this.attributes) {
-        params[name] = value;
-      }
+      const stanza = new Stanza(main, __metadata__);
+      const params = Object.fromEntries(Array.from(this.attributes).map(({name, value}) => [name, value]));
 
-      fn(s, params);
+      init(stanza, params);
     }
   }
 
-  customElements.define("togostanza-" + __metadata__["@id"], StanzaElement);
+  customElements.define(`togostanza-${__metadata__["@id"]}`, StanzaElement);
 };
 
 // TODO check attribute updates
