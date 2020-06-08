@@ -1,28 +1,29 @@
 class Stanza {
-  constructor(main, metadata) {
-    this.main     = main;
+  constructor(root, metadata) {
+    this.root     = root;
     this.metadata = metadata;
   }
 
-  async render(params) {
-    const template = await import(`provider/${this.metadata["@id"]}/templates/${params.template}`);
-    const html     = template.default(params.parameters);
+  render(params) {
+    const template = require(`provider/${this.metadata["@id"]}/templates/${params.template}`);
+    const html     = template(params.parameters);
 
-    this.main.innerHTML = html;
+    this.root.innerHTML = html;
+  }
+
+  select(selector) {
+    return this.root.querySelector(selector);
   }
 }
 
 module.exports = function(init) {
   class StanzaElement extends HTMLElement {
     constructor() {
-      super();
+      super(...arguments);
 
-      const root = this.attachShadow({mode: "open"});
-      const main = document.createElement("main");
+      this.attachShadow({mode: "open"});
 
-      root.appendChild(main);
-
-      const stanza = new Stanza(main, __metadata__);
+      const stanza = new Stanza(this.shadowRoot, __metadata__);
       const params = Object.fromEntries(Array.from(this.attributes).map(({name, value}) => [name, value]));
 
       init(stanza, params);

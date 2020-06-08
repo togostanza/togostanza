@@ -7,13 +7,16 @@
     "build": "webpack",
     "serve": "webpack-dev-server"
   },
-  "devDependencies": {
+  "bin": {
+    "togostanza": "./cli.mjs"
+  },
+  "dependencies": {
     "handlebars": "^4.7.6",
     "handlebars-loader": "^1.7.1",
     "html-webpack-plugin": "^4.3.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
+    "webpack-dev-middleware": "^3.7.2",
     "webpack-dev-server": "^3.11.0"
-  },
-  "dependencies": {}
+  }
 }
