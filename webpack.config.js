@@ -25,6 +25,8 @@ const stanzas = fs
 
 const stanzaEntryPoints = stanzas.map((metadata) => {
   const id = metadata["@id"];
+  const outerPath = path.join(providerPath, id, "_header.html");
+
   return {
     entry: { [id]: path.join(providerPath, id, "index.js") },
     output: {
@@ -34,8 +36,7 @@ const stanzaEntryPoints = stanzas.map((metadata) => {
     mode: "development",
     module: {
       rules: [
-        { test: /templates\/.+\.html$/, use: "handlebars-loader" },
-        { test: /\/.+\.hbs$/, use: "handlebars-loader" },
+        { test: /\/.+\.(hbs|html)$/, use: "handlebars-loader" },
       ],
     },
     resolve: {
@@ -53,6 +54,7 @@ const stanzaEntryPoints = stanzas.map((metadata) => {
       new webpack.ProvidePlugin({
         Stanza: path.join(__dirname, "stanza.js"),
         __metadata__: path.join(providerPath, id, "metadata.json"),
+        __outer__: fs.existsSync(outerPath) ? outerPath : null
       }),
     ],
   };

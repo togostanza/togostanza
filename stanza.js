@@ -21,9 +21,10 @@ module.exports = function(init) {
     constructor() {
       super(...arguments);
 
-      this.attachShadow({mode: "open"});
+      ensureOuterInserted();
 
-      const stanza = new Stanza(this.shadowRoot, __metadata__);
+      const root   = this.attachShadow({mode: "open"});
+      const stanza = new Stanza(root, __metadata__);
       const params = Object.fromEntries(Array.from(this.attributes).map(({name, value}) => [name, value]));
 
       init(stanza, params);
@@ -32,5 +33,31 @@ module.exports = function(init) {
 
   customElements.define(`togostanza-${__metadata__["@id"]}`, StanzaElement);
 };
+
+let initialized = false;
+
+function ensureOuterInserted() {
+  if (initialized) { return; }
+
+  initialized = true;
+
+  const outer = document.createElement('div');
+
+  outer.innerHTML = __outer__();
+
+  document.body.append(outer);
+
+  outer.querySelectorAll('script').forEach((orig) => {
+    const el = document.createElement('script');
+
+    el.textContent = orig.textContent;
+
+    Array.from(orig.attributes).forEach((attr) => {
+      el.setAttribute(attr.nodeName, attr.textContent);
+    });
+
+    orig.replaceWith(el);
+  });
+}
 
 // TODO check attribute updates
