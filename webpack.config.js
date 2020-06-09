@@ -39,7 +39,9 @@ const stanzaEntryPoints = stanzas.map((metadata) => {
   }
 
   return {
-    entry: { [stanzaId]: path.join(stanzaRoot, "index.js") },
+    entry: {
+      [stanzaId]: path.join(stanzaRoot, "index.js")
+    },
     output: {
       path: outputPath,
       filename: "[name].js",
