@@ -24,11 +24,22 @@ const stanzas = fs
   });
 
 const stanzaEntryPoints = stanzas.map((metadata) => {
-  const id = metadata["@id"];
-  const outerPath = path.join(providerPath, id, "_header.html");
+  const stanzaId   = metadata["@id"];
+  const stanzaRoot = path.join(providerPath, stanzaId);
+
+  const provideMappings = {
+    Stanza:       path.join(__dirname, "stanza.js"),
+    __metadata__: path.join(stanzaRoot, "metadata.json"),
+  };
+
+  const outerPath = path.join(stanzaRoot, "_header.html");
+
+  if (fs.existsSync(outerPath)) {
+    provideMappings.__outer__ = outerPath;
+  }
 
   return {
-    entry: { [id]: path.join(providerPath, id, "index.js") },
+    entry: { [stanzaId]: path.join(stanzaRoot, "index.js") },
     output: {
       path: outputPath,
       filename: "[name].js",
@@ -46,16 +57,12 @@ const stanzaEntryPoints = stanzas.map((metadata) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        filename: `${id}.html`,
+        filename: `${stanzaId}.html`,
         inject: false,
         template: path.join(__dirname, "help.html.hbs"),
         templateParameters: { metadata },
       }),
-      new webpack.ProvidePlugin({
-        Stanza: path.join(__dirname, "stanza.js"),
-        __metadata__: path.join(providerPath, id, "metadata.json"),
-        __outer__: fs.existsSync(outerPath) ? outerPath : null
-      }),
+      new webpack.ProvidePlugin(provideMappings)
     ],
   };
 });

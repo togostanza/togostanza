@@ -37,6 +37,7 @@ module.exports = function(init) {
 let initialized = false;
 
 function ensureOuterInserted() {
+  if (typeof __outer__ === 'undefined') { return; }
   if (initialized) { return; }
 
   initialized = true;
