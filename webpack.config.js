@@ -72,7 +72,7 @@ const stanzaEntryPoints = stanzas.map((metadata) => {
 module.exports = [
   ...stanzaEntryPoints,
   {
-    entry: "./index.js",
+    entry: path.join(__dirname, "index.js"),
     output: {
       path: outputPath,
     },
