@@ -47,7 +47,7 @@ const stanzaEntryPoints = stanzas.map((metadata) => {
     mode: "development",
     module: {
       rules: [
-        { test: /\/.+\.(hbs|html)$/, use: "handlebars-loader" },
+        { test: /\/.+\.(hbs|html)$/, use: require.resolve("handlebars-loader") },
       ],
     },
     resolve: {
@@ -76,7 +76,7 @@ module.exports = [
     },
     mode: "development",
     module: {
-      rules: [{ test: /\/.+\.hbs$/, use: "handlebars-loader" }],
+      rules: [{ test: /\/.+\.hbs$/, use: require.resolve("handlebars-loader") }],
     },
     plugins: [
       new HtmlWebpackPlugin({
