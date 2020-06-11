@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const outputPath = path.join(__dirname, "dist");
 const providerPath = path.resolve('.');
@@ -78,12 +79,18 @@ module.exports = [
     },
     mode: "development",
     module: {
-      rules: [{ test: /\/.+\.hbs$/, use: require.resolve("handlebars-loader") }],
+      rules: [
+        { test: /\.hbs$/, use: require.resolve("handlebars-loader") },
+        { test: /\.css$/, use: [
+          MiniCssExtractPlugin.loader,
+          require.resolve("css-loader")
+        ]}
+      ],
     },
     plugins: [
+      new MiniCssExtractPlugin(),
       new HtmlWebpackPlugin({
         filename: "index.html",
-        inject: false,
         template: path.join(__dirname, "index.html.hbs"),
         templateParameters: { stanzas },
       }),
