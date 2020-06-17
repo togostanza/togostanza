@@ -5,13 +5,16 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack",
-    "serve": "webpack-dev-server"
+    "serve": "webpack-dev-server",
+    "gulp": "gulp"
   },
   "bin": {
     "togostanza": "./cli.mjs"
   },
   "dependencies": {
     "css-loader": "^3.5.3",
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.3.0",
     "handlebars": "^4.7.6",
     "handlebars-loader": "^1.7.1",
     "html-webpack-plugin": "^4.3.0",
