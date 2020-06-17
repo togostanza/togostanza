@@ -46,6 +46,8 @@ async function buildIndex() {
   const provider = new StanzaProvider(providerPath);
   const stanzas  = await provider.stanzas();
 
+  const stanzaJsPath = new URL('stanza.js', import.meta.url).pathname;
+
   return src(templatePath)
     .pipe(through2.obj((file, _, cb) => {
       file.basename = 'index.html';
@@ -53,20 +55,59 @@ async function buildIndex() {
 
       cb(null, file);
     }))
+    .pipe(src(stanzaJsPath))
     .pipe(dest('dist/'))
     .pipe(connect.reload());
 }
 
+const jsTemplate = Handlebars.compile(`
+  window.__metadata__ = {{metadataJSON}};
+  window.__outer__    = {{outerJSON}};
+
+  import Stanza from './stanza.js';
+
+  {{script}}
+`, {noEscape: true});
+
 async function buildStanzas() {
-  const provider = new StanzaProvider(providerPath);
-  const stanzas  = await provider.stanzas();
+  return src(['*/index.js', '!dist/**', '!node_modules/**'])
+    .pipe(through2.obj(async function(file, _, cb) {
+      const id = path.dirname(file.relative);
 
-  for (const stanza of stanzas) {
-    const id = stanza['@id'];
+      const metadata = JSON.parse(await fs.readFile(path.join(id, 'metadata.json')));
 
-    await fs.mkdir(path.join('dist', id));
-    await fs.copyFile(path.join(id, 'index.js'), path.join('dist', `${id}.js`));
-  }
+      let header = null;
+
+      try {
+        header = await fs.readFile(path.join(id, '_header.html'), 'utf8');
+      } catch (e) {
+        // do nothing
+      }
+
+      // TODO pass template functions
+      await fs.writeFile(path.join('dist', `${id}.js`), jsTemplate({
+        script:       file.contents.toString(),
+        metadataJSON: JSON.stringify(metadata),
+        outerJSON:    JSON.stringify(header)
+      }));
+
+      // TODO build from html template
+      await fs.writeFile(path.join('dist', `${id}.html`), `
+        <html>
+          <script type="module" src="./${id}.js"></script>
+          <togostanza-${id}></togostanza-${id}>
+        </html>
+      `);
+
+      cb();
+    }));
+
+//   for (const stanza of stanzas) {
+//     const id = stanza['@id'];
+
+//     await fs.mkdir(path.join('dist', id));
+//     await fs.copyFile(path.join(id, 'index.js'), path.join('dist', `${id}.js`));
+//   }
 }
 
 function serve() {
@@ -79,7 +120,13 @@ function serve() {
 const buildAll = series(clean, prepare, buildStanzas, buildIndex);
 
 function _watch() {
-  watch([templatePath, '*/metadata.json'], buildIndex);
+  watch([
+    templatePath,
+    '*/metadata.json',
+    '*/*.js',
+    '!dist/**',
+    '!node_modules/**'
+  ], buildAll);
 }
 
 export default series(

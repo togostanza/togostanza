@@ -16,7 +16,7 @@ class Stanza {
   }
 }
 
-module.exports = function(init) {
+export default function(init) {
   class StanzaElement extends HTMLElement {
     constructor() {
       super(...arguments);
@@ -44,7 +44,7 @@ function ensureOuterInserted() {
 
   const outer = document.createElement('div');
 
-  outer.innerHTML = __outer__();
+  outer.innerHTML = __outer__;
 
   document.body.append(outer);
 
