@@ -113,7 +113,15 @@ function serve() {
   });
 }
 
-const buildAll = series(clean, prepare, buildIndex, buildStanzaLib, buildStanzas);
+const buildAll = series(
+  clean,
+  prepare,
+  parallel(
+    buildIndex,
+    buildStanzaLib,
+    buildStanzas
+  )
+);
 
 function _watch() {
   watch([
