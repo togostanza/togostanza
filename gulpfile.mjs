@@ -29,12 +29,45 @@ async function prepare() {
   await fs.mkdir('dist');
 }
 
+function allStanzas() {
+  return glob.sync('*/metadata.json').map((metadataPath) => {
+    const dir = path.dirname(metadataPath);
+
+    return {
+      id: path.basename(dir),
+
+      get metadata() {
+        return fs.readFile(metadataPath).then(JSON.parse);
+      },
+
+      get script() {
+        return fs.readFile(path.join(dir, 'index.js'), 'utf8');
+      },
+
+      get templates() {
+        const paths = glob.sync('templates/*.html', {cwd: dir});
+
+        return Promise.all(paths.map(async (templatePath) => {
+          return {
+            name: path.basename(templatePath),
+            spec: Handlebars.precompile(await fs.readFile(path.join(dir, templatePath), 'utf8'))
+          };
+        }));
+      },
+
+      get outer() {
+        return fs.readFile(path.join(dir, '_header.html'), 'utf8').catch(() => null);
+      }
+    };
+  });
+}
+
 async function buildIndex() {
   const template = await handlebarsTemplate(packagePath('index.html.hbs'));
-  const paths    = await glob('*/metadata.json');
-  const stanzas  = await Promise.all(paths.map(async (path) => JSON.parse(await fs.readFile(path))));
 
-  await fs.writeFile('dist/index.html', template({stanzas}));
+  await fs.writeFile('dist/index.html', template({
+    stanzas: await Promise.all(allStanzas().map(({metadata}) => metadata))
+  }));
 
   return src(packagePath('index.html.hbs')).pipe(connect.reload());
 }
@@ -54,41 +87,20 @@ async function buildStanzaLib() {
 }
 
 async function buildStanzas() {
-  for (const metadataPath of await glob('*/metadata.json')) {
-    const stanzaDir = path.dirname(metadataPath);
-    const stanzaId  = path.basename(stanzaDir);
-    const metadata  = JSON.parse(await fs.readFile(metadataPath));
-
-    let header = null;
-
-    try {
-      header = await fs.readFile(path.join(stanzaDir, '_header.html'), 'utf8');
-    } catch (e) {
-      // do nothing
-    }
-
-    const templatePaths = await glob('templates/*.html', {cwd: stanzaDir});
-
-    const templates = await Promise.all(templatePaths.map(async (templatePath) => {
-      return {
-        name: path.basename(templatePath),
-        spec: Handlebars.precompile(await fs.readFile(path.join(stanzaDir, templatePath), 'utf8'))
-      };
-    }));
-
+  for (const stanza of allStanzas()) {
     const entrypoint = await handlebarsTemplate(packagePath('entrypoint.js.hbs'), {noEscape: true});
-    const script     = await fs.readFile(path.join(stanzaDir, 'index.js'), 'utf8');
+    const metadata   = await stanza.metadata;
 
-    await fs.writeFile(path.join('dist', `${stanzaId}.js`), entrypoint({
-      script,
-      templates,
+    await fs.writeFile(path.join('dist', `${stanza.id}.js`), entrypoint({
       metadataJSON: JSON.stringify(metadata),
-      outerJSON:    JSON.stringify(header)
+      script:       await stanza.script,
+      templates:    await stanza.templates,
+      outerJSON:    JSON.stringify(await stanza.outer)
     }));
 
     const help = await handlebarsTemplate(packagePath('help.html.hbs'));
 
-    await fs.writeFile(path.join('dist', `${stanzaId}.html`), help({metadata}));
+    await fs.writeFile(path.join('dist', `${stanza.id}.html`), help({metadata}));
   }
 
   return src(['*/metadata.json', '*/**/*.js', '*/**/*.html', '!dist/**', '!node_modules/**']).pipe(connect.reload());
