@@ -40,7 +40,7 @@ export default function(init) {
 let initialized = false;
 
 function ensureOuterInserted() {
-  if (typeof __outer__ === 'undefined') { return; }
+  if (!__outer__)  { return; }
   if (initialized) { return; }
 
   initialized = true;
