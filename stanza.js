@@ -1,11 +1,14 @@
+import Handlebars from 'handlebars/dist/handlebars.runtime';
+
 class Stanza {
-  constructor(root, metadata) {
-    this.root     = root;
-    this.metadata = metadata;
+  constructor(root, metadata, templates) {
+    this.root      = root;
+    this.metadata  = metadata;
+    this.templates = templates;
   }
 
   render(params) {
-    const template = require(`provider/${this.metadata["@id"]}/templates/${params.template}`);
+    const template = Handlebars.template(this.templates[params.template]);
     const html     = template(params.parameters);
 
     this.root.innerHTML = html;
@@ -24,7 +27,7 @@ export default function(init) {
       ensureOuterInserted();
 
       const root   = this.attachShadow({mode: "open"});
-      const stanza = new Stanza(root, __metadata__);
+      const stanza = new Stanza(root, __metadata__, __templates__);
       const params = Object.fromEntries(Array.from(this.attributes).map(({name, value}) => [name, value]));
 
       init(stanza, params);

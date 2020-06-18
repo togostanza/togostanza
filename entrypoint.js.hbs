@@ -1,0 +1,12 @@
+window.__metadata__  = {{metadataJSON}};
+window.__outer__     = {{outerJSON}};
+
+window.__templates__ = {
+  {{#each templates as |template|}}
+    "{{template.name}}": {{template.spec}}
+  {{/each}}
+};
+
+import Stanza from './stanza.js';
+
+{{script}}

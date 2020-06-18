@@ -2,37 +2,24 @@ import { promises as fs } from 'fs';
 import path from 'path';
 
 import Handlebars from 'handlebars';
+import commonjs from '@rollup/plugin-commonjs';
 import connect from 'gulp-connect';
+import glob from 'fast-glob';
 import gulp from 'gulp';
-import through2 from 'through2';
+import resolve from '@rollup/plugin-node-resolve';
+import { rollup } from 'rollup';
 
-const {dest, parallel, series, src, watch} = gulp;
+const {parallel, series, src, watch} = gulp;
 
-class StanzaProvider {
-  constructor(rootPath) {
-    this.rootPath = rootPath;
-  }
-
-  async stanzas() {
-    const dirents = await fs.readdir(this.rootPath, {withFileTypes: true});
-
-    return Promise.all(dirents.filter((ent) => {
-      return ent.isDirectory() && !ent.name.startsWith('.') && ent.name !== 'node_modules' && ent.name !== 'dist';
-    }).map(async ({name}) => {
-      const stanzaDir = path.join(providerPath, name);
-      const metadata  = JSON.parse(await fs.readFile(path.join(stanzaDir, 'metadata.json')));
-
-      if (name !== metadata['@id']) {
-        throw new Error(`mismatch directory name ${stanzaDir} and its stanza id in metadata.json (${metadata["@id"]})`);
-      }
-
-      return metadata;
-    }));
-  }
+function packagePath(_path) {
+  return new URL(_path, import.meta.url).pathname;
 }
 
-const providerPath = path.resolve('.');
-const templatePath = new URL('index.html.hbs', import.meta.url).pathname;
+async function handlebarsTemplate(path, opts = {}) {
+  const template = await fs.readFile(path, 'utf8');
+
+  return Handlebars.compile(template, opts);
+}
 
 async function clean() {
   await fs.rmdir('dist', {recursive: true});
@@ -43,71 +30,69 @@ async function prepare() {
 }
 
 async function buildIndex() {
-  const provider = new StanzaProvider(providerPath);
-  const stanzas  = await provider.stanzas();
+  const template = await handlebarsTemplate(packagePath('index.html.hbs'));
+  const paths    = await glob('*/metadata.json');
+  const stanzas  = await Promise.all(paths.map((path) => fs.readFile(path, 'utf8').then(JSON.parse)));
 
-  const stanzaJsPath = new URL('stanza.js', import.meta.url).pathname;
+  await fs.writeFile('dist/index.html', template({stanzas}));
 
-  return src(templatePath)
-    .pipe(through2.obj((file, _, cb) => {
-      file.basename = 'index.html';
-      file.contents = Buffer.from(Handlebars.compile(file.contents.toString())({stanzas}));
-
-      cb(null, file);
-    }))
-    .pipe(src(stanzaJsPath))
-    .pipe(dest('dist/'))
-    .pipe(connect.reload());
+  return src(packagePath('index.html.hbs')).pipe(connect.reload());
 }
 
-const jsTemplate = Handlebars.compile(`
-  window.__metadata__ = {{metadataJSON}};
-  window.__outer__    = {{outerJSON}};
+async function buildStanzaLib() {
+  const bundle = await rollup({
+    input: packagePath('stanza.js'),
+    plugins: [resolve.default(), commonjs()]
+  });
 
-  import Stanza from './stanza.js';
+  await bundle.write({
+    file: 'dist/stanza.js',
+    format: 'esm'
+  });
 
-  {{script}}
-`, {noEscape: true});
+  return src(packagePath('stanza.js')).pipe(connect.reload());
+}
 
 async function buildStanzas() {
-  return src(['*/index.js', '!dist/**', '!node_modules/**'])
-    .pipe(through2.obj(async function(file, _, cb) {
-      const id = path.dirname(file.relative);
+  for (const metadataPath of await glob(['*/metadata.json'])) {
+    const stanzaDir = path.dirname(metadataPath);
+    const stanzaId  = path.basename(stanzaDir);
+    const metadata  = JSON.parse(await fs.readFile(metadataPath));
 
-      const metadata = JSON.parse(await fs.readFile(path.join(id, 'metadata.json')));
+    let header = null;
 
-      let header = null;
+    try {
+      header = await fs.readFile(path.join(stanzaDir, '_header.html'), 'utf8');
+    } catch (e) {
+      // do nothing
+    }
 
-      try {
-        header = await fs.readFile(path.join(id, '_header.html'), 'utf8');
-      } catch (e) {
-        // do nothing
-      }
+    const templatePaths = await glob([path.join(stanzaDir, 'templates/*.html')]);
 
-      // TODO pass template functions
-      await fs.writeFile(path.join('dist', `${id}.js`), jsTemplate({
-        script:       file.contents.toString(),
-        metadataJSON: JSON.stringify(metadata),
-        outerJSON:    JSON.stringify(header)
-      }));
-
-      // TODO build from html template
-      await fs.writeFile(path.join('dist', `${id}.html`), `
-        <html>
-          <script type="module" src="./${id}.js"></script>
-          <togostanza-${id}></togostanza-${id}>
-        </html>
-      `);
-
-      cb();
+    const templates = await Promise.all(templatePaths.map(async (templatePath) => {
+      return {
+        name: path.basename(templatePath),
+        spec: Handlebars.precompile(await fs.readFile(templatePath, 'utf8'))
+      };
     }));
 
-//   for (const stanza of stanzas) {
-//     const id = stanza['@id'];
+    const entrypoint = await handlebarsTemplate(packagePath('entrypoint.js.hbs'), {noEscape: true});
+    const script     = await fs.readFile(path.join(stanzaDir, 'index.js'), 'utf8');
 
-//     await fs.mkdir(path.join('dist', id));
-//     await fs.copyFile(path.join(id, 'index.js'), path.join('dist', `${id}.js`));
-//   }
+    await fs.writeFile(path.join('dist', `${stanzaId}.js`), entrypoint({
+      script,
+      templates,
+      metadataJSON: JSON.stringify(metadata),
+      outerJSON:    JSON.stringify(header)
+    }));
+
+    const help = await handlebarsTemplate(packagePath('help.html.hbs'));
+
+    await fs.writeFile(path.join('dist', `${stanzaId}.html`), help({metadata}));
+  }
+
+  return src(['*/metadata.json', '*/**/*.js', '*/**/*.html', '!dist/**', '!node_modules/**'])
+    .pipe(connect.reload());
 }
 
 function serve() {
@@ -117,13 +102,15 @@ function serve() {
   });
 }
 
-const buildAll = series(clean, prepare, buildStanzas, buildIndex);
+const buildAll = series(clean, prepare, buildIndex, buildStanzaLib, buildStanzas);
 
 function _watch() {
   watch([
-    templatePath,
+    packagePath('index.html.hbs'),
+    packagePath('stanza.js'),
     '*/metadata.json',
-    '*/*.js',
+    '*/**/*.js',
+    '*/**/*.html',
     '!dist/**',
     '!node_modules/**'
   ], buildAll);
