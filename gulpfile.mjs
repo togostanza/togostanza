@@ -67,12 +67,12 @@ async function buildStanzas() {
       // do nothing
     }
 
-    const templatePaths = await glob(path.join(stanzaDir, 'templates/*.html'));
+    const templatePaths = await glob('templates/*.html', {cwd: stanzaDir});
 
     const templates = await Promise.all(templatePaths.map(async (templatePath) => {
       return {
         name: path.basename(templatePath),
-        spec: Handlebars.precompile(await fs.readFile(templatePath, 'utf8'))
+        spec: Handlebars.precompile(await fs.readFile(path.join(stanzaDir, templatePath), 'utf8'))
       };
     }));
 
