@@ -87,7 +87,7 @@ async function buildStanzaLib() {
 }
 
 async function buildStanzas() {
-  for (const stanza of allStanzas()) {
+  await Promise.all(allStanzas().map(async (stanza) => {
     const entrypoint = await handlebarsTemplate(packagePath('entrypoint.js.hbs'), {noEscape: true});
     const metadata   = await stanza.metadata;
 
@@ -101,7 +101,7 @@ async function buildStanzas() {
     const help = await handlebarsTemplate(packagePath('help.html.hbs'));
 
     await fs.writeFile(path.join('dist', `${stanza.id}.html`), help({metadata}));
-  }
+  }));
 
   return src(['*/metadata.json', '*/**/*.js', '*/**/*.html', '!dist/**', '!node_modules/**']).pipe(connect.reload());
 }
