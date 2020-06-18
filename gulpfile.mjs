@@ -21,14 +21,6 @@ async function handlebarsTemplate(path, opts = {}) {
   return Handlebars.compile(template, opts);
 }
 
-async function clean() {
-  await fs.rmdir('dist', {recursive: true});
-}
-
-async function prepare() {
-  await fs.mkdir('dist');
-}
-
 function allStanzas() {
   return glob.sync('*/metadata.json').map((metadataPath) => {
     const dir = path.dirname(metadataPath);
@@ -60,6 +52,14 @@ function allStanzas() {
       }
     };
   });
+}
+
+async function clean() {
+  await fs.rmdir('dist', {recursive: true});
+}
+
+async function prepare() {
+  await fs.mkdir('dist');
 }
 
 async function buildIndex() {
