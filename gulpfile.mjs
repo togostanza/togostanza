@@ -32,7 +32,7 @@ async function prepare() {
 async function buildIndex() {
   const template = await handlebarsTemplate(packagePath('index.html.hbs'));
   const paths    = await glob('*/metadata.json');
-  const stanzas  = await Promise.all(paths.map((path) => fs.readFile(path, 'utf8').then(JSON.parse)));
+  const stanzas  = await Promise.all(paths.map(async (path) => JSON.parse(await fs.readFile(path))));
 
   await fs.writeFile('dist/index.html', template({stanzas}));
 
