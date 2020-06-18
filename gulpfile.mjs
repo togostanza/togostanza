@@ -54,7 +54,7 @@ async function buildStanzaLib() {
 }
 
 async function buildStanzas() {
-  for (const metadataPath of await glob(['*/metadata.json'])) {
+  for (const metadataPath of await glob('*/metadata.json')) {
     const stanzaDir = path.dirname(metadataPath);
     const stanzaId  = path.basename(stanzaDir);
     const metadata  = JSON.parse(await fs.readFile(metadataPath));
@@ -67,7 +67,7 @@ async function buildStanzas() {
       // do nothing
     }
 
-    const templatePaths = await glob([path.join(stanzaDir, 'templates/*.html')]);
+    const templatePaths = await glob(path.join(stanzaDir, 'templates/*.html'));
 
     const templates = await Promise.all(templatePaths.map(async (templatePath) => {
       return {
