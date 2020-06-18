@@ -19,39 +19,40 @@ class Stanza {
   }
 }
 
-export default function(init) {
-  class StanzaElement extends HTMLElement {
-    constructor() {
-      super(...arguments);
+export default function _Stanza(main) {
+  return function init({templates, metadata, outer}) {
+    const id = metadata["@id"];
 
-      ensureOuterInserted();
+    class StanzaElement extends HTMLElement {
+      constructor() {
+        super(...arguments);
 
-      const root   = this.attachShadow({mode: "open"});
-      const stanza = new Stanza(root, __metadata__, __templates__);
-      const params = Object.fromEntries(Array.from(this.attributes).map(({name, value}) => [name, value]));
+        ensureOuterInserted(id, outer);
 
-      init(stanza, params);
+        const root   = this.attachShadow({mode: "open"});
+        const stanza = new Stanza(root, metadata, templates);
+        const params = Object.fromEntries(Array.from(this.attributes).map(({name, value}) => [name, value]));
+
+        main(stanza, params);
+      }
     }
-  }
 
-  customElements.define(`togostanza-${__metadata__["@id"]}`, StanzaElement);
+    customElements.define(`togostanza-${id}`, StanzaElement);
+  }
 };
 
-let initialized = false;
+function ensureOuterInserted(id, outer) {
+  if (!outer) { return; }
+  if (document.querySelector(`[data-togostanza-outer="${id}"]`)) { return; }
 
-function ensureOuterInserted() {
-  if (!__outer__)  { return; }
-  if (initialized) { return; }
+  const outerEl = document.createElement('div');
 
-  initialized = true;
+  outerEl.setAttribute('data-togostanza-outer', id);
+  outerEl.innerHTML = outer;
 
-  const outer = document.createElement('div');
+  document.body.append(outerEl);
 
-  outer.innerHTML = __outer__;
-
-  document.body.append(outer);
-
-  outer.querySelectorAll('script').forEach((orig) => {
+  outerEl.querySelectorAll('script').forEach((orig) => {
     const el = document.createElement('script');
 
     el.textContent = orig.textContent;

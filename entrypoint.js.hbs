@@ -1,12 +1,14 @@
-window.__metadata__  = {{metadataJSON}};
-window.__outer__     = {{outerJSON}};
+import Stanza from './stanza.js';
 
-window.__templates__ = {
+const templates = {
   {{#each templates as |template|}}
     "{{template.name}}": {{template.spec}}
   {{/each}}
 };
 
-import Stanza from './stanza.js';
+const metadata = {{metadataJSON}};
+const outer    = {{outerJSON}};
 
-{{script}}
+const init = {{script}};
+
+init({templates, metadata, outer});
