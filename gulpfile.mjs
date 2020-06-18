@@ -65,7 +65,7 @@ function allStanzas() {
 async function buildIndex() {
   const template = await handlebarsTemplate(packagePath('index.html.hbs'));
 
-  await fs.writeFile('dist/index.html', template({
+  await fs.writeFile(path.join('dist', 'index.html'), template({
     stanzas: await Promise.all(allStanzas().map(({metadata}) => metadata))
   }));
 
@@ -74,12 +74,12 @@ async function buildIndex() {
 
 async function buildStanzaLib() {
   const bundle = await rollup({
-    input: packagePath('stanza.js'),
+    input:   packagePath('stanza.js'),
     plugins: [resolve.default(), commonjs()]
   });
 
   await bundle.write({
-    file: 'dist/stanza.js',
+    file:   path.join('dist', 'stanza.js'),
     format: 'esm'
   });
 
