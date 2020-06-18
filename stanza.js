@@ -19,27 +19,25 @@ class Stanza {
   }
 }
 
-export default function _Stanza(main) {
-  return function init({templates, metadata, outer}) {
-    const id = metadata["@id"];
+export function defineStanzaElement(main, {metadata, templates, outer}) {
+  const id = metadata["@id"];
 
-    class StanzaElement extends HTMLElement {
-      constructor() {
-        super(...arguments);
+  class StanzaElement extends HTMLElement {
+    constructor() {
+      super(...arguments);
 
-        ensureOuterInserted(id, outer);
+      ensureOuterInserted(id, outer);
 
-        const root   = this.attachShadow({mode: "open"});
-        const stanza = new Stanza(root, metadata, templates);
-        const params = Object.fromEntries(Array.from(this.attributes).map(({name, value}) => [name, value]));
+      const root   = this.attachShadow({mode: "open"});
+      const stanza = new Stanza(root, metadata, templates);
+      const params = Object.fromEntries(Array.from(this.attributes).map(({name, value}) => [name, value]));
 
-        main(stanza, params);
-      }
+      main(stanza, params);
     }
-
-    customElements.define(`togostanza-${id}`, StanzaElement);
   }
-};
+
+  customElements.define(`togostanza-${id}`, StanzaElement);
+}
 
 function ensureOuterInserted(id, outer) {
   if (!outer) { return; }

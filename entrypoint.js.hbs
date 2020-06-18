@@ -1,4 +1,19 @@
-import Stanza from './stanza.js';
+let main = null;
+
+function Stanza(_main) {
+  main = _main;
+}
+
+{{script}}
+
+if (!main) {
+  throw new Error('Stanza() is not called');
+}
+
+import { defineStanzaElement } from './stanza.js';
+
+const metadata = {{metadataJSON}};
+const outer    = {{outerJSON}};
 
 const templates = {
   {{#each templates as |template|}}
@@ -6,9 +21,4 @@ const templates = {
   {{/each}}
 };
 
-const metadata = {{metadataJSON}};
-const outer    = {{outerJSON}};
-
-const init = {{script}};
-
-init({templates, metadata, outer});
+defineStanzaElement(main, {metadata, templates, outer});
