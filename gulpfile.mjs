@@ -91,8 +91,7 @@ async function buildStanzas() {
     await fs.writeFile(path.join('dist', `${stanzaId}.html`), help({metadata}));
   }
 
-  return src(['*/metadata.json', '*/**/*.js', '*/**/*.html', '!dist/**', '!node_modules/**'])
-    .pipe(connect.reload());
+  return src(['*/metadata.json', '*/**/*.js', '*/**/*.html', '!dist/**', '!node_modules/**']).pipe(connect.reload());
 }
 
 function serve() {
