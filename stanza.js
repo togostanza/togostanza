@@ -3,19 +3,33 @@ import Handlebars from 'handlebars/dist/handlebars.runtime';
 class Stanza {
   constructor(root, metadata, templates) {
     this.root      = root;
+    this.main      = document.createElement('main');
     this.metadata  = metadata;
     this.templates = templates;
+
+    this.root.appendChild(this.main);
   }
 
   render(params) {
     const template = Handlebars.template(this.templates[params.template]);
     const html     = template(params.parameters);
 
-    this.root.innerHTML = html;
+    this.main.innerHTML = html;
   }
 
   select(selector) {
-    return this.root.querySelector(selector);
+    return this.main.querySelector(selector);
+  }
+
+  importWebFontCSS(url) {
+    const el = document.createElement('link');
+
+    el.rel  = 'stylesheet';
+    el.type = 'text/css';
+    el.href = url;
+
+    document.head.appendChild(el);
+    this.root.appendChild(el.cloneNode());
   }
 }
 
