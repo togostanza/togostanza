@@ -3,17 +3,15 @@ import path from 'path';
 
 import Handlebars from 'handlebars';
 import commonjs from '@rollup/plugin-commonjs';
-import connect from 'gulp-connect';
 import glob from 'fast-glob';
 import gulp from 'gulp';
 import resolve from '@rollup/plugin-node-resolve';
 import { rollup } from 'rollup';
 
-const {parallel, series, src, watch} = gulp;
+import { createDevServer } from './dev-server.mjs';
+import { packagePath } from './util.mjs';
 
-function packagePath(_path) {
-  return new URL(_path, import.meta.url).pathname;
-}
+const {parallel, series, watch} = gulp;
 
 async function handlebarsTemplate(path, opts = {}) {
   const template = await fs.readFile(path, 'utf8');
@@ -64,12 +62,9 @@ async function prepare() {
 
 async function buildIndex() {
   const template = await handlebarsTemplate(packagePath('index.html.hbs'));
+  const stanzas  = await Promise.all(allStanzas().map(({metadata}) => metadata));
 
-  await fs.writeFile(path.join('dist', 'index.html'), template({
-    stanzas: await Promise.all(allStanzas().map(({metadata}) => metadata))
-  }));
-
-  return src(packagePath('index.html.hbs')).pipe(connect.reload());
+  await fs.writeFile(path.join('dist', 'index.html'), template({stanzas}));
 }
 
 async function buildStanzaLib() {
@@ -82,8 +77,6 @@ async function buildStanzaLib() {
     file:   path.join('dist', 'stanza.js'),
     format: 'esm'
   });
-
-  return src(packagePath('stanza.js')).pipe(connect.reload());
 }
 
 async function buildStanzas() {
@@ -102,14 +95,13 @@ async function buildStanzas() {
 
     await fs.writeFile(path.join('dist', `${stanza.id}.html`), help({metadata}));
   }));
-
-  return src(['*/metadata.json', '*/**/*.js', '*/**/*.html', '!dist/**', '!node_modules/**']).pipe(connect.reload());
 }
 
 function serve() {
-  connect.server({
-    root:       'dist',
-    livereload: true
+  const port = process.env.PORT || '8080';
+
+  createDevServer('dist').listen(port, () => {
+    console.log(`Development server listening at http://localhost:${port}`);
   });
 }
 
@@ -125,13 +117,8 @@ const buildAll = series(
 
 function _watch() {
   watch([
-    packagePath('index.html.hbs'),
-    packagePath('stanza.js'),
-    '*/metadata.json',
-    '*/**/*.js',
-    '*/**/*.html',
-    '!dist/**',
-    '!node_modules/**'
+    '*/**/*',
+    '!dist/**'
   ], buildAll);
 }
 
