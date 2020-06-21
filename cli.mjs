@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import LiveServer from 'broccoli-live-server';
 import TreeSync from 'tree-sync';
 import UI from 'console-ui';
 import broccoli from 'broccoli';
@@ -7,8 +8,19 @@ import messages from 'broccoli/dist/messages.js';
 
 import brocfile from './Brocfile.mjs';
 
+const command = process.argv[2] || 'serve';
+
+let inputNode = brocfile();
+
+if (command === 'serve') {
+  inputNode = new LiveServer(inputNode, {
+    port:     8080,
+    logLevel: 0
+  });
+}
+
 const ui      = new UI();
-const builder = new broccoli.Builder(brocfile());
+const builder = new broccoli.Builder(inputNode);
 
 const watcher = new broccoli.Watcher(builder, builder.watchedSourceNodeWrappers, {
   saneOptions: {
@@ -16,24 +28,16 @@ const watcher = new broccoli.Watcher(builder, builder.watchedSourceNodeWrappers,
   }
 });
 
-switch (process.argv[2]) {
-  case undefined:
+switch (command) {
   case 'serve':
-    broccoli.server.serve(
-      watcher,
-      'localhost',
-      8080,
-      undefined,
-      undefined,
-      ui
-    );
-
-    break;
-  case 'build':
-    build(builder, watcher, ui, {watch: false});
+    ui.writeLine('Serving at http://localhost:8080');
+    build(builder, watcher, ui, {watch: true});
     break;
   case 'watch':
     build(builder, watcher, ui, {watch: true});
+    break;
+  case 'build':
+    build(builder, watcher, ui, {watch: false});
     break;
   default:
     ui.writeLine('togostanza serve|build|watch');
