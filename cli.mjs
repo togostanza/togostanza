@@ -8,43 +8,43 @@ import messages from 'broccoli/dist/messages.js';
 
 import brocfile from './Brocfile.mjs';
 
-const command = process.argv[2] || 'serve';
+const tree = brocfile();
+const ui   = new UI();
 
-let inputNode = brocfile();
-
-if (command === 'serve') {
-  inputNode = new LiveServer(inputNode, {
-    port:     8080,
-    logLevel: 0
-  });
-}
-
-const ui      = new UI();
-const builder = new broccoli.Builder(inputNode);
-
-const watcher = new broccoli.Watcher(builder, builder.watchedSourceNodeWrappers, {
-  saneOptions: {
-    ignored: 'dist/**'
-  }
-});
-
-switch (command) {
+switch (process.argv[2]) {
+  case undefined:
   case 'serve':
-    ui.writeLine('Serving at http://localhost:8080');
-    build(builder, watcher, ui, {watch: true});
-    break;
-  case 'watch':
-    build(builder, watcher, ui, {watch: true});
+    build(tree, ui, {watch: true, serve: true});
     break;
   case 'build':
-    build(builder, watcher, ui, {watch: false});
+    build(tree, ui, {watch: false, serve: false});
+    break;
+  case 'watch':
+    build(tree, ui, {watch: true, serve: false});
     break;
   default:
     ui.writeLine('togostanza serve|build|watch');
+    process.exit(1);
 }
 
-async function build(builder, watcher, ui, {watch}) {
+async function build(tree, ui, {watch, serve}) {
+  if (serve) {
+    tree = new LiveServer(tree, {
+      port:     8080,
+      logLevel: 0
+    });
+
+    ui.writeInfoLine('Serving at http://localhost:8080');
+  }
+
+  const builder    = new broccoli.Builder(tree);
   const outputTree = new TreeSync(builder.outputPath, 'dist');
+
+  const watcher = new broccoli.Watcher(builder, builder.watchedSourceNodeWrappers, {
+    saneOptions: {
+      ignored: 'dist/**'
+    }
+  });
 
   watcher.on('buildSuccess', () => {
     outputTree.sync();
