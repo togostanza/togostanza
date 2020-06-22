@@ -17,7 +17,7 @@ async function handlebarsTemplate(fpath, opts = {}) {
   return Handlebars.compile(hbs, opts);
 }
 
-class BuildStanza extends BroccoliPlugin {
+export default class BuildStanza extends BroccoliPlugin {
   async build() {
     const stanzas = this.allStanzas;
 
@@ -109,5 +109,3 @@ class BuildStanza extends BroccoliPlugin {
     });
   }
 }
-
-export default () => new BuildStanza(['.']);

@@ -6,9 +6,9 @@ import UI from 'console-ui';
 import broccoli from 'broccoli';
 import messages from 'broccoli/dist/messages.js';
 
-import brocfile from './Brocfile.mjs';
+import BuildStanza from './build-stanza.mjs';
 
-const tree = brocfile();
+const tree = new BuildStanza(['.']);
 const ui   = new UI();
 
 switch (process.argv[2]) {
