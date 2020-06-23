@@ -6,7 +6,7 @@ import Handlebars from 'handlebars';
 import RSVP from 'rsvp';
 import RollupCommonjs from '@rollup/plugin-commonjs';
 import RollupResolve from '@rollup/plugin-node-resolve';
-import glob from 'fast-glob';
+import walkSync from 'walk-sync';
 import { rollup } from 'rollup';
 
 import { packagePath } from './util.mjs';
@@ -81,7 +81,10 @@ export default class BuildStanza extends BroccoliPlugin {
   get allStanzas() {
     const providerDir = this.inputPaths[0];
 
-    return glob.sync(`${providerDir}/*/metadata.json`).map((metadataPath) => {
+    return walkSync(providerDir, {
+      globs:           ['*/metadata.json'],
+      includeBasePath: true
+    }).map((metadataPath) => {
       const stanzaDir = path.dirname(metadataPath);
 
       return {
@@ -96,12 +99,15 @@ export default class BuildStanza extends BroccoliPlugin {
         },
 
         get templates() {
-          const paths = glob.sync('templates/*.html', {cwd: stanzaDir});
+          const paths = walkSync(stanzaDir, {
+            globs:           ['templates/*.html'],
+            includeBasePath: true
+          });
 
           return Promise.all(paths.map(async (templatePath) => {
             return {
               name: path.basename(templatePath),
-              spec: Handlebars.precompile(await fs.readFile(path.join(stanzaDir, templatePath), 'utf8'))
+              spec: Handlebars.precompile(await fs.readFile(templatePath, 'utf8'))
             };
           }));
         },
