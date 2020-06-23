@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import LiveServer from 'broccoli-live-server';
+import MergeTrees from 'broccoli-merge-trees';
 import TreeSync from 'tree-sync';
 import UI from 'console-ui';
 import broccoli from 'broccoli';
@@ -8,38 +9,66 @@ import messages from 'broccoli/dist/messages.js';
 
 import BuildStanza from './build-stanza.mjs';
 
-const tree = new BuildStanza('.');
 const ui   = new UI();
+const tree = new BuildStanza('.');
 
 switch (process.argv[2]) {
   case undefined:
   case 'serve':
-    build(tree, ui, {watch: true, serve: true});
+    serve(ui, tree, 8080);
     break;
   case 'build':
-    build(tree, ui, {watch: false, serve: false});
+    build(ui, tree, 'dist');
     break;
   case 'watch':
-    build(tree, ui, {watch: true, serve: false});
+    watch(ui, tree, 'dist');
     break;
   default:
     ui.writeLine('togostanza serve|build|watch');
     process.exit(1);
 }
 
-async function build(tree, ui, {watch, serve}) {
-  if (serve) {
-    tree = new LiveServer(tree, {
-      port:     8080,
+async function serve(ui, tree, port) {
+  const server = new MergeTrees([
+    tree,
+
+    new LiveServer(tree, {
+      port,
       logLevel: 0
-    });
+    })
+  ]);
 
-    ui.writeInfoLine('Serving at http://localhost:8080');
-  }
+  const builder = new broccoli.Builder(server);
 
+  ui.writeInfoLine(`Serving at http://localhost:${port}`);
+
+  await runWatcher(ui, builder);
+}
+
+async function build(ui, tree, distPath) {
   const builder    = new broccoli.Builder(tree);
-  const outputTree = new TreeSync(builder.outputPath, 'dist');
+  const outputTree = new TreeSync(builder.outputPath, distPath);
 
+  try {
+    await builder.build();
+
+    messages.default.onBuildSuccess(builder, ui);
+    outputTree.sync();
+  } finally {
+    await builder.cleanup();
+  }
+}
+
+async function watch(ui, tree, distPath) {
+  const builder    = new broccoli.Builder(tree);
+  const outputTree = new TreeSync(builder.outputPath, distPath);
+
+  await runWatcher(ui, builder, () => {
+    outputTree.sync();
+  });
+}
+
+async function runWatcher(ui, builder, onBuildSuccess = () => {}) {
   const watcher = new broccoli.Watcher(builder, builder.watchedSourceNodeWrappers, {
     saneOptions: {
       ignored: 'dist/**'
@@ -47,12 +76,8 @@ async function build(tree, ui, {watch, serve}) {
   });
 
   watcher.on('buildSuccess', () => {
-    outputTree.sync();
     messages.default.onBuildSuccess(builder, ui);
-
-    if (!watch) {
-      watcher.quit();
-    }
+    onBuildSuccess();
   });
 
   watcher.on('buildFailure', (e) => {
@@ -64,17 +89,10 @@ async function build(tree, ui, {watch, serve}) {
   process.on('SIGTERM', () => watcher.quit());
 
   try {
-    await watcher.start()
-  } catch (e) {
-    ui.writeError(e);
+    await watcher.start();
   } finally {
-    try {
-      builder.cleanup();
-      process.exit(0);
-    } catch (e) {
-      ui.writeLine('cleanup error', 'ERROR');
-      ui.writeError(e);
-      process.exit(1);
-    }
+    await builder.cleanup();
   }
+
+  process.exit(0); // perhaps LiveServer is still listening and needs to stop the process
 }
