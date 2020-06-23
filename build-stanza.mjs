@@ -18,6 +18,10 @@ async function handlebarsTemplate(fpath, opts = {}) {
 }
 
 export default class BuildStanza extends BroccoliPlugin {
+  constructor(inputNode, options) {
+    super([inputNode], options);
+  }
+
   async build() {
     const stanzas = this.allStanzas;
 
@@ -75,37 +79,37 @@ export default class BuildStanza extends BroccoliPlugin {
   }
 
   get allStanzas() {
-    return this.inputPaths.flatMap((providerDir) => {
-      return glob.sync(`${providerDir}/*/metadata.json`).map((metadataPath) => {
-        const stanzaDir = path.dirname(metadataPath);
+    const providerDir = this.inputPaths[0];
 
-        return {
-          id: path.basename(stanzaDir),
+    return glob.sync(`${providerDir}/*/metadata.json`).map((metadataPath) => {
+      const stanzaDir = path.dirname(metadataPath);
 
-          get metadata() {
-            return fs.readFile(metadataPath).then(JSON.parse);
-          },
+      return {
+        id: path.basename(stanzaDir),
 
-          get script() {
-            return fs.readFile(path.join(stanzaDir, 'index.js'), 'utf8');
-          },
+        get metadata() {
+          return fs.readFile(metadataPath).then(JSON.parse);
+        },
 
-          get templates() {
-            const paths = glob.sync('templates/*.html', {cwd: stanzaDir});
+        get script() {
+          return fs.readFile(path.join(stanzaDir, 'index.js'), 'utf8');
+        },
 
-            return Promise.all(paths.map(async (templatePath) => {
-              return {
-                name: path.basename(templatePath),
-                spec: Handlebars.precompile(await fs.readFile(path.join(stanzaDir, templatePath), 'utf8'))
-              };
-            }));
-          },
+        get templates() {
+          const paths = glob.sync('templates/*.html', {cwd: stanzaDir});
 
-          get outer() {
-            return fs.readFile(path.join(stanzaDir, '_header.html'), 'utf8').catch(() => null);
-          }
-        };
-      });
+          return Promise.all(paths.map(async (templatePath) => {
+            return {
+              name: path.basename(templatePath),
+              spec: Handlebars.precompile(await fs.readFile(path.join(stanzaDir, templatePath), 'utf8'))
+            };
+          }));
+        },
+
+        get outer() {
+          return fs.readFile(path.join(stanzaDir, '_header.html'), 'utf8').catch(() => null);
+        }
+      };
     });
   }
 }

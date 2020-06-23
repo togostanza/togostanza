@@ -8,7 +8,7 @@ import messages from 'broccoli/dist/messages.js';
 
 import BuildStanza from './build-stanza.mjs';
 
-const tree = new BuildStanza(['.']);
+const tree = new BuildStanza('.');
 const ui   = new UI();
 
 switch (process.argv[2]) {
