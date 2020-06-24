@@ -1,11 +1,14 @@
 import path from 'path';
 
 import BroccoliPlugin from 'broccoli-plugin';
-import RollupCommonjs from '@rollup/plugin-commonjs';
-import RollupResolve from '@rollup/plugin-node-resolve';
+import alias from '@rollup/plugin-alias';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import walkSync from 'walk-sync';
-import { rollup } from 'rollup';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
+import { rollup } from 'rollup';
+
+import { packagePath } from './util.mjs';
 
 export default class BundleStanzaModules extends BroccoliPlugin {
   constructor(inputNode, options) {
@@ -19,7 +22,6 @@ export default class BundleStanzaModules extends BroccoliPlugin {
 
     const paths = walkSync(distPath, {
       globs:           ['*.js'],
-      ignore:          ['stanza.js'],
       includeBasePath: true
     });
 
@@ -27,12 +29,18 @@ export default class BundleStanzaModules extends BroccoliPlugin {
       input: paths,
 
       plugins: [
-        RollupResolve({
+        alias({
+          entries: {
+            '~togostanza/stanza':  packagePath('stanza.js'),
+            '~handlebars/runtime': packagePath('../node_modules/handlebars/dist/cjs/handlebars.runtime.js')
+          }
+        }),
+        resolve({
           customResolveOptions: {
             moduleDirectory: this.moduleDirectory
           }
         }),
-        RollupCommonjs()
+        commonjs()
       ],
 
       onwarn(warn) {

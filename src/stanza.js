@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars/dist/handlebars.runtime';
+import HandlebarsRuntime from '~handlebars/runtime';
 
 class Stanza {
   constructor(root, metadata, templates) {
@@ -11,7 +11,7 @@ class Stanza {
   }
 
   render(params) {
-    const template = Handlebars.template(this.templates[params.template]);
+    const template = HandlebarsRuntime.template(this.templates[params.template]);
     const html     = template(params.parameters);
 
     this.main.innerHTML = html;

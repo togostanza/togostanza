@@ -2,7 +2,6 @@
 
 import path from 'path';
 
-import Funnel from 'broccoli-funnel';
 import LiveServer from 'broccoli-live-server';
 import MergeTrees from 'broccoli-merge-trees';
 import TreeSync from 'tree-sync';
@@ -20,10 +19,7 @@ const ui = new UI();
 const buildTree  = new BuildStanza(providerDir);
 const bundleTree = new BundleStanzaModules(buildTree, {moduleDirectory: path.join(providerDir, 'node_modules')});
 
-const tree = new MergeTrees([
-  new Funnel(buildTree, {exclude: ['stanza.js']}),
-  bundleTree,
-], {overwrite: true});
+const tree = new MergeTrees([buildTree, bundleTree], {overwrite: true});
 
 switch (process.argv[2]) {
   case undefined:

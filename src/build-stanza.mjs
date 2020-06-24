@@ -4,10 +4,7 @@ import path from 'path';
 import BroccoliPlugin from 'broccoli-plugin';
 import Handlebars from 'handlebars';
 import RSVP from 'rsvp';
-import RollupCommonjs from '@rollup/plugin-commonjs';
-import RollupResolve from '@rollup/plugin-node-resolve';
 import walkSync from 'walk-sync';
-import { rollup } from 'rollup';
 
 import { packagePath } from './util.mjs';
 
@@ -27,7 +24,6 @@ export default class BuildStanza extends BroccoliPlugin {
 
     await Promise.all([
       this.buildIndex(stanzas),
-      this.buildStanzaLib(),
       this.buildStanzas(stanzas)
     ]);
   }
@@ -39,21 +35,6 @@ export default class BuildStanza extends BroccoliPlugin {
     this.output.writeFileSync('index.html', template({
       stanzas: metadata
     }));
-  }
-
-  async buildStanzaLib() {
-    const bundle = await rollup({
-      input: packagePath('stanza.js'),
-
-      plugins: [
-        RollupResolve(),
-        RollupCommonjs()
-      ]
-    });
-
-    const {output} = await bundle.generate({format: 'esm'});
-
-    this.output.writeFileSync('stanza.js', output[0].code);
   }
 
   async buildStanzas(stanzas) {
