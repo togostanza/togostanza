@@ -45,8 +45,9 @@ export default class BundleStanzaModules extends BroccoliPlugin {
     });
 
     await bundle.write({
-      format: 'esm',
-      dir:    this.outputPath
+      format:    'esm',
+      dir:       this.outputPath,
+      sourcemap: true
     });
   }
 }
