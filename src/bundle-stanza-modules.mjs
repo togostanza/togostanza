@@ -23,31 +23,30 @@ export default class BundleStanzaModules extends BroccoliPlugin {
       includeBasePath: true
     });
 
-    await Promise.all(paths.map(async (jsPath) => {
-      const bundle = await rollup({
-        input: jsPath,
+    const bundle = await rollup({
+      input: paths,
 
-        plugins: [
-          RollupResolve({
-            customResolveOptions: {
-              moduleDirectory: this.moduleDirectory
-            }
-          }),
-          RollupCommonjs()
-        ],
+      plugins: [
+        RollupResolve({
+          customResolveOptions: {
+            moduleDirectory: this.moduleDirectory
+          }
+        }),
+        RollupCommonjs()
+      ],
 
-        onwarn(warn) {
-          // suppress circular dependency warnings
-          // ref https://github.com/d3/d3-selection/issues/229
-          if (warn.code === 'CIRCULAR_DEPENDENCY') { return; }
+      onwarn(warn) {
+        // suppress circular dependency warnings
+        // ref https://github.com/d3/d3-selection/issues/229
+        if (warn.code === 'CIRCULAR_DEPENDENCY') { return; }
 
-          defaultOnWarn(warn);
-        }
-      });
+        defaultOnWarn(warn);
+      }
+    });
 
-      const {output} = await bundle.generate({format: 'esm'});
-
-      this.output.writeFileSync(path.basename(jsPath), output[0].code);
-    }));
+    await bundle.write({
+      format: 'esm',
+      dir:    this.outputPath
+    });
   }
 }

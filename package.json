@@ -15,6 +15,7 @@
     "@rollup/plugin-commonjs": "^13.0.0",
     "@rollup/plugin-node-resolve": "^8.0.1",
     "broccoli": "^3.4.2",
+    "broccoli-funnel": "^3.0.3",
     "broccoli-live-server": "^1.0.4",
     "broccoli-merge-trees": "^4.2.0",
     "broccoli-plugin": "^4.0.3",
