@@ -5,6 +5,7 @@ import RollupCommonjs from '@rollup/plugin-commonjs';
 import RollupResolve from '@rollup/plugin-node-resolve';
 import walkSync from 'walk-sync';
 import { rollup } from 'rollup';
+import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 
 export default class BundleStanzaModules extends BroccoliPlugin {
   constructor(inputNode, options) {
@@ -33,7 +34,15 @@ export default class BundleStanzaModules extends BroccoliPlugin {
             }
           }),
           RollupCommonjs()
-        ]
+        ],
+
+        onwarn(warn) {
+          // suppress circular dependency warnings
+          // ref https://github.com/d3/d3-selection/issues/229
+          if (warn.code === 'CIRCULAR_DEPENDENCY') { return; }
+
+          defaultOnWarn(warn);
+        }
       });
 
       const {output} = await bundle.generate({format: 'esm'});
