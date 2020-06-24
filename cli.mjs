@@ -18,10 +18,10 @@ switch (process.argv[2]) {
     serve(ui, tree, 8080);
     break;
   case 'build':
-    build(ui, tree, 'dist');
+    build(ui, tree, 'dist', {watch: false});
     break;
   case 'watch':
-    watch(ui, tree, 'dist');
+    build(ui, tree, 'dist', {watch: true});
     break;
   default:
     ui.writeLine('togostanza serve|build|watch');
@@ -45,26 +45,16 @@ async function serve(ui, tree, port) {
   await runWatcher(ui, builder);
 }
 
-async function build(ui, tree, distPath) {
+async function build(ui, tree, distPath, {watch}) {
   const builder    = new broccoli.Builder(tree);
   const outputTree = new TreeSync(builder.outputPath, distPath);
 
-  try {
-    await builder.build();
-
-    messages.default.onBuildSuccess(builder, ui);
+  await runWatcher(ui, builder, (watcher) => {
     outputTree.sync();
-  } finally {
-    await builder.cleanup();
-  }
-}
 
-async function watch(ui, tree, distPath) {
-  const builder    = new broccoli.Builder(tree);
-  const outputTree = new TreeSync(builder.outputPath, distPath);
-
-  await runWatcher(ui, builder, () => {
-    outputTree.sync();
+    if (!watch) {
+      watcher.quit();
+    }
   });
 }
 
@@ -77,7 +67,7 @@ async function runWatcher(ui, builder, onBuildSuccess = () => {}) {
 
   watcher.on('buildSuccess', () => {
     messages.default.onBuildSuccess(builder, ui);
-    onBuildSuccess();
+    onBuildSuccess(watcher);
   });
 
   watcher.on('buildFailure', (e) => {
