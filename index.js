@@ -1,1 +1,0 @@
-import "./provider/assets/css/ts.css";
