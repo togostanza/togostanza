@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import path from 'path';
+
 import LiveServer from 'broccoli-live-server';
 import MergeTrees from 'broccoli-merge-trees';
 import TreeSync from 'tree-sync';
@@ -8,9 +10,16 @@ import broccoli from 'broccoli';
 import messages from 'broccoli/dist/messages.js';
 
 import BuildStanza from './build-stanza.mjs';
+import BundleStanzaModules from './bundle-stanza-modules.mjs';
 
-const ui   = new UI();
-const tree = new BuildStanza('.');
+const providerDir = path.resolve('.');
+
+const ui = new UI();
+
+const buildTree  = new BuildStanza(providerDir);
+const bundleTree = new BundleStanzaModules(buildTree, {moduleDirectory: path.join(providerDir, 'node_modules')});
+
+const tree = new MergeTrees([buildTree, bundleTree], {overwrite: true});
 
 switch (process.argv[2]) {
   case undefined:
