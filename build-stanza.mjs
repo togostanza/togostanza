@@ -46,7 +46,7 @@ export default class BuildStanza extends BroccoliPlugin {
       input: packagePath('stanza.js'),
 
       plugins: [
-        RollupResolve.default(),
+        RollupResolve(),
         RollupCommonjs()
       ]
     });

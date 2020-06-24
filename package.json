@@ -4,9 +4,9 @@
   "repository": "https://github.com/togostanza/ts.git",
   "license": "MIT",
   "scripts": {
-    "build": "webpack",
-    "serve": "webpack-dev-server",
-    "gulp": "gulp"
+    "build": "togostanza build",
+    "serve": "togostanza serve",
+    "watch": "togostanza watch"
   },
   "bin": {
     "togostanza": "./cli.mjs"
@@ -18,25 +18,11 @@
     "broccoli-live-server": "^1.0.4",
     "broccoli-merge-trees": "^4.2.0",
     "broccoli-plugin": "^4.0.3",
-    "chokidar": "^3.4.0",
     "console-ui": "^3.1.1",
-    "css-loader": "^3.5.3",
-    "express": "^4.17.1",
-    "gulp": "^4.0.2",
-    "gulp-cli": "^2.3.0",
     "handlebars": "^4.7.6",
-    "handlebars-loader": "^1.7.1",
-    "html-webpack-plugin": "^4.3.0",
-    "lodash.debounce": "^4.0.8",
-    "mime": "^2.4.6",
-    "mini-css-extract-plugin": "^0.9.0",
     "rollup": "^2.16.1",
     "rsvp": "^4.8.5",
     "tree-sync": "^2.0.0",
-    "walk-sync": "^2.1.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "^3.11.0"
+    "walk-sync": "^2.1.0"
   }
 }
