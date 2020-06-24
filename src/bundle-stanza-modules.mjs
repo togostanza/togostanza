@@ -52,10 +52,33 @@ export default class BundleStanzaModules extends BroccoliPlugin {
       }
     });
 
+    // TODO get the exact name
+    const basename = path.basename(path.resolve(this.moduleDirectory, '..'));
+
     await bundle.write({
       format:    'esm',
       dir:       this.outputPath,
-      sourcemap: true
+      sourcemap: true,
+
+      sourcemapPathTransform: (relativeSourcePath) => {
+        const fullPath = path.resolve(distPath, relativeSourcePath);
+
+        if (fullPath.startsWith(distPath)) {
+          return `${basename}/${fullPath.slice(distPath.length + 1)}`;
+        }
+
+        if (fullPath.startsWith(this.moduleDirectory)) {
+          return `${basename}/node_modules/${fullPath.slice(this.moduleDirectory.length + 1)}`;
+        }
+
+        const packageRoot = packagePath('..').replace(/\/$/, '');
+
+        if (fullPath.startsWith(packageRoot)) {
+          return `togostanza/${fullPath.slice(packageRoot.length + 1)}`;
+        }
+
+        return fullPath;
+      }
     });
   }
 }
