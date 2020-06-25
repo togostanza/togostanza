@@ -32,7 +32,7 @@ export default class BundleStanzaModules extends BroccoliPlugin {
         alias({
           entries: {
             '~togostanza/stanza':  packagePath('stanza.js'),
-            '~handlebars/runtime': packagePath('../node_modules/handlebars/dist/cjs/handlebars.runtime.js')
+            '~handlebars/runtime': packagePath('../node_modules/handlebars/lib/handlebars.runtime.js')
           }
         }),
         resolve({
