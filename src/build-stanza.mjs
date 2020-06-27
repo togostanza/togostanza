@@ -8,6 +8,10 @@ import walkSync from 'walk-sync';
 
 import { packagePath } from './util.mjs';
 
+Handlebars.registerHelper('array', function() {
+  return Array.from(arguments).slice(0, -1);
+});
+
 async function handlebarsTemplate(fpath, opts = {}) {
   const hbs = await fs.readFile(fpath, 'utf8');
 

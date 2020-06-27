@@ -2,6 +2,7 @@
 
 import path from 'path';
 
+import Funnel from 'broccoli-funnel'
 import LiveServer from 'broccoli-live-server';
 import MergeTrees from 'broccoli-merge-trees';
 import TreeSync from 'tree-sync';
@@ -11,6 +12,7 @@ import messages from 'broccoli/dist/messages.js';
 
 import BuildStanza from './build-stanza.mjs';
 import BundleStanzaModules from './bundle-stanza-modules.mjs';
+import { packagePath } from './util.mjs';
 
 const providerDir = path.resolve('.');
 
@@ -19,7 +21,21 @@ const ui = new UI();
 const buildTree  = new BuildStanza(providerDir);
 const bundleTree = new BundleStanzaModules(buildTree, {moduleDirectory: path.join(providerDir, 'node_modules')});
 
-const tree = new MergeTrees([buildTree, bundleTree], {overwrite: true});
+const css = new Funnel(packagePath('.'), {
+  files: ['app.css'],
+
+  getDestinationPath(fpath) {
+    if (fpath === 'app.css') { return 'togostanza.css'; }
+
+    return fpath;
+  }
+});
+
+const tree = new MergeTrees([
+  buildTree,
+  bundleTree,
+  css
+], {overwrite: true});
 
 switch (process.argv[2]) {
   case undefined:
@@ -54,11 +70,11 @@ async function serve(ui, tree, port) {
   await runWatcher(ui, builder);
 }
 
-async function build(ui, tree, distPath, {watch}) {
+async function build(ui, tree, outputPath, {watch}) {
   const builder    = new broccoli.Builder(tree);
-  const outputTree = new TreeSync(builder.outputPath, distPath);
+  const outputTree = new TreeSync(builder.outputPath, outputPath);
 
-  await runWatcher(ui, builder, (watcher) => {
+  await runWatcher(ui, builder, outputPath, (watcher) => {
     outputTree.sync();
 
     if (!watch) {
@@ -67,10 +83,10 @@ async function build(ui, tree, distPath, {watch}) {
   });
 }
 
-async function runWatcher(ui, builder, onBuildSuccess = () => {}) {
+async function runWatcher(ui, builder, outputPath, onBuildSuccess = () => {}) {
   const watcher = new broccoli.Watcher(builder, builder.watchedSourceNodeWrappers, {
     saneOptions: {
-      ignored: 'dist/**'
+      ignored: `${outputPath}/**`
     }
   });
 

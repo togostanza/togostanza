@@ -18,9 +18,9 @@ export default class BundleStanzaModules extends BroccoliPlugin {
   }
 
   async build() {
-    const distPath = this.inputPaths[0];
+    const inputPath = this.inputPaths[0];
 
-    const paths = walkSync(distPath, {
+    const paths = walkSync(inputPath, {
       globs:           ['*.js'],
       includeBasePath: true
     });
@@ -61,10 +61,10 @@ export default class BundleStanzaModules extends BroccoliPlugin {
       sourcemap: true,
 
       sourcemapPathTransform: (relativeSourcePath) => {
-        const fullPath = path.resolve(distPath, relativeSourcePath);
+        const fullPath = path.resolve(inputPath, relativeSourcePath);
 
-        if (fullPath.startsWith(distPath)) {
-          return `${basename}/${fullPath.slice(distPath.length + 1)}`;
+        if (fullPath.startsWith(inputPath)) {
+          return `${basename}/${fullPath.slice(inputPath.length + 1)}`;
         }
 
         if (fullPath.startsWith(this.moduleDirectory)) {
