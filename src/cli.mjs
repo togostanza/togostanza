@@ -3,7 +3,6 @@
 import path from 'path';
 
 import Funnel from 'broccoli-funnel'
-import LiveServer from 'broccoli-live-server';
 import MergeTrees from 'broccoli-merge-trees';
 import TreeSync from 'tree-sync';
 import UI from 'console-ui';
@@ -12,6 +11,7 @@ import messages from 'broccoli/dist/messages.js';
 
 import BuildStanza from './build-stanza.mjs';
 import BundleStanzaModules from './bundle-stanza-modules.mjs';
+import Serve from './serve.mjs';
 import { packagePath } from './util.mjs';
 
 const providerDir = path.resolve('.');
@@ -57,9 +57,8 @@ async function serve(ui, tree, port) {
   const server = new MergeTrees([
     tree,
 
-    new LiveServer(tree, {
-      port,
-      logLevel: 0
+    new Serve(tree, (server) => {
+      server.listen(port);
     })
   ]);
 
