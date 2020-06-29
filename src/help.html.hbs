@@ -70,5 +70,19 @@
         </div>
       </div>
     </div>
+
+    <script>
+      const stanza = document.querySelector('togostanza-{{metadata.[@id]}}');
+      const inputs = document.querySelectorAll('.showcase_id input');
+
+      for (const input of inputs) {
+        function onParamChange() {
+          stanza.setAttribute(input.dataset.paramKey, input.value);
+        }
+
+        input.addEventListener('input', onParamChange);
+        onParamChange();
+      }
+    </script>
   </body>
 </html>

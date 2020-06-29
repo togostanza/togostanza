@@ -32,7 +32,8 @@ export default class BundleStanzaModules extends BroccoliPlugin {
         alias({
           entries: {
             '~togostanza/stanza-element': packagePath('stanza-element.mjs'),
-            '~handlebars/runtime':        packagePath('../node_modules/handlebars/lib/handlebars.runtime.js')
+            '~handlebars/runtime':        packagePath('../node_modules/handlebars/lib/handlebars.runtime.js'),
+            '~lodash.debounce':           packagePath('../node_modules/lodash.debounce/index.js')
           }
         }),
         resolve({

@@ -1,19 +1,38 @@
+import debounce from '~lodash.debounce';
+
 import Stanza from './stanza.mjs';
 
 export function defineStanzaElement(main, {metadata, templates, outer}) {
-  const id = metadata["@id"];
+  const id        = metadata['@id'];
+  const paramKeys = metadata['stanza:parameter'].map(param => param['stanza:key']);
 
   class StanzaElement extends HTMLElement {
+    static observedAttributes = paramKeys;
+
     constructor() {
       super(...arguments);
 
       ensureOuterInserted(id, outer);
 
-      const root   = this.attachShadow({mode: "open"});
-      const stanza = new Stanza(root, metadata, templates);
+      const root = this.attachShadow({mode: "open"});
+
+      this.stanza = new Stanza(root, metadata, templates);
+
+      this.render();
+    }
+
+    render() {
       const params = Object.fromEntries(Array.from(this.attributes).map(({name, value}) => [name, value]));
 
-      main(stanza, params);
+      main(this.stanza, params);
+    }
+
+    renderDebounced = debounce(() => {
+      this.render();
+    }, 50);
+
+    attributeChangedCallback() {
+      this.renderDebounced();
     }
   }
 
