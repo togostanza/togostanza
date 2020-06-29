@@ -28,7 +28,9 @@ export function defineStanzaElement(main, {metadata, templates, outer}) {
     }
 
     render() {
-      const params = Object.fromEntries(Array.from(this.attributes).map(({name, value}) => [name, value]));
+      const params = Object.fromEntries(
+        Array.from(this.attributes).map(({name, value}) => [name, value])
+      );
 
       main(this.stanza, params);
     }
