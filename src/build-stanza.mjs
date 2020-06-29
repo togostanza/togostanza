@@ -2,14 +2,20 @@ import { promises as fs } from 'fs';
 import path from 'path';
 
 import BroccoliPlugin from 'broccoli-plugin';
-import Handlebars from 'handlebars';
 import RSVP from 'rsvp';
+import _Handlebars from 'handlebars';
 import walkSync from 'walk-sync';
 
 import { packagePath } from './util.mjs';
 
+const Handlebars = _Handlebars.create();
+
 Handlebars.registerHelper('array', function() {
   return Array.from(arguments).slice(0, -1);
+});
+
+Handlebars.registerHelper('to-json', function(val) {
+  return JSON.stringify(val);
 });
 
 async function handlebarsTemplate(fpath, opts = {}) {
@@ -54,10 +60,10 @@ export default class BuildStanza extends BroccoliPlugin {
     const metadata = await stanza.metadata;
 
     this.output.writeFileSync(`${stanza.id}.js`, templates.entrypoint({
-      metadataJSON: JSON.stringify(metadata),
-      script:       await stanza.script,
-      templates:    await stanza.templates,
-      outerJSON:    JSON.stringify(await stanza.outer)
+      metadata,
+      script:    await stanza.script,
+      templates: await stanza.templates,
+      outer:     await stanza.outer
     }));
 
     this.output.writeFileSync(`${stanza.id}.html`, templates.help({metadata}));
@@ -85,14 +91,19 @@ export default class BuildStanza extends BroccoliPlugin {
 
         get templates() {
           const paths = walkSync(stanzaDir, {
-            globs:           ['templates/*.html'],
+            globs:           ['templates/*'],
             includeBasePath: true
           });
 
           return Promise.all(paths.map(async (templatePath) => {
+            const name = path.basename(templatePath, '.hbs');
+
             return {
-              name: path.basename(templatePath),
-              spec: Handlebars.precompile(await fs.readFile(templatePath, 'utf8'))
+              name,
+
+              spec: Handlebars.precompile(await fs.readFile(templatePath, 'utf8'), {
+                noEscape: path.extname(name) !== '.html'
+              })
             };
           }));
         },

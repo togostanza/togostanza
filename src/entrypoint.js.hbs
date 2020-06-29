@@ -12,13 +12,13 @@ if (!main) {
 
 import { defineStanzaElement } from '~togostanza/stanza-element';
 
-const metadata = {{metadataJSON}};
-const outer    = {{outerJSON}};
+const metadata = {{to-json metadata}};
+const outer    = {{to-json outer}};
 
-const templates = {
+const templates = [
   {{#each templates as |template|}}
-    "{{template.name}}": {{template.spec}},
+    [{{to-json template.name}}, {{template.spec}}],
   {{/each}}
-};
+];
 
 defineStanzaElement(main, {metadata, templates, outer});
