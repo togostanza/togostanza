@@ -17,8 +17,14 @@ export function defineStanzaElement(main, {metadata, templates, outer}) {
       const root = this.attachShadow({mode: "open"});
 
       this.stanza = new Stanza(root, metadata, templates);
+    }
 
+    connectedCallback() {
       this.render();
+    }
+
+    attributeChangedCallback() {
+      this.renderDebounced();
     }
 
     render() {
@@ -30,10 +36,6 @@ export function defineStanzaElement(main, {metadata, templates, outer}) {
     renderDebounced = debounce(() => {
       this.render();
     }, 50);
-
-    attributeChangedCallback() {
-      this.renderDebounced();
-    }
   }
 
   customElements.define(`togostanza-${id}`, StanzaElement);
@@ -62,5 +64,3 @@ function ensureOuterInserted(id, outer) {
     orig.replaceWith(el);
   });
 }
-
-// TODO check attribute updates
