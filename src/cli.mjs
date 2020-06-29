@@ -19,7 +19,7 @@ const providerDir = path.resolve('.');
 const ui = new UI();
 
 const buildTree  = new BuildStanza(providerDir);
-const bundleTree = new BundleStanzaModules(buildTree, {moduleDirectory: path.join(providerDir, 'node_modules')});
+const bundleTree = new BundleStanzaModules(buildTree, {providerDir});
 
 const css = new Funnel(packagePath('.'), {
   files: ['app.css'],
