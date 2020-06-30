@@ -24,6 +24,7 @@
     "handlebars": "^4.7.6",
     "lodash.debounce": "^4.0.8",
     "mime": "^2.4.6",
+    "resolve": "^1.17.0",
     "rollup": "^2.18.1",
     "rsvp": "^4.8.5",
     "tree-sync": "^2.0.0",

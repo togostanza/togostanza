@@ -4,6 +4,7 @@ import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
+import resolvePackage from 'resolve';
 import walkSync from 'walk-sync';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 import { rollup } from 'rollup';
@@ -32,8 +33,8 @@ export default class BundleStanzaModules extends BroccoliPlugin {
         alias({
           entries: {
             '~togostanza/stanza-element': packagePath('stanza-element.mjs'),
-            '~handlebars/runtime':        packagePath('../node_modules/handlebars/lib/handlebars.runtime.js'),
-            '~lodash.debounce':           packagePath('../node_modules/lodash.debounce/index.js')
+            '~handlebars/runtime':        resolvePackage.sync('handlebars/runtime', {basedir: packagePath('..')}),
+            '~lodash.debounce':           resolvePackage.sync('lodash.debounce', {basedir: packagePath('..')})
           }
         }),
         resolve({
