@@ -101,7 +101,7 @@ function groupBy(array, func) {
 
   array.forEach((item) => {
     const key   = func(item);
-    const entry = ret.filter((e) => e[0] === key)[0];
+    const entry = ret.find(e => e[0] === key);
 
     if (entry) {
       entry[1].push(item);
