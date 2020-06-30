@@ -39,7 +39,7 @@ export default class BuildStanza extends BroccoliPlugin {
   }
 
   async buildIndex(stanzas) {
-    const template = await handlebarsTemplate(packagePath('index.html.hbs'));
+    const template = await handlebarsTemplate(path.join(packagePath, 'src', 'index.html.hbs'));
     const metadata = await Promise.all(stanzas.map(({metadata}) => metadata));
 
     this.output.writeFileSync('index.html', template({
@@ -49,8 +49,8 @@ export default class BuildStanza extends BroccoliPlugin {
 
   async buildStanzas(stanzas) {
     const templates = await RSVP.hash({
-      entrypoint: handlebarsTemplate(packagePath('entrypoint.js.hbs'), {noEscape: true}),
-      help:       handlebarsTemplate(packagePath('help.html.hbs'))
+      entrypoint: handlebarsTemplate(path.join(packagePath, 'src', 'entrypoint.js.hbs'), {noEscape: true}),
+      help:       handlebarsTemplate(path.join(packagePath, 'src', 'help.html.hbs'))
     });
 
     await Promise.all(stanzas.map(stanza => this.buildStanza(stanza, templates)));

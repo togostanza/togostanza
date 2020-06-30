@@ -4,7 +4,7 @@ import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import resolvePackage from 'resolve';
+import resolveModule from 'resolve';
 import walkSync from 'walk-sync';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 import { rollup } from 'rollup';
@@ -32,9 +32,9 @@ export default class BundleStanzaModules extends BroccoliPlugin {
       plugins: [
         alias({
           entries: {
-            '~togostanza/stanza-element': packagePath('stanza-element.mjs'),
-            '~handlebars/runtime':        resolvePackage.sync('handlebars/runtime', {basedir: packagePath('..')}),
-            '~lodash.debounce':           resolvePackage.sync('lodash.debounce', {basedir: packagePath('..')})
+            '~togostanza/stanza-element': path.join(packagePath, 'src', 'stanza-element.mjs'),
+            '~handlebars/runtime':        resolveModule.sync('handlebars/runtime', {basedir: packagePath}),
+            '~lodash.debounce':           resolveModule.sync('lodash.debounce',    {basedir: packagePath})
           }
         }),
         resolve({
@@ -72,10 +72,8 @@ export default class BundleStanzaModules extends BroccoliPlugin {
           return `${basename}/${fullPath.slice(this.providerDir.length + 1)}`;
         }
 
-        const packageRoot = packagePath('..').replace(/\/$/, '');
-
-        if (fullPath.startsWith(packageRoot)) {
-          return `togostanza/${fullPath.slice(packageRoot.length + 1)}`;
+        if (fullPath.startsWith(packagePath)) {
+          return `togostanza/${fullPath.slice(packagePath.length + 1)}`;
         }
 
         return fullPath;

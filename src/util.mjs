@@ -1,3 +1,1 @@
-export function packagePath(fpath) {
-  return new URL(fpath, import.meta.url).pathname;
-}
+export const packagePath = new URL('..', import.meta.url).pathname.replace(/\/$/, '');

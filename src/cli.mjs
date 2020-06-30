@@ -21,8 +21,9 @@ const ui = new UI();
 const buildTree  = new BuildStanza(providerDir);
 const bundleTree = new BundleStanzaModules(buildTree, {providerDir});
 
-const css = new Funnel(packagePath('.'), {
-  files: ['app.css'],
+const css = new Funnel(packagePath, {
+  srcDir: 'src',
+  files:  ['app.css'],
 
   getDestinationPath(fpath) {
     if (fpath === 'app.css') { return 'togostanza.css'; }

@@ -52,7 +52,7 @@ function createServer(distPath) {
   });
 
   app.get('/-reloader/client', (_req, res) => {
-    res.sendFile(packagePath('reloader-client.js'));
+    res.sendFile(path.join(packagePath, 'src', 'reloader-client.js'));
   });
 
   app.get('*', async ({url}, res) => {
