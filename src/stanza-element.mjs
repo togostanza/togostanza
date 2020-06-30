@@ -20,7 +20,7 @@ export function defineStanzaElement(main, {metadata, templates, outer}) {
     }
 
     connectedCallback() {
-      this.render();
+      this.renderDebounced.flush();
     }
 
     attributeChangedCallback() {
