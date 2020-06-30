@@ -85,6 +85,7 @@ async function* eachLine(reader) {
       if (newlinePos === -1) { break; }
 
       yield buf.slice(0, newlinePos);
+
       buf = buf.slice(newlinePos + 1);
     }
   }

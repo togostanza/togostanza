@@ -11,7 +11,7 @@ import messages from 'broccoli/dist/messages.js';
 
 import BuildStanza from './build-stanza.mjs';
 import BundleStanzaModules from './bundle-stanza-modules.mjs';
-import Serve from './serve.mjs';
+import PreviewServer from './preview-server.mjs';
 import { packagePath } from './util.mjs';
 
 const providerDir = path.resolve('.');
@@ -57,7 +57,7 @@ async function serve(ui, tree, port) {
   const server = new MergeTrees([
     tree,
 
-    new Serve(tree, (server) => {
+    new PreviewServer(tree, (server) => {
       server.listen(port);
     })
   ]);
