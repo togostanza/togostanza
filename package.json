@@ -30,6 +30,8 @@
     "rollup": "^2.18.1",
     "rsvp": "^4.8.5",
     "tree-sync": "^2.0.0",
-    "walk-sync": "^2.1.0"
+    "walk-sync": "^2.1.0",
+    "yeoman-environment": "^2.10.3",
+    "yeoman-generator": "^4.11.0"
   }
 }

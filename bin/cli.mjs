@@ -10,6 +10,8 @@ import broccoli from 'broccoli';
 import commandLineArgs from 'command-line-args';
 import commandLineCommands from 'command-line-commands';
 import messages from 'broccoli/dist/messages.js';
+import Generator from 'yeoman-generator';
+import yeoman from 'yeoman-environment';
 
 import BuildStanza from '../src/build-stanza.mjs';
 import BundleStanzaModules from '../src/bundle-stanza-modules.mjs';
@@ -40,9 +42,11 @@ const tree = new MergeTrees([
   css
 ], {overwrite: true});
 
-const {command, argv} = commandLineCommands(['serve', 'build']);
+const {command, argv} = commandLineCommands(['new', 'serve', 'build']);
 
 const optionDefinitions = {
+  new: [
+  ],
   serve: [
     {name: 'port', type: Number, defaultValue: 8080}
   ],
@@ -54,6 +58,17 @@ const optionDefinitions = {
 const options = commandLineArgs(optionDefinitions[command], {argv});
 
 switch (command) {
+  case 'new':
+    const env = yeoman.createEnv();
+    env.register(path.join(packagePath, 'generators/provider'), 'togostanza:provider');
+    env.lookup(() => {
+      env.run('togostanza:provider', err => {
+        if (!err) {
+          throw err;
+        }
+      });
+    });
+    break;
   case 'serve':
     serve(ui, tree, options.port);
     break;
