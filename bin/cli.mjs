@@ -61,12 +61,10 @@ switch (command) {
   case 'new':
     const env = yeoman.createEnv();
     env.register(path.join(packagePath, 'generators/provider'), 'togostanza:provider');
-    env.lookup(() => {
-      env.run('togostanza:provider', err => {
-        if (!err) {
-          throw err;
-        }
-      });
+    env.run('togostanza:provider', err => {
+      if (!err) {
+        throw err;
+      }
     });
     break;
   case 'serve':
