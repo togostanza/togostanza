@@ -58,7 +58,7 @@ switch (command) {
     serve(ui, tree, options.port);
     break;
   case 'build':
-    build(ui, tree, options['output-path'], {watch: false});
+    build(ui, tree, options['output-path']);
     break;
   default:
     ui.writeLine('togostanza serve|build');
@@ -81,16 +81,13 @@ async function serve(ui, tree, port) {
   await runWatcher(ui, builder);
 }
 
-async function build(ui, tree, outputPath, {watch}) {
+async function build(ui, tree, outputPath) {
   const builder    = new broccoli.Builder(tree);
   const outputTree = new TreeSync(builder.outputPath, outputPath);
 
   await runWatcher(ui, builder, outputPath, (watcher) => {
     outputTree.sync();
-
-    if (!watch) {
-      watcher.quit();
-    }
+    watcher.quit();
   });
 }
 
