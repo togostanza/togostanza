@@ -10,12 +10,12 @@ import broccoli from 'broccoli';
 import commandLineArgs from 'command-line-args';
 import commandLineCommands from 'command-line-commands';
 import messages from 'broccoli/dist/messages.js';
-import Generator from 'yeoman-generator';
 import yeoman from 'yeoman-environment';
 
 import BuildStanza from '../src/build-stanza.mjs';
 import BundleStanzaModules from '../src/bundle-stanza-modules.mjs';
 import PreviewServer from '../src/preview-server.mjs';
+import ProviderGenerator from '../generators/provider/index.mjs';
 import { packagePath } from '../src/util.mjs';
 
 const providerDir = path.resolve('.');
@@ -42,10 +42,15 @@ const tree = new MergeTrees([
   css
 ], {overwrite: true});
 
-const {command, argv} = commandLineCommands(['new', 'serve', 'build']);
-
 const optionDefinitions = {
-  new: [
+  'new-provider': [
+    {name: 'name',            type: String, defaultOption: true},
+    {name: 'license',         type: String},
+    {name: 'owner',           type: String},
+    {name: 'repo',            type: String},
+    {name: 'package-manager', type: String},
+    {name: 'skip-install',    type: Boolean, defaultValue: false},
+    {name: 'skip-git',        type: Boolean, defaultValue: false},
   ],
   serve: [
     {name: 'port', type: Number, defaultValue: 8080}
@@ -55,26 +60,30 @@ const optionDefinitions = {
   ]
 };
 
-const options = commandLineArgs(optionDefinitions[command], {argv});
+const commands = Object.keys(optionDefinitions);
+
+const {command, argv} = commandLineCommands(commands);
+const options         = commandLineArgs(optionDefinitions[command], {argv, camelCase: true});
 
 switch (command) {
-  case 'new':
-    const env = yeoman.createEnv();
-    env.register(path.join(packagePath, 'generators/provider'), 'togostanza:provider');
-    env.run('togostanza:provider', err => {
-      if (!err) {
-        throw err;
-      }
+  case 'new-provider':
+    const env = yeoman.createEnv(argv);
+
+    env.registerStub(ProviderGenerator, 'togostanza:provider', path.join(packagePath, 'generators', 'provider', 'index.mjs'));
+
+    env.run('togostanza:provider', options, (err) => {
+      if (err) { throw err; }
     });
+
     break;
   case 'serve':
     serve(ui, tree, options.port);
     break;
   case 'build':
-    build(ui, tree, options['output-path']);
+    build(ui, tree, options.outputPath);
     break;
   default:
-    ui.writeLine('togostanza serve|build');
+    ui.writeLine(`togostanza <${commands.join('|')}>`);
     process.exit(1);
 }
 
