@@ -9,7 +9,7 @@
     "watch": "togostanza watch"
   },
   "bin": {
-    "togostanza": "./src/cli.mjs"
+    "togostanza": "./bin/cli.mjs"
   },
   "dependencies": {
     "@rollup/plugin-alias": "^3.1.1",
@@ -19,6 +19,8 @@
     "broccoli-funnel": "^3.0.3",
     "broccoli-merge-trees": "^4.2.0",
     "broccoli-plugin": "^4.0.3",
+    "command-line-args": "^5.1.1",
+    "command-line-commands": "^3.0.1",
     "console-ui": "^3.1.1",
     "express": "^4.17.1",
     "handlebars": "^4.7.6",

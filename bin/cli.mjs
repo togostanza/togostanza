@@ -7,12 +7,14 @@ import MergeTrees from 'broccoli-merge-trees';
 import TreeSync from 'tree-sync';
 import UI from 'console-ui';
 import broccoli from 'broccoli';
+import commandLineArgs from 'command-line-args';
+import commandLineCommands from 'command-line-commands';
 import messages from 'broccoli/dist/messages.js';
 
-import BuildStanza from './build-stanza.mjs';
-import BundleStanzaModules from './bundle-stanza-modules.mjs';
-import PreviewServer from './preview-server.mjs';
-import { packagePath } from './util.mjs';
+import BuildStanza from '../src/build-stanza.mjs';
+import BundleStanzaModules from '../src/bundle-stanza-modules.mjs';
+import PreviewServer from '../src/preview-server.mjs';
+import { packagePath } from '../src/util.mjs';
 
 const providerDir = path.resolve('.');
 
@@ -38,19 +40,28 @@ const tree = new MergeTrees([
   css
 ], {overwrite: true});
 
-switch (process.argv[2]) {
-  case undefined:
+const {command, argv} = commandLineCommands(['serve', 'build']);
+
+const optionDefinitions = {
+  serve: [
+    {name: 'port', type: Number, defaultValue: 8080}
+  ],
+  build: [
+    {name: 'output-path', type: String, defaultValue: './dist'}
+  ]
+};
+
+const options = commandLineArgs(optionDefinitions[command], {argv});
+
+switch (command) {
   case 'serve':
-    serve(ui, tree, 8080);
+    serve(ui, tree, options.port);
     break;
   case 'build':
-    build(ui, tree, 'dist', {watch: false});
-    break;
-  case 'watch':
-    build(ui, tree, 'dist', {watch: true});
+    build(ui, tree, options['output-path'], {watch: false});
     break;
   default:
-    ui.writeLine('togostanza serve|build|watch');
+    ui.writeLine('togostanza serve|build');
     process.exit(1);
 }
 
