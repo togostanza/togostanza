@@ -9,7 +9,7 @@
     "watch": "togostanza watch"
   },
   "bin": {
-    "togostanza": "./bin/cli.mjs"
+    "togostanza": "./bin/togostanza.mjs"
   },
   "dependencies": {
     "@rollup/plugin-alias": "^3.1.1",
