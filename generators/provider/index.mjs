@@ -34,7 +34,31 @@ export default class ProviderGenerator extends Generator {
   }
 
   writing() {
-    const root = this.destinationRoot(this.inputs.name);
+    const {name, license, skipGit, owner, repo} = this.inputs;
+
+    const root = this.destinationRoot(name);
+
+    this.writeDestinationJSON('package.json', {
+      name,
+      version: '0.0.1',
+      license,
+      repository: skipGit ? '' : `${owner}/${repo}`,
+      scripts: {
+        start:        'togostanza serve --port $npm_package_config_port',
+        build:        'togostanza build',
+        'new-stanza': 'togostanza new-stanza'
+      },
+      config: {
+        port: 8080
+      },
+      dependencies: {
+        togostanza: 'togostanza/ts#js'
+      },
+      engines: {
+        node: '>=12'
+      },
+      private: true
+    });
 
     this.renderTemplate('**/*', '.', this.inputs, null, {
       processDestinationPath: (fullPath) => {
