@@ -34,31 +34,9 @@ export default class ProviderGenerator extends Generator {
   }
 
   writing() {
-    const {name, license, skipGit, owner, repo} = this.inputs;
+    const root = this.destinationRoot(this.inputs.name);
 
-    const root = this.destinationRoot(name);
-
-    this.writeDestinationJSON('package.json', {
-      name,
-      version: '0.0.1',
-      license,
-      repository: skipGit ? '' : `${owner}/${repo}`,
-      scripts: {
-        start:        'togostanza serve --port $npm_package_config_port',
-        build:        'togostanza build',
-        'new-stanza': 'togostanza new-stanza'
-      },
-      config: {
-        port: 8080
-      },
-      dependencies: {
-        togostanza: 'togostanza/ts#js'
-      },
-      engines: {
-        node: '>=12'
-      },
-      private: true
-    });
+    this.writeDestinationJSON('package.json', packageJSON(this.inputs));
 
     this.renderTemplate('**/*', '.', this.inputs, null, {
       processDestinationPath: (fullPath) => {
@@ -92,3 +70,27 @@ export default class ProviderGenerator extends Generator {
     this.spawnCommandSync('git', ['commit', '--message', `Initialize new stanza provider: ${name}`]);
   }
 };
+
+function packageJSON({name, license, skipGit, owner, repo}) {
+  return {
+    name,
+    version: '0.0.1',
+    license,
+    repository: skipGit ? '' : `${owner}/${repo}`,
+    scripts: {
+      start:        'togostanza serve --port $npm_package_config_port',
+      build:        'togostanza build',
+      'new-stanza': 'togostanza new-stanza'
+    },
+    config: {
+      port: 8080
+    },
+    dependencies: {
+      togostanza: 'togostanza/ts#js'
+    },
+    engines: {
+      node: '>=12'
+    },
+    private: true
+  };
+}
