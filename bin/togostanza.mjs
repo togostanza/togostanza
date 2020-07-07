@@ -7,11 +7,12 @@ const {command, argv} = commandLineCommands([
   null,
   'serve',
   'build',
-  'new-provider'
+  'new-provider',
+  'new-stanza'
 ]);
 
 if (command === null) {
-  console.error('togostanza <serve|build|new-provider>')
+  console.error('togostanza <serve|build|new-provider|new-stanza>')
   process.exit(1);
 }
 

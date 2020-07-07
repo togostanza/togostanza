@@ -1,18 +1,17 @@
 import path from 'path';
+import { promisify } from 'util';
 
 import yeoman from 'yeoman-environment';
 
 import ProviderGenerator from '../../generators/provider/index.mjs';
-import { packagePath} from '../util.mjs';
+import { packagePath } from '../util.mjs';
 
-export default function newProvider(argv, opts) {
+export default async function newProvider(argv, opts) {
   const env = yeoman.createEnv(argv);
 
   env.registerStub(ProviderGenerator, 'togostanza:provider', path.join(packagePath, 'generators', 'provider', 'index.mjs'));
 
-  env.run('togostanza:provider', opts, (err) => {
-    if (err) { throw err; }
-  });
+  await promisify(env.run.bind(env))('togostanza:provider', opts);
 }
 
 export const optionDefinition = [
