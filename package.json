@@ -3,11 +3,6 @@
   "version": "0.1.0",
   "repository": "https://github.com/togostanza/ts.git",
   "license": "MIT",
-  "scripts": {
-    "build": "togostanza build",
-    "serve": "togostanza serve",
-    "watch": "togostanza watch"
-  },
   "bin": {
     "togostanza": "./bin/togostanza.mjs"
   },
@@ -22,6 +17,7 @@
     "command-line-args": "^5.1.1",
     "command-line-commands": "^3.0.1",
     "console-ui": "^3.1.1",
+    "dedent": "^0.7.0",
     "express": "^4.17.1",
     "fecha": "^4.2.0",
     "handlebars": "^4.7.6",

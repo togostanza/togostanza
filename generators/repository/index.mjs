@@ -1,4 +1,5 @@
 import Generator from 'yeoman-generator';
+import dedent from 'dedent';
 
 export default class RepositoryGenerator extends Generator {
   async prompting() {
@@ -66,14 +67,41 @@ export default class RepositoryGenerator extends Generator {
   }
 
   end() {
+    this._setupGit();
+
+    const runner = commandRunner(this.inputs.packageManager);
+
+    this.log();
+    this.log(dedent`
+      Getting Started
+      ---------------
+
+      Create a new stanza:
+
+        $ ${runner} togostanza new-stanza <ID>
+
+      Serve the repository locally:
+
+        $ ${runner} togostanza serve
+
+      Building stanzas for deployment:
+
+        $ ${runner} togostanza build
+    `);
+    this.log();
+  }
+
+  _setupGit() {
     const {skipGit, owner, repo, name} = this.inputs;
 
     if (skipGit) { return; }
 
-    this.spawnCommandSync('git', ['init']);
-    this.spawnCommandSync('git', ['remote', 'add', 'origin', `https://github.com/${owner}/${repo}.git`]);
-    this.spawnCommandSync('git', ['add', '--all']);
-    this.spawnCommandSync('git', ['commit', '--message', `Initialize new stanza repository: ${name}`]);
+    const root = this.destinationRoot();
+
+    this.spawnCommandSync('git', ['-C', root, 'init']);
+    this.spawnCommandSync('git', ['-C', root, 'remote', 'add', 'origin', `https://github.com/${owner}/${repo}.git`]);
+    this.spawnCommandSync('git', ['-C', root, 'add', '--all']);
+    this.spawnCommandSync('git', ['-C', root, 'commit', '--message', `Initialize new stanza repository: ${name}`]);
   }
 };
 
@@ -99,4 +127,15 @@ function packageJSON({name, license, skipGit, owner, repo}) {
     },
     private: true
   };
+}
+
+function commandRunner(packageManager) {
+  switch (packageManager) {
+    case 'yarn':
+      return 'yarn run';
+    case 'npm':
+      return 'npx';
+    default:
+      throw new Error(`unknown package manager: ${packageManager}`);
+  }
 }
