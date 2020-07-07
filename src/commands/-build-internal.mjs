@@ -39,9 +39,9 @@ export async function runWatcher(builder, outputPath = null, onBuildSuccess = ()
   process.exit(0); // perhaps LiveServer is still listening and needs to stop the process
 }
 
-export function composeTree(providerDir) {
-  const buildTree  = new BuildStanza(providerDir);
-  const bundleTree = new BundleStanzaModules(buildTree, {providerDir});
+export function composeTree(repositoryDir) {
+  const buildTree  = new BuildStanza(repositoryDir);
+  const bundleTree = new BundleStanzaModules(buildTree, {repositoryDir});
 
   const css = new Funnel(packagePath, {
     srcDir: 'src',

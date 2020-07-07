@@ -1,13 +1,13 @@
 import Generator from 'yeoman-generator';
 
-export default class ProviderGenerator extends Generator {
+export default class RepositoryGenerator extends Generator {
   async prompting() {
     const {name, license, skipGit, owner, repo, skipInstall, packageManager} = this.options;
 
     const answers = await this.prompt([
       {
         name:    'name',
-        message: 'directory name',
+        message: 'repository name (used as a directory name)',
         when:    !name
       },
       {
@@ -73,7 +73,7 @@ export default class ProviderGenerator extends Generator {
     this.spawnCommandSync('git', ['init']);
     this.spawnCommandSync('git', ['remote', 'add', 'origin', `https://github.com/${owner}/${repo}.git`]);
     this.spawnCommandSync('git', ['add', '--all']);
-    this.spawnCommandSync('git', ['commit', '--message', `Initialize new stanza provider: ${name}`]);
+    this.spawnCommandSync('git', ['commit', '--message', `Initialize new stanza repository: ${name}`]);
   }
 };
 

@@ -3,15 +3,15 @@ import { promisify } from 'util';
 
 import yeoman from 'yeoman-environment';
 
-import ProviderGenerator from '../../generators/provider/index.mjs';
+import RepositoryGenerator from '../../generators/repository/index.mjs';
 import { packagePath } from '../util.mjs';
 
-export default async function newProvider(argv, opts) {
+export default async function newRepository(argv, opts) {
   const env = yeoman.createEnv(argv);
 
-  env.registerStub(ProviderGenerator, 'togostanza:provider', path.join(packagePath, 'generators', 'provider', 'index.mjs'));
+  env.registerStub(RepositoryGenerator, 'togostanza:repository', path.join(packagePath, 'generators', 'repository', 'index.mjs'));
 
-  await promisify(env.run.bind(env))('togostanza:provider', opts);
+  await promisify(env.run.bind(env))('togostanza:repository', opts);
 }
 
 export const optionDefinition = [

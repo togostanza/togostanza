@@ -15,7 +15,7 @@ export default class BundleStanzaModules extends BroccoliPlugin {
   constructor(inputNode, options) {
     super([inputNode], options);
 
-    this.providerDir = options.providerDir;
+    this.repositoryDir = options.repositoryDir;
   }
 
   async build() {
@@ -39,7 +39,7 @@ export default class BundleStanzaModules extends BroccoliPlugin {
         }),
         resolve({
           customResolveOptions: {
-            basedir: this.providerDir
+            basedir: this.repositoryDir
           }
         }),
         commonjs()
@@ -54,7 +54,7 @@ export default class BundleStanzaModules extends BroccoliPlugin {
       }
     });
 
-    const basename = path.basename(this.providerDir);
+    const basename = path.basename(this.repositoryDir);
 
     await bundle.write({
       format:    'esm',
@@ -68,8 +68,8 @@ export default class BundleStanzaModules extends BroccoliPlugin {
           return `${basename}/${fullPath.slice(inputPath.length + 1)}`;
         }
 
-        if (fullPath.startsWith(this.providerDir)) {
-          return `${basename}/${fullPath.slice(this.providerDir.length + 1)}`;
+        if (fullPath.startsWith(this.repositoryDir)) {
+          return `${basename}/${fullPath.slice(this.repositoryDir.length + 1)}`;
         }
 
         if (fullPath.startsWith(packagePath)) {
