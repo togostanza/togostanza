@@ -69,25 +69,8 @@ export default class RepositoryGenerator extends Generator {
   end() {
     this._setupGit();
 
-    const runner = commandRunner(this.inputs.packageManager);
-
     this.log();
-    this.log(dedent`
-      Getting Started
-      ---------------
-
-      Create a new stanza:
-
-        $ ${runner} togostanza new-stanza <ID>
-
-      Serve the repository locally:
-
-        $ ${runner} togostanza serve
-
-      Building stanzas for deployment:
-
-        $ ${runner} togostanza build
-    `);
+    this.log(gettingStarted(this.inputs));
     this.log();
   }
 
@@ -127,6 +110,30 @@ function packageJSON({name, license, skipGit, owner, repo}) {
     },
     private: true
   };
+}
+
+function gettingStarted({name, packageManager}) {
+  const runner = commandRunner(packageManager);
+
+  return dedent`
+    Getting Started
+    ---------------
+
+    Create a new stanza:
+
+      $ cd ${name}
+      $ ${runner} togostanza new-stanza <ID>
+
+    Serve the repository locally:
+
+      $ cd ${name}
+      $ ${runner} togostanza serve
+
+    Building stanzas for deployment:
+
+      $ cd ${name}
+      $ ${runner} togostanza build
+  `;
 }
 
 function commandRunner(packageManager) {
