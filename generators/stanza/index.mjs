@@ -97,8 +97,6 @@ export default class StanzaGenerator extends Generator {
       }
     ]);
 
-    console.log(answers);
-
     this.inputs = Object.assign({}, this.options, answers);
   }
 
