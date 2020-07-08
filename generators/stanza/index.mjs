@@ -73,6 +73,7 @@ export default class StanzaGenerator extends Generator {
           'Image',
           {name: 'Other (free form)', value: null}
         ],
+        pageSize: Infinity,
         when: display === undefined
       },
       {
