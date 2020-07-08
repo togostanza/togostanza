@@ -3,20 +3,24 @@ import fecha from 'fecha';
 import lowerCase from 'lodash.lowercase';
 import upperFirst from 'lodash.upperfirst';
 
+import { required } from '../util.mjs';
+
 export default class StanzaGenerator extends Generator {
   async prompting() {
     const {id, label, definition, type, context, display, provider, license, author, address} = this.options;
 
     const answers = await this.prompt([
       {
-        name:    'id',
-        message: 'stanza id (<togostanza-ID></togostanza-ID>)',
-        when:    id === undefined
+        name:     'id',
+        message:  'stanza id (<togostanza-ID></togostanza-ID>)',
+        validate: required,
+        when:     id === undefined
       },
       {
-        name:    'label',
-        default: (memo) => upperFirst(lowerCase(id || memo.id)),
-        when:    label === undefined
+        name:     'label',
+        default:  (memo) => upperFirst(lowerCase(id || memo.id)),
+        validate: required,
+        when:     label === undefined
       },
       {
         name:    'definition',

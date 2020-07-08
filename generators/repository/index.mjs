@@ -1,15 +1,18 @@
 import Generator from 'yeoman-generator';
 import dedent from 'dedent';
 
+import { required } from '../util.mjs';
+
 export default class RepositoryGenerator extends Generator {
   async prompting() {
     const {name, license, skipGit, owner, repo, skipInstall, packageManager} = this.options;
 
     const answers = await this.prompt([
       {
-        name:    'name',
-        message: 'repository name (used as a directory name)',
-        when:    name === undefined
+        name:     'name',
+        message:  'repository name (used as a directory name)',
+        validate: required,
+        when:     name === undefined
       },
       {
         name:    'license',
@@ -17,16 +20,18 @@ export default class RepositoryGenerator extends Generator {
         when:    license === undefined
       },
       {
-        name:    'owner',
-        message: 'Who is the GitHub owner of repository (https://github.com/OWNER/repo)',
-        default: await this.user.github.username(),
-        when:    !skipGit && owner === undefined
+        name:     'owner',
+        message:  'Who is the GitHub owner of repository (https://github.com/OWNER/repo)',
+        default:  await this.user.github.username(),
+        validate: required,
+        when:     !skipGit && owner === undefined
       },
       {
-        name:    'repo',
-        message: 'What is the GitHub name of repository (https://github.com/owner/REPO)',
-        default: memo => name || memo.name,
-        when:    !skipGit && repo === undefined
+        name:     'repo',
+        message:  'What is the GitHub name of repository (https://github.com/owner/REPO)',
+        default:  memo => name || memo.name,
+        validate: required,
+        when:     !skipGit && repo === undefined
       },
       {
         name:    'packageManager',
