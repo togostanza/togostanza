@@ -127,14 +127,14 @@ function gettingStarted({name, packageManager}) {
     Create a new stanza:
 
       $ cd ${name}
-      $ ${runner} togostanza new-stanza <ID>
+      $ ${runner} togostanza generate stanza
 
     Serve the repository locally:
 
       $ cd ${name}
       $ ${runner} togostanza serve
 
-    Building stanzas for deployment:
+    Build stanzas for deployment:
 
       $ cd ${name}
       $ ${runner} togostanza build
