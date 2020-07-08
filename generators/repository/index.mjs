@@ -1,7 +1,7 @@
 import Generator from 'yeoman-generator';
 import dedent from 'dedent';
 
-import { required } from '../util.mjs';
+import { required } from '../validators.mjs';
 
 export default class RepositoryGenerator extends Generator {
   async prompting() {

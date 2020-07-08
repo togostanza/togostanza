@@ -3,7 +3,7 @@ import fecha from 'fecha';
 import lowerCase from 'lodash.lowercase';
 import upperFirst from 'lodash.upperfirst';
 
-import { required } from '../util.mjs';
+import { required } from '../validators.mjs';
 
 export default class StanzaGenerator extends Generator {
   async prompting() {
