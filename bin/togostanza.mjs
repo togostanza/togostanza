@@ -1,23 +1,24 @@
 #!/usr/bin/env node
 
-import commandLineArgs from 'command-line-args';
-import commandLineCommands from 'command-line-commands';
+import path from 'path';
+import { readFileSync } from 'fs';
 
-const {command, argv} = commandLineCommands([
-  null,
-  'serve',
-  'build',
-  'new-stanza',
-  'init',
-]);
+import commander from 'commander';
 
-if (command === null) {
-  console.error('togostanza <serve|build|new-stanza|init>')
-  process.exit(1);
-}
+import build from '../src/commands/build.mjs';
+import generate from '../src/commands/generate.mjs';
+import init from '../src/commands/init.mjs';
+import serve from '../src/commands/serve.mjs';
+import { packagePath } from '../src/util.mjs';
 
-import(`../src/commands/${command}.mjs`).then(async ({default: run, optionDefinition}) => {
-  const options = commandLineArgs(optionDefinition, {argv, camelCase: true});
+const {program} = commander;
+const {version} = JSON.parse(readFileSync(path.join(packagePath, 'package.json')));
 
-  await run(argv, options);
-});
+program.version(version);
+
+program.addCommand(serve);
+program.addCommand(build);
+program.addCommand(generate);
+program.addCommand(init);
+
+program.parseAsync(process.argv);

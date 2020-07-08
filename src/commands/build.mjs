@@ -1,9 +1,21 @@
-import broccoli from 'broccoli';
 import TreeSync from 'tree-sync';
+import broccoli from 'broccoli';
+import commander from 'commander';
 
 import { composeTree, runWatcher } from './-build-internal.mjs';
 
-export default async function build(_argv, {outputPath}) {
+const command = new commander.Command()
+  .command('build')
+  .alias('b')
+  .description('build stanzas for deployment')
+  .option('-o, --output-path <dir>', 'output directory', './dist')
+  .action(async ({outputPath}) => {
+    await build(outputPath);
+  });
+
+export default command;
+
+async function build(outputPath) {
   const builder    = new broccoli.Builder(composeTree('.'));
   const outputTree = new TreeSync(builder.outputPath, outputPath);
 
@@ -12,7 +24,3 @@ export default async function build(_argv, {outputPath}) {
     watcher.quit();
   });
 }
-
-export const optionDefinition = [
-  {name: 'output-path', type: String, defaultValue: './dist'}
-];

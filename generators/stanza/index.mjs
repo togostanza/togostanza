@@ -11,17 +11,17 @@ export default class StanzaGenerator extends Generator {
       {
         name:    'id',
         message: 'stanza id (<togostanza-ID></togostanza-ID>)',
-        when:    !id
+        when:    id === undefined
       },
       {
         name:    'label',
         default: (memo) => upperFirst(lowerCase(id || memo.id)),
-        when:    !label
+        when:    label === undefined
       },
       {
         name:    'definition',
         message: 'definition (description)',
-        when:    !definition
+        when:    definition === undefined
       },
       {
         name: 'type',
@@ -31,11 +31,11 @@ export default class StanzaGenerator extends Generator {
           'NanoStanza',
           {name: 'Other (free form)', value: null}
         ],
-        when: !type
+        when: type === undefined
       },
       {
         name: 'type',
-        when: (memo) => !type && !memo.type,
+        when: (memo) => type === undefined && memo.type === null,
         askAnswered: true
       },
       {
@@ -48,11 +48,11 @@ export default class StanzaGenerator extends Generator {
           'Phenotype',
           {name: 'Other (free form)', value: null}
         ],
-        when: !context
+        when: context === undefined
       },
       {
         name: 'context',
-        when: (memo) => !context && !memo.context,
+        when: (memo) => context === undefined && memo.context === null,
         askAnswered: true
       },
       {
@@ -69,31 +69,31 @@ export default class StanzaGenerator extends Generator {
           'Image',
           {name: 'Other (free form)', value: null}
         ],
-        when: !display
+        when: display === undefined
       },
       {
         name: 'display',
-        when: (memo) => !display && !memo.display,
+        when: (memo) => display === undefined && memo.display === null,
         askAnswered: true
       },
       {
         name: 'provider',
-        when: !provider
+        when: provider === undefined
       },
       {
         name:    'license',
         default: 'MIT', // TODO read package.json?
-        when:    !license
+        when:    license === undefined
       },
       {
         name:    'author',
         default: this.user.git.name(),
-        when:    !author
+        when:    author === undefined
       },
       {
         name:    'address',
         default: this.user.git.email(),
-        when:    !address
+        when:    address === undefined
       }
     ]);
 

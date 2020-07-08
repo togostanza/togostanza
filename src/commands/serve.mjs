@@ -1,11 +1,23 @@
 import MergeTrees from 'broccoli-merge-trees';
 import UI from 'console-ui';
 import broccoli from 'broccoli';
+import commander from 'commander';
 
 import PreviewServer from '../preview-server.mjs';
 import { composeTree, runWatcher } from './-build-internal.mjs';
 
-export default async function serve(_argv, {port}) {
+const command = new commander.Command()
+  .command('serve')
+  .alias('s')
+  .description('serve the repository locally')
+  .option('-p, --port <port>', 'server port', (v) => Number(v), 8080)
+  .action(async ({port}) => {
+    await serve(port);
+  });
+
+export default command;
+
+async function serve(port) {
   const ui   = new UI();
   const tree = composeTree('.');
 
@@ -23,7 +35,3 @@ export default async function serve(_argv, {port}) {
 
   await runWatcher(builder);
 }
-
-export const optionDefinition = [
-  {name: 'port', type: Number, defaultValue: 8080}
-];

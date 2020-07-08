@@ -9,31 +9,31 @@ export default class RepositoryGenerator extends Generator {
       {
         name:    'name',
         message: 'repository name (used as a directory name)',
-        when:    !name
+        when:    name === undefined
       },
       {
         name:    'license',
         default: 'MIT',
-        when:    !license
+        when:    license === undefined
       },
       {
         name:    'owner',
         message: 'Who is the GitHub owner of repository (https://github.com/OWNER/repo)',
         default: await this.user.github.username(),
-        when:    !skipGit && !owner
+        when:    !skipGit && owner === undefined
       },
       {
         name:    'repo',
         message: 'What is the GitHub name of repository (https://github.com/owner/REPO)',
         default: memo => name || memo.name,
-        when:    !skipGit && !repo
+        when:    !skipGit && repo === undefined
       },
       {
         name:    'packageManager',
         message: 'Select a package manager',
         type:    'list',
         choices: ['yarn', 'npm'],
-        when:    !skipInstall && !packageManager
+        when:    !skipInstall && packageManager === undefined
       }
     ]);
 
