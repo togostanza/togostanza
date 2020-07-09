@@ -48,16 +48,17 @@ export default class RepositoryGenerator extends Generator {
   }
 
   writing() {
-    const root = this.destinationRoot();
+    const root   = this.destinationRoot(this.inputs.name);
+    const runner = commandRunner(this.inputs.packageManager);
 
-    this.writeDestinationJSON(this._repositoryDestinationPath('package.json'), packageJSON(this.inputs));
+    this.writeDestinationJSON('package.json', packageJSON(this.inputs));
 
-    this.renderTemplate('**/*', '.', this.inputs, null, {
+    this.renderTemplate('**/*', '.', Object.assign({}, this.inputs, {commandRunner: runner}), null, {
       processDestinationPath: (fullPath) => {
         const relativePath = fullPath.slice(root.length + 1);
         const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
 
-        return this.destinationPath(this._repositoryDestinationPath(dotted));
+        return this.destinationPath(dotted);
       }
     });
   }
@@ -82,21 +83,17 @@ export default class RepositoryGenerator extends Generator {
     this.log();
   }
 
-  _repositoryDestinationPath(...paths) {
-    return path.join(this.inputs.name, ...paths);
-  }
-
   _setupGit() {
     const {skipGit, owner, repo, name} = this.inputs;
 
     if (skipGit) { return; }
 
-    const repositoryPath = this._repositoryDestinationPath();
+    const root = this.destinationRoot();
 
-    this.spawnCommandSync('git', ['-C', repositoryPath, 'init']);
-    this.spawnCommandSync('git', ['-C', repositoryPath, 'remote', 'add', 'origin', `https://github.com/${owner}/${repo}.git`]);
-    this.spawnCommandSync('git', ['-C', repositoryPath, 'add', '--all']);
-    this.spawnCommandSync('git', ['-C', repositoryPath, 'commit', '--message', `Initialize new stanza repository: ${name}`]);
+    this.spawnCommandSync('git', ['-C', root, 'init']);
+    this.spawnCommandSync('git', ['-C', root, 'remote', 'add', 'origin', `https://github.com/${owner}/${repo}.git`]);
+    this.spawnCommandSync('git', ['-C', root, 'add', '--all']);
+    this.spawnCommandSync('git', ['-C', root, 'commit', '--message', `Initialize new stanza repository: ${name}`]);
   }
 };
 

@@ -19,10 +19,10 @@ jobs:
           node-version: '12'
 
       - name: Install packages
-        run: npm install
+        run: <%= packageManager %> install
 
       - name: Build
-        run: npx togostanza build
+        run: <%= commandRunner %> togostanza build
 
       - name: Publish
         uses: peaceiris/actions-gh-pages@v3
