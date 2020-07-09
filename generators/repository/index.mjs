@@ -108,7 +108,7 @@ function packageJSON({name, license, skipGit, owner, repo}) {
       port: 8080
     },
     dependencies: {
-      togostanza: 'togostanza/ts#js'
+      togostanza: 'togostanza/togostanza-js'
     },
     engines: {
       node: '>=12'

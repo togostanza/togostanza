@@ -1,7 +1,7 @@
 {
   "name": "togostanza",
   "version": "0.1.0",
-  "repository": "https://github.com/togostanza/ts.git",
+  "repository": "https://github.com/togostanza/togostanza-js.git",
   "license": "MIT",
   "bin": {
     "togostanza": "./bin/togostanza.mjs"
