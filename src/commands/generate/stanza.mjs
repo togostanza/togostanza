@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import commander from 'commander';
 import yeoman from 'yeoman-environment';
 
-import StanzaGenerator from '../../../generators/stanza/index.mjs';
+import StanzaGenerator from '../../generators/stanza/index.mjs';
 import { packagePath } from '../../util.mjs';
 
 const command = new commander.Command()
@@ -28,7 +28,7 @@ export default command;
 async function generateStanza(opts) {
   const env = yeoman.createEnv();
 
-  env.registerStub(StanzaGenerator, 'togostanza:stanza', path.join(packagePath, 'generators', 'stanza', 'index.mjs'));
+  env.registerStub(StanzaGenerator, 'togostanza:stanza', path.join(packagePath, 'src', 'generators', 'stanza', 'index.mjs'));
 
   await promisify(env.run.bind(env))('togostanza:stanza', opts);
 }

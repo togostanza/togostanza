@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import commander from 'commander';
 import yeoman from 'yeoman-environment';
 
-import RepositoryGenerator from '../../generators/repository/index.mjs';
+import RepositoryGenerator from '../generators/repository/index.mjs';
 import { packagePath } from '../util.mjs';
 
 const command = new commander.Command()
@@ -25,7 +25,7 @@ export default command;
 async function init(opts) {
   const env = yeoman.createEnv();
 
-  env.registerStub(RepositoryGenerator, 'togostanza:repository', path.join(packagePath, 'generators', 'repository', 'index.mjs'));
+  env.registerStub(RepositoryGenerator, 'togostanza:repository', path.join(packagePath, 'src', 'generators', 'repository', 'index.mjs'));
 
   await promisify(env.run.bind(env))('togostanza:repository', opts);
 }
