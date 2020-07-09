@@ -1,3 +1,5 @@
+import path from 'path';
+
 import Generator from 'yeoman-generator';
 import fecha from 'fecha';
 import lowerCase from 'lodash.lowercase';
@@ -106,17 +108,20 @@ export default class StanzaGenerator extends Generator {
   }
 
   writing() {
-    const root = this.destinationRoot(this.inputs.id);
-
-    this.writeDestinationJSON('metadata.json', metadataJSON(this.inputs));
+    this.writeDestinationJSON(this._stanzaDestinationPath('metadata.json'), metadataJSON(this.inputs));
 
     this.renderTemplate('**/*', '.', this.inputs, null, {
       processDestinationPath: (fullPath) => {
-        const relativePath = fullPath.slice(root.length + 1);
+        const relativePath = fullPath.slice(this.destinationRoot().length + 1);
+        const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
 
-        return this.destinationPath(relativePath.replace(/(?<=^|\/)_/g, '.'));
+        return this.destinationPath(this._stanzaDestinationPath(dotted));
       }
     });
+  }
+
+  _stanzaDestinationPath(...paths) {
+    return path.join('stanzas', this.inputs.id, ...paths);
   }
 };
 

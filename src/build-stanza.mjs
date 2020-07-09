@@ -73,7 +73,7 @@ export default class BuildStanza extends BroccoliPlugin {
     const repositoryDir = this.inputPaths[0];
 
     return walkSync(repositoryDir, {
-      globs:           ['*/metadata.json'],
+      globs:           ['stanzas/*/metadata.json'],
       includeBasePath: true
     }).map((metadataPath) => {
       const stanzaDir = path.dirname(metadataPath);
