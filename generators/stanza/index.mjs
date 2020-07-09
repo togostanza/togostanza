@@ -12,7 +12,7 @@ export default class StanzaGenerator extends Generator {
     const answers = await this.prompt([
       {
         name:     'id',
-        message:  'stanza id (<togostanza-ID></togostanza-ID>)',
+        message:  'stanza id (<togostanza-ID></togostanza-ID>):',
         validate: required,
         when:     id === undefined
       },
@@ -24,7 +24,7 @@ export default class StanzaGenerator extends Generator {
       },
       {
         name:    'definition',
-        message: 'definition (description)',
+        message: 'definition (description):',
         when:    definition === undefined
       },
       {
