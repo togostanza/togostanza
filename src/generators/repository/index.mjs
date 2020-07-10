@@ -1,5 +1,3 @@
-import path from 'path';
-
 import Generator from 'yeoman-generator';
 import dedent from 'dedent';
 
