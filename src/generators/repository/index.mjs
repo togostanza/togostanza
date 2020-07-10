@@ -5,7 +5,7 @@ import { required } from '../validators.mjs';
 
 export default class RepositoryGenerator extends Generator {
   async prompting() {
-    const {name, license, skipGit, owner, repo, skipInstall, packageManager} = this.options;
+    const {name, license, packageManager, skipGit, owner, repo} = this.options;
 
     const answers = await this.prompt([
       {
@@ -20,6 +20,13 @@ export default class RepositoryGenerator extends Generator {
         when:    license === undefined
       },
       {
+        name:    'packageManager',
+        message: 'package manager:',
+        type:    'list',
+        choices: ['npm', 'yarn'],
+        when:    packageManager === undefined
+      },
+      {
         name:     'owner',
         message:  'GitHub repository owner (https://github.com/OWNER/repo):',
         default:  await this.user.github.username(),
@@ -32,13 +39,6 @@ export default class RepositoryGenerator extends Generator {
         default:  memo => name || memo.name,
         validate: required,
         when:     !skipGit && repo === undefined
-      },
-      {
-        name:    'packageManager',
-        message: 'package manager:',
-        type:    'list',
-        choices: ['yarn', 'npm'],
-        when:    !skipInstall && packageManager === undefined
       }
     ]);
 
