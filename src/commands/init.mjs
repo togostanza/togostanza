@@ -10,12 +10,12 @@ import { packagePath } from '../util.mjs';
 const command = new commander.Command()
   .command('init [name]')
   .description('create a new stanza repository')
-  .option('--license <license>', 'license')
-  .option('--owner <owner>', 'GitHub owner')
-  .option('--repo <repo>', 'GitHub repository name')
-  .option('--package-manager <yarn|npm>', 'package manager')
-  .option('--skip-install', 'skip package installation', false)
-  .option('--skip-git', 'skip Git configuration')
+  .option('--license <license>',          'license')
+  .option('--package-manager <npm|yarn>', 'package manager')
+  .option('--owner <owner>',              'GitHub owner')
+  .option('--repo <repo>',                'GitHub repository name')
+  .option('--skip-install',               'skip package installation')
+  .option('--skip-git',                   'skip Git configuration')
   .action(async (name, opts) => {
     await init(Object.assign({name}, opts));
   });
