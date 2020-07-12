@@ -1,57 +1,59 @@
 import Generator from 'yeoman-generator';
 import dedent from 'dedent';
+import pick from 'lodash.pick';
 
+import MemoryStorage from '../memory-storage.mjs';
 import { required } from '../validators.mjs';
 
 export default class RepositoryGenerator extends Generator {
   async prompting() {
-    const {name, license, packageManager, skipGit, owner, repo} = this.options;
+    const args    = pick(this.options, ['name', 'license', 'packageManager', 'skipGit', 'owner', 'repo']);
+    const storage = new MemoryStorage(args);
 
-    const answers = await this.prompt([
+    await this.prompt([
       {
         name:     'name',
         message:  'stanza repository name (used as a directory name):',
-        validate: required,
-        when:     name === undefined
+        validate: required
       },
       {
         name:    'license',
-        default: 'MIT',
-        when:    license === undefined
+        default: 'MIT'
       },
       {
         name:    'packageManager',
         message: 'package manager:',
         type:    'list',
-        choices: ['npm', 'yarn'],
-        when:    packageManager === undefined
+        choices: ['npm', 'yarn']
       },
       {
         name:     'owner',
         message:  'GitHub repository owner (https://github.com/OWNER/repo):',
         default:  await this.user.github.username(),
         validate: required,
-        when:     !skipGit && owner === undefined
+        when:     !args.skipGit
       },
       {
         name:     'repo',
         message:  'GitHub repository name (https://github.com/owner/REPO):',
-        default:  memo => name || memo.name,
+        default:  ({name}) => args.name || name,
         validate: required,
-        when:     !skipGit && repo === undefined
+        when:     !args.skipGit
       }
-    ]);
+    ], storage);
 
-    this.inputs = Object.assign({}, this.options, answers);
+    this.params = storage.data;
   }
 
   writing() {
-    const root   = this.destinationRoot(this.inputs.name);
-    const runner = commandRunner(this.inputs.packageManager);
+    const {name, packageManager} = this.params;
 
-    this.writeDestinationJSON('package.json', packageJSON(this.inputs));
+    const root   = this.destinationRoot(name);
+    const runner = commandRunner(packageManager);
 
-    this.renderTemplate('**/*', '.', Object.assign({}, this.inputs, {commandRunner: runner}), null, {
+    this.writeDestinationJSON('package.json', packageJSON(this.params));
+
+    this.renderTemplate('**/*', '.', Object.assign({}, this.params, {commandRunner: runner}), null, {
       processDestinationPath: (fullPath) => {
         const relativePath = fullPath.slice(root.length + 1);
         const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
@@ -62,7 +64,7 @@ export default class RepositoryGenerator extends Generator {
   }
 
   install() {
-    const {skipInstall, packageManager} = this.inputs;
+    const {skipInstall, packageManager} = this.params;
 
     if (skipInstall) { return; }
 
@@ -77,12 +79,12 @@ export default class RepositoryGenerator extends Generator {
     this._setupGit();
 
     this.log();
-    this.log(gettingStarted(this.inputs));
+    this.log(gettingStarted(this.params));
     this.log();
   }
 
   _setupGit() {
-    const {skipGit, owner, repo, name} = this.inputs;
+    const {skipGit, owner, repo, name} = this.params;
 
     if (skipGit) { return; }
 

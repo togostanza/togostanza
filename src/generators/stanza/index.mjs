@@ -3,31 +3,31 @@ import path from 'path';
 import Generator from 'yeoman-generator';
 import fecha from 'fecha';
 import lowerCase from 'lodash.lowercase';
+import pick from 'lodash.pick';
 import upperFirst from 'lodash.upperfirst';
 
+import MemoryStorage from '../memory-storage.mjs';
 import { required } from '../validators.mjs';
 
 export default class StanzaGenerator extends Generator {
   async prompting() {
-    const {id, label, definition, type, context, display, provider, license, author, address} = this.options;
+    const args    = pick(this.options, ['id', 'label', 'definition', 'type', 'context', 'display', 'provider', 'license', 'author', 'address']);
+    const storage = new MemoryStorage(args);
 
-    const answers = await this.prompt([
+    await this.prompt([
       {
         name:     'id',
         message:  'stanza id (<togostanza-ID></togostanza-ID>):',
-        validate: required,
-        when:     id === undefined
+        validate: required
       },
       {
         name:     'label',
-        default:  (memo) => upperFirst(lowerCase(id || memo.id)),
-        validate: required,
-        when:     label === undefined
+        default:  ({id}) => upperFirst(lowerCase(args.id || id)),
+        validate: required
       },
       {
         name:    'definition',
         message: 'definition (description):',
-        when:    definition === undefined
       },
       {
         name: 'type',
@@ -36,12 +36,11 @@ export default class StanzaGenerator extends Generator {
           'Stanza',
           'NanoStanza',
           {name: 'Other (free form)', value: null}
-        ],
-        when: type === undefined
+        ]
       },
       {
         name: 'type',
-        when: (memo) => type === undefined && memo.type === null,
+        when: ({type}) => type === null,
         askAnswered: true
       },
       {
@@ -53,12 +52,11 @@ export default class StanzaGenerator extends Generator {
           'Organism',
           'Phenotype',
           {name: 'Other (free form)', value: null}
-        ],
-        when: context === undefined
+        ]
       },
       {
         name: 'context',
-        when: (memo) => context === undefined && memo.context === null,
+        when: ({context}) => context === null,
         askAnswered: true
       },
       {
@@ -75,42 +73,37 @@ export default class StanzaGenerator extends Generator {
           'Image',
           {name: 'Other (free form)', value: null}
         ],
-        pageSize: Infinity,
-        when: display === undefined
+        pageSize: Infinity
       },
       {
         name: 'display',
-        when: (memo) => display === undefined && memo.display === null,
+        when: ({display}) => display === null,
         askAnswered: true
       },
       {
-        name: 'provider',
-        when: provider === undefined
+        name: 'provider'
       },
       {
         name:    'license',
-        default: 'MIT', // TODO read package.json?
-        when:    license === undefined
+        default: 'MIT' // TODO read package.json?
       },
       {
         name:    'author',
-        default: this.user.git.name(),
-        when:    author === undefined
+        default: this.user.git.name()
       },
       {
         name:    'address',
-        default: this.user.git.email(),
-        when:    address === undefined
+        default: this.user.git.email()
       }
-    ]);
+    ], storage);
 
-    this.inputs = Object.assign({}, this.options, answers);
+    this.params = storage.data;
   }
 
   writing() {
-    this.writeDestinationJSON(this._stanzaDestinationPath('metadata.json'), metadataJSON(this.inputs));
+    this.writeDestinationJSON(this._stanzaDestinationPath('metadata.json'), metadataJSON(this.params));
 
-    this.renderTemplate('**/*', '.', this.inputs, null, {
+    this.renderTemplate('**/*', '.', this.params, null, {
       processDestinationPath: (fullPath) => {
         const relativePath = fullPath.slice(this.destinationRoot().length + 1);
         const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
@@ -121,7 +114,7 @@ export default class StanzaGenerator extends Generator {
   }
 
   _stanzaDestinationPath(...paths) {
-    return path.join('stanzas', this.inputs.id, ...paths);
+    return path.join('stanzas', this.params.id, ...paths);
   }
 };
 
