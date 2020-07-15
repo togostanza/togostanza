@@ -31,13 +31,28 @@ export default class BundleStanzaModules extends BroccoliPlugin {
 
       plugins: [
         alias({
-          entries: {
-            '@': this.repositoryDir,
-
-            '-togostanza/stanza-element': path.join(packagePath, 'src', 'stanza-element.mjs'),
-            '-system/handlebars/runtime': resolveModule.sync('handlebars/runtime', {basedir: packagePath}),
-            '-system/lodash.debounce':    resolveModule.sync('lodash.debounce',    {basedir: packagePath})
-          }
+          entries: [
+            {
+              find: /^@\/stanzas\/([^/]+)$/,
+              replacement: './$1.js'
+            },
+            {
+              find: '@',
+              replacement: this.repositoryDir
+            },
+            {
+              find: '-togostanza/stanza-element',
+              replacement: path.join(packagePath, 'src', 'stanza-element.mjs')
+            },
+            {
+              find: '-system/handlebars/runtime',
+              replacement: resolveModule.sync('handlebars/runtime', {basedir: packagePath})
+            },
+            {
+              find: '-system/lodash.debounce',
+              replacement: resolveModule.sync('lodash.debounce', {basedir: packagePath})
+            }
+          ]
         }),
         resolve({
           customResolveOptions: {
@@ -46,6 +61,10 @@ export default class BundleStanzaModules extends BroccoliPlugin {
         }),
         commonjs()
       ],
+
+      external(id) {
+        return /^https?:\/\//.test(id)
+      },
 
       onwarn(warn) {
         // suppress circular dependency warnings
