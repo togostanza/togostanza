@@ -1,4 +1,4 @@
-import debounce from '~lodash.debounce';
+import debounce from '-system/lodash.debounce';
 
 import Stanza from './stanza.mjs';
 

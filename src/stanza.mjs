@@ -1,4 +1,4 @@
-import HandlebarsRuntime from '~handlebars/runtime';
+import HandlebarsRuntime from '-system/handlebars/runtime';
 
 export default class Stanza {
   grouping               = grouping;

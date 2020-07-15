@@ -32,9 +32,11 @@ export default class BundleStanzaModules extends BroccoliPlugin {
       plugins: [
         alias({
           entries: {
-            '~togostanza/stanza-element': path.join(packagePath, 'src', 'stanza-element.mjs'),
-            '~handlebars/runtime':        resolveModule.sync('handlebars/runtime', {basedir: packagePath}),
-            '~lodash.debounce':           resolveModule.sync('lodash.debounce',    {basedir: packagePath})
+            '@': this.repositoryDir,
+
+            '-togostanza/stanza-element': path.join(packagePath, 'src', 'stanza-element.mjs'),
+            '-system/handlebars/runtime': resolveModule.sync('handlebars/runtime', {basedir: packagePath}),
+            '-system/lodash.debounce':    resolveModule.sync('lodash.debounce',    {basedir: packagePath})
           }
         }),
         resolve({
