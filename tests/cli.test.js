@@ -69,9 +69,10 @@ describe('upgrade', () => {
 
       expect(pathExistsSync('hello/metadata.json')).toBe(true);
 
-      const {status} = togostanza('upgrade');
+      const {status, output} = togostanza('upgrade');
 
       expect(status).toBe(0);
+      expect(output).toMatchSnapshot();
 
       expect(pathExistsSync('hello/metadata.json')).toBe(false);
       expect(pathExistsSync('stanzas/hello/metadata.json')).toBe(true);

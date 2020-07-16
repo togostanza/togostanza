@@ -1,25 +1,30 @@
 import path from 'path';
-import { promisify } from 'util';
 
+import chalk from 'chalk';
 import commander from 'commander';
-import yeoman from 'yeoman-environment';
-
-import UpgradeGenerator from '../generators/upgrade/index.mjs';
-import { packagePath } from '../util.mjs';
+import fs from 'fs-extra';
+import walkSync from 'walk-sync';
 
 const command = new commander.Command()
   .command('upgrade')
   .description('upgrade stanza repository')
   .action(async (opts) => {
-    await upgrade(opts);
+    await moveStanzaIntoStanzas();
   });
 
 export default command;
 
-async function upgrade(opts) {
-  const env = yeoman.createEnv();
+async function moveStanzaIntoStanzas() {
+  const metadataPaths = walkSync('.', {
+    globs: ['*/metadata.json']
+  });
 
-  env.registerStub(UpgradeGenerator, 'togostanza:upgrade', path.join(packagePath, 'src', 'generators', 'upgrade', 'index.mjs'));
+  await Promise.all(metadataPaths.map(async (metadataPath) => {
+    const from = path.dirname(metadataPath);
+    const to   = path.join('stanzas', from);
 
-  await promisify(env.run.bind(env))('togostanza:upgrade', opts);
+    await fs.move(from, to);
+
+    console.log(chalk.green('move') + `  ${from} -> ${to}\n`);
+  }));
 }

@@ -242,3 +242,13 @@ jobs:
           publish_dir: ./dist
 "
 `;
+
+exports[`upgrade move stanza into stanzas/ 1`] = `
+Array [
+  null,
+  "move  hello -> stanzas/hello
+
+",
+  "",
+]
+`;
