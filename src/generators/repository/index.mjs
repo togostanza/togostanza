@@ -40,7 +40,7 @@ export default class RepositoryGenerator extends Generator {
       {
         name:    'owner',
         message: 'GitHub repository owner (https://github.com/OWNER/repo):',
-        default: await this.user.github.username(),
+        default: () => this.user.github.username(),
       },
       {
         name:    'repo',
