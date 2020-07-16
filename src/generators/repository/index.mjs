@@ -5,6 +5,17 @@ import pick from 'lodash.pick';
 import MemoryStorage from '../memory-storage.mjs';
 import { required } from '../validators.mjs';
 
+const packageManagers = {
+  npm: {
+    install: 'npm ci',
+    runner:  'npx'
+  },
+  yarn: {
+    install: 'yarn install --frozen-lockfile',
+    runner:  'yarn run'
+  }
+};
+
 export default class RepositoryGenerator extends Generator {
   async prompting() {
     const args    = pick(this.options, ['name', 'license', 'packageManager', 'skipGit', 'owner', 'repo']);
@@ -24,7 +35,7 @@ export default class RepositoryGenerator extends Generator {
         name:    'packageManager',
         message: 'package manager:',
         type:    'list',
-        choices: ['npm', 'yarn']
+        choices: Object.keys(packageManagers)
       },
       {
         name:     'owner',
@@ -48,12 +59,12 @@ export default class RepositoryGenerator extends Generator {
   writing() {
     const {name, packageManager} = this.params;
 
-    const root   = this.destinationRoot(name);
-    const runner = commandRunner(packageManager);
+    const root     = this.destinationRoot(name);
+    const commands = packageManagers[packageManager];
 
     this.writeDestinationJSON('package.json', packageJSON(this.params));
 
-    this.renderTemplate('**/*', '.', Object.assign({}, this.params, {commandRunner: runner}), null, {
+    this.renderTemplate('**/*', '.', Object.assign({}, this.params, {commands}), null, {
       processDestinationPath: (fullPath) => {
         const relativePath = fullPath.slice(root.length + 1);
         const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
@@ -122,7 +133,7 @@ function packageJSON({name, license, skipGit, owner, repo}) {
 }
 
 function gettingStarted({name, packageManager}) {
-  const runner = commandRunner(packageManager);
+  const {runner} = packageManagers[packageManager];
 
   return dedent`
     Getting Started
@@ -143,15 +154,4 @@ function gettingStarted({name, packageManager}) {
       $ cd ${name}
       $ ${runner} togostanza build
   `;
-}
-
-function commandRunner(packageManager) {
-  switch (packageManager) {
-    case 'yarn':
-      return 'yarn run';
-    case 'npm':
-      return 'npx';
-    default:
-      throw new Error(`unknown package manager: ${packageManager}`);
-  }
 }

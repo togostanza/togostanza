@@ -1,4 +1,4 @@
-name: github pages
+name: Publish GitHub Pages
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -18,14 +19,10 @@ jobs:
         with:
           node-version: '12'
 
-      - name: Install packages
-        run: <%= packageManager %> install
+      - run: <%= commands.install %>
+      - run: <%= commands.runner %> togostanza build
 
-      - name: Build
-        run: <%= commandRunner %> togostanza build
-
-      - name: Publish
-        uses: peaceiris/actions-gh-pages@v3
+      - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
