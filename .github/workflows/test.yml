@@ -18,8 +18,5 @@ jobs:
         with:
           node-version: '12'
 
-      - name: Install packages
-        run: npm install
-
-      - name: Run tests
-        run: npm test
+      - run: npm ci
+      - run: npm test
