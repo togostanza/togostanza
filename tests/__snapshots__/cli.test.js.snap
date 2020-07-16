@@ -1,0 +1,183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`init non-interactive ({"packageManager": "npm"}) 1`] = `
+Array [
+  null,
+  "",
+  "   create package.json
+   create README.md
+   create .gitignore
+   create .github/workflows/publish.yml
+Skipping install command: npm install --cache-min 86400
+
+
+I'm all done. Just run npm install to install the required dependencies.
+
+
+
+Getting Started
+---------------
+
+Create a new stanza:
+
+  $ cd some-repo
+  $ npx togostanza generate stanza
+
+Serve the repository locally:
+
+  $ cd some-repo
+  $ npx togostanza serve
+
+Build stanzas for deployment:
+
+  $ cd some-repo
+  $ npx togostanza build
+
+",
+]
+`;
+
+exports[`init non-interactive ({"packageManager": "npm"}) 2`] = `
+"# some-repo
+"
+`;
+
+exports[`init non-interactive ({"packageManager": "npm"}) 3`] = `
+"{
+  \\"name\\": \\"some-repo\\",
+  \\"version\\": \\"0.0.1\\",
+  \\"license\\": \\"MIT\\",
+  \\"repository\\": \\"ursm/some-repo\\",
+  \\"dependencies\\": {
+    \\"togostanza\\": \\"togostanza/togostanza-js\\"
+  },
+  \\"engines\\": {
+    \\"node\\": \\">=12\\"
+  },
+  \\"private\\": true
+}
+"
+`;
+
+exports[`init non-interactive ({"packageManager": "npm"}) 4`] = `
+"name: Publish GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - run: npm ci
+      - run: npx togostanza build
+
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: \${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+"
+`;
+
+exports[`init non-interactive ({"packageManager": "yarn"}) 1`] = `
+Array [
+  null,
+  "",
+  "   create package.json
+   create README.md
+   create .gitignore
+   create .github/workflows/publish.yml
+Skipping install command: yarn install
+
+
+I'm all done. Just run yarn install to install the required dependencies.
+
+
+
+Getting Started
+---------------
+
+Create a new stanza:
+
+  $ cd some-repo
+  $ yarn run togostanza generate stanza
+
+Serve the repository locally:
+
+  $ cd some-repo
+  $ yarn run togostanza serve
+
+Build stanzas for deployment:
+
+  $ cd some-repo
+  $ yarn run togostanza build
+
+",
+]
+`;
+
+exports[`init non-interactive ({"packageManager": "yarn"}) 2`] = `
+"# some-repo
+"
+`;
+
+exports[`init non-interactive ({"packageManager": "yarn"}) 3`] = `
+"{
+  \\"name\\": \\"some-repo\\",
+  \\"version\\": \\"0.0.1\\",
+  \\"license\\": \\"MIT\\",
+  \\"repository\\": \\"ursm/some-repo\\",
+  \\"dependencies\\": {
+    \\"togostanza\\": \\"togostanza/togostanza-js\\"
+  },
+  \\"engines\\": {
+    \\"node\\": \\">=12\\"
+  },
+  \\"private\\": true
+}
+"
+`;
+
+exports[`init non-interactive ({"packageManager": "yarn"}) 4`] = `
+"name: Publish GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+
+      - run: yarn install --frozen-lockfile
+      - run: yarn run togostanza build
+
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: \${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+"
+`;

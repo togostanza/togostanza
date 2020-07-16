@@ -38,18 +38,15 @@ export default class RepositoryGenerator extends Generator {
         choices: Object.keys(packageManagers)
       },
       {
-        name:     'owner',
-        message:  'GitHub repository owner (https://github.com/OWNER/repo):',
-        default:  await this.user.github.username(),
-        validate: required,
-        when:     !args.skipGit
+        name:    'owner',
+        message: 'GitHub repository owner (https://github.com/OWNER/repo):',
+        default: await this.user.github.username(),
       },
       {
-        name:     'repo',
-        message:  'GitHub repository name (https://github.com/owner/REPO):',
-        default:  ({name}) => args.name || name,
-        validate: required,
-        when:     !args.skipGit
+        name:    'repo',
+        message: 'GitHub repository name (https://github.com/owner/REPO):',
+        default: ({name})  => args.name  || name,
+        when:    ({owner}) => args.owner || owner
       }
     ], storage);
 
@@ -95,33 +92,28 @@ export default class RepositoryGenerator extends Generator {
   }
 
   _setupGit() {
-    const {skipGit, owner, repo, name} = this.params;
+    const {skipGit, name, owner, repo} = this.params;
 
     if (skipGit) { return; }
 
     const root = this.destinationRoot();
 
     this.spawnCommandSync('git', ['-C', root, 'init']);
-    this.spawnCommandSync('git', ['-C', root, 'remote', 'add', 'origin', `https://github.com/${owner}/${repo}.git`]);
     this.spawnCommandSync('git', ['-C', root, 'add', '--all']);
     this.spawnCommandSync('git', ['-C', root, 'commit', '--message', `Initialize new stanza repository: ${name}`]);
+
+    if (owner && repo) {
+      this.spawnCommandSync('git', ['-C', root, 'remote', 'add', 'origin', `https://github.com/${owner}/${repo}.git`]);
+    }
   }
 };
 
-function packageJSON({name, license, skipGit, owner, repo}) {
+function packageJSON({name, license, owner, repo}) {
   return {
     name,
     version: '0.0.1',
     license,
-    repository: skipGit ? '' : `${owner}/${repo}`,
-    scripts: {
-      start:        'togostanza serve --port $npm_package_config_port',
-      build:        'togostanza build',
-      'new-stanza': 'togostanza new-stanza'
-    },
-    config: {
-      port: 8080
-    },
+    repository: owner && repo ? `${owner}/${repo}` : '',
     dependencies: {
       togostanza: 'togostanza/togostanza-js'
     },
