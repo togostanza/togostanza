@@ -39,7 +39,9 @@ describe('init', () => {
 function togostanza(...args) {
   const bin = path.resolve(__dirname, '..', 'bin', 'togostanza.mjs');
 
-  return spawnSync(bin, args, {encoding: 'utf8', timeout: 3000});
+  // --no-warnings is necessary to avoid including ESM warnings in the snapshot, which change with each test run
+  // (not required in Node.js 14)
+  return spawnSync(process.argv0, ['--no-warnings', bin, ...args], {encoding: 'utf8', timeout: 3000});
 }
 
 function withinTmpdir(cb) {
