@@ -18,10 +18,10 @@ describe('init', () => {
     withinTmpdir(() => {
       const {status, output} = togostanza(
         'init', 'some-repo',
-        '--license', 'MIT',
+        '--license',         'MIT',
         '--package-manager', packageManager,
-        '--owner', 'ursm',
-        '--repo', 'some-repo',
+        '--owner',           'ursm',
+        '--repo',            'some-repo',
         '--skip-install',
         '--skip-git'
       );
@@ -32,6 +32,32 @@ describe('init', () => {
       expect(readFileSync('some-repo/README.md', 'utf8')).toMatchSnapshot();
       expect(readFileSync('some-repo/package.json', 'utf8')).toMatchSnapshot();
       expect(readFileSync('some-repo/.github/workflows/publish.yml', 'utf8')).toMatchSnapshot();
+    });
+  });
+});
+
+describe('generate stanza', () => {
+  test('non-interactive', () => {
+    withinTmpdir(() => {
+      const {status, output} = togostanza(
+        'generate', 'stanza', 'hello',
+        '--label',      'LABEL',
+        '--definition', 'DEFINITION',
+        '--type',       'TYPE',
+        '--context',    'CONTEXT',
+        '--display',    'DISPLAY',
+        '--provider',   'PROVIDER',
+        '--license',    'LICENSE',
+        '--author',     'AUTHOR',
+        '--address',    'ADDRESS'
+      );
+
+      expect(status).toBe(0)
+      expect(output).toMatchSnapshot();
+
+      expect(readFileSync('stanzas/hello/metadata.json', 'utf8')).toMatchSnapshot();
+      expect(readFileSync('stanzas/hello/index.js', 'utf8')).toMatchSnapshot();
+      expect(readFileSync('stanzas/hello/templates/stanza.html.hbs', 'utf8')).toMatchSnapshot();
     });
   });
 });

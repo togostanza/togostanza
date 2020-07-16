@@ -1,5 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`generate stanza non-interactive 1`] = `
+Array [
+  null,
+  "",
+  "   create stanzas/hello/metadata.json
+   create stanzas/hello/index.js
+   create stanzas/hello/templates/stanza.html.hbs
+",
+]
+`;
+
+exports[`generate stanza non-interactive 2`] = `
+"{
+  \\"@context\\": {
+    \\"stanza\\": \\"http://togostanza.org/resource/stanza#\\"
+  },
+  \\"@id\\": \\"hello\\",
+  \\"stanza:label\\": \\"LABEL\\",
+  \\"stanza:definition\\": \\"DEFINITION\\",
+  \\"stanza:parameter\\": [
+    {
+      \\"stanza:key\\": \\"say-to\\",
+      \\"stanza:example\\": \\"world\\",
+      \\"stanza:description\\": \\"who to say hello to\\",
+      \\"stanza:required\\": false
+    }
+  ],
+  \\"stanza:usage\\": \\"<togostanza-hello></togostanza-hello>\\",
+  \\"stanza:type\\": \\"TYPE\\",
+  \\"stanza:context\\": \\"CONTEXT\\",
+  \\"stanza:display\\": \\"DISPLAY\\",
+  \\"stanza:provider\\": \\"PROVIDER\\",
+  \\"stanza:license\\": \\"LICENSE\\",
+  \\"stanza:author\\": \\"AUTHOR\\",
+  \\"stanza:address\\": \\"ADDRESS\\",
+  \\"stanza:contributor\\": [],
+  \\"stanza:created\\": \\"2020-07-16\\",
+  \\"stanza:updated\\": \\"2020-07-16\\"
+}
+"
+`;
+
+exports[`generate stanza non-interactive 3`] = `
+"Stanza((stanza, params) => {
+  const sayTo = params['say-to'] || 'world';
+
+  stanza.render({
+    template: 'stanza.html',
+    parameters: {
+      greeting: \`Hello, \${sayTo}!\`
+    }
+  });
+});
+"
+`;
+
+exports[`generate stanza non-interactive 4`] = `
+"<p>{{greeting}}</p>
+"
+`;
+
 exports[`init non-interactive ({"packageManager": "npm"}) 1`] = `
 Array [
   null,
