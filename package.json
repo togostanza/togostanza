@@ -6,6 +6,9 @@
   "bin": {
     "togostanza": "./bin/togostanza.mjs"
   },
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "@rollup/plugin-alias": "^3.1.1",
     "@rollup/plugin-commonjs": "^13.0.0",
@@ -34,5 +37,11 @@
     "walk-sync": "^2.1.0",
     "yeoman-environment": "^2.10.3",
     "yeoman-generator": "^4.11.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "babel-jest": "^26.1.0",
+    "jest": "^26.1.0"
   }
 }
