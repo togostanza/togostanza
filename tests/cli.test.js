@@ -16,7 +16,7 @@ describe('init', () => {
     {packageManager: 'yarn'}
   ])('non-interactive (%p)', ({packageManager}) => {
     withinTmpdir(() => {
-      const {output} = togostanza(
+      const {status, output} = togostanza(
         'init', 'some-repo',
         '--license', 'MIT',
         '--package-manager', packageManager,
@@ -26,7 +26,9 @@ describe('init', () => {
         '--skip-git'
       );
 
+      expect(status).toBe(0);
       expect(output).toMatchSnapshot();
+
       expect(readFileSync('some-repo/README.md', 'utf8')).toMatchSnapshot();
       expect(readFileSync('some-repo/package.json', 'utf8')).toMatchSnapshot();
       expect(readFileSync('some-repo/.github/workflows/publish.yml', 'utf8')).toMatchSnapshot();
