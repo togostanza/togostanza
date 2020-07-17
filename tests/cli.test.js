@@ -67,15 +67,16 @@ describe('upgrade', () => {
     withinTmpdir((here) => {
       copySync(path.resolve(__dirname, 'fixtures/upgrade/move-stanza-into-stanzas'), here);
 
-      expect(pathExistsSync('hello/metadata.json')).toBe(true);
+      expect(pathExistsSync('hello')).toBe(true);
+      expect(pathExistsSync('stanzas/hello')).toBe(false);
 
       const {status, output} = togostanza('upgrade');
 
       expect(status).toBe(0);
       expect(output).toMatchSnapshot();
 
-      expect(pathExistsSync('hello/metadata.json')).toBe(false);
-      expect(pathExistsSync('stanzas/hello/metadata.json')).toBe(true);
+      expect(pathExistsSync('hello')).toBe(false);
+      expect(pathExistsSync('stanzas/hello')).toBe(true);
     });
   });
 });
