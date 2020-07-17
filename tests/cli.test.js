@@ -49,7 +49,8 @@ describe('generate stanza', () => {
         '--provider',   'PROVIDER',
         '--license',    'LICENSE',
         '--author',     'AUTHOR',
-        '--address',    'ADDRESS'
+        '--address',    'ADDRESS',
+        '--timestamp',  '2020-10-05'
       );
 
       expect(status).toBe(0);

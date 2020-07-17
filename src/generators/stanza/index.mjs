@@ -11,7 +11,7 @@ import { required } from '../validators.mjs';
 
 export default class StanzaGenerator extends Generator {
   async prompting() {
-    const args    = pick(this.options, ['id', 'label', 'definition', 'type', 'context', 'display', 'provider', 'license', 'author', 'address']);
+    const args    = pick(this.options, ['id', 'label', 'definition', 'type', 'context', 'display', 'provider', 'license', 'author', 'address', 'timestamp']);
     const storage = new MemoryStorage(args);
 
     await this.prompt([
@@ -118,8 +118,8 @@ export default class StanzaGenerator extends Generator {
   }
 };
 
-function metadataJSON({id, label, definition, type, context, display, provider, license, author, address}) {
-  const today = fecha.format(new Date(), 'isoDate');
+function metadataJSON({id, label, definition, type, context, display, provider, license, author, address, timestamp}) {
+  const today = fecha.format(timestamp, 'isoDate');
 
   return {
     '@context': {

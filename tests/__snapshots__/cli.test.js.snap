@@ -36,8 +36,8 @@ exports[`generate stanza non-interactive 2`] = `
   \\"stanza:author\\": \\"AUTHOR\\",
   \\"stanza:address\\": \\"ADDRESS\\",
   \\"stanza:contributor\\": [],
-  \\"stanza:created\\": \\"2020-07-16\\",
-  \\"stanza:updated\\": \\"2020-07-16\\"
+  \\"stanza:created\\": \\"2020-10-05\\",
+  \\"stanza:updated\\": \\"2020-10-05\\"
 }
 "
 `;

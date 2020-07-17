@@ -19,6 +19,7 @@ const command = new commander.Command()
   .option('--license <license>',       'license')
   .option('--author <author>',         'author')
   .option('--address <address>',       'address')
+  .option('--timestamp <date>',        'timestamp', s => new Date(s), new Date())
   .action(async (id, opts) => {
     await generateStanza(Object.assign({id}, opts));
   });
