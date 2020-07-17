@@ -1,7 +1,6 @@
 import path from 'path';
 
 import Generator from 'yeoman-generator';
-import fecha from 'fecha';
 import lowerCase from 'lodash.lowercase';
 import pick from 'lodash.pick';
 import upperFirst from 'lodash.upperfirst';
@@ -119,8 +118,6 @@ export default class StanzaGenerator extends Generator {
 };
 
 function metadataJSON({id, label, definition, type, context, display, provider, license, author, address, timestamp}) {
-  const today = fecha.format(timestamp, 'isoDate');
-
   return {
     '@context': {
       stanza: 'http://togostanza.org/resource/stanza#'
@@ -145,7 +142,7 @@ function metadataJSON({id, label, definition, type, context, display, provider, 
     'stanza:author': author,
     'stanza:address': address,
     'stanza:contributor': [],
-    'stanza:created': today,
-    'stanza:updated': today
+    'stanza:created': timestamp,
+    'stanza:updated': timestamp
   };
 }

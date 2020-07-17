@@ -2,6 +2,7 @@ import path from 'path';
 import { promisify } from 'util';
 
 import commander from 'commander';
+import fecha from 'fecha';
 import yeoman from 'yeoman-environment';
 
 import StanzaGenerator from '../../generators/stanza/index.mjs';
@@ -19,7 +20,7 @@ const command = new commander.Command()
   .option('--license <license>',       'license')
   .option('--author <author>',         'author')
   .option('--address <address>',       'address')
-  .option('--timestamp <date>',        'timestamp', s => new Date(s), new Date())
+  .option('--timestamp <date>',        'timestamp', fecha.format(new Date(), 'isoDate'))
   .action(async (id, opts) => {
     await generateStanza(Object.assign({id}, opts));
   });
