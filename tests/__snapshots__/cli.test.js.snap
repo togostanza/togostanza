@@ -12,7 +12,21 @@ Array [
 `;
 
 exports[`generate stanza non-interactive 2`] = `
-"{
+Object {
+  "stanzas": Object {
+    "hello": Object {
+      "index.js": "Stanza((stanza, params) => {
+  const sayTo = params['say-to'] || 'world';
+
+  stanza.render({
+    template: 'stanza.html',
+    parameters: {
+      greeting: \`Hello, \${sayTo}!\`
+    }
+  });
+});
+",
+      "metadata.json": "{
   \\"@context\\": {
     \\"stanza\\": \\"http://togostanza.org/resource/stanza#\\"
   },
@@ -39,26 +53,14 @@ exports[`generate stanza non-interactive 2`] = `
   \\"stanza:created\\": \\"2020-10-05\\",
   \\"stanza:updated\\": \\"2020-10-05\\"
 }
-"
-`;
-
-exports[`generate stanza non-interactive 3`] = `
-"Stanza((stanza, params) => {
-  const sayTo = params['say-to'] || 'world';
-
-  stanza.render({
-    template: 'stanza.html',
-    parameters: {
-      greeting: \`Hello, \${sayTo}!\`
-    }
-  });
-});
-"
-`;
-
-exports[`generate stanza non-interactive 4`] = `
-"<p>{{greeting}}</p>
-"
+",
+      "templates": Object {
+        "stanza.html.hbs": "<p>{{greeting}}</p>
+",
+      },
+    },
+  },
+}
 `;
 
 exports[`init non-interactive ({"packageManager": "npm"}) 1`] = `
@@ -99,29 +101,11 @@ Build stanzas for deployment:
 `;
 
 exports[`init non-interactive ({"packageManager": "npm"}) 2`] = `
-"# some-repo
-"
-`;
-
-exports[`init non-interactive ({"packageManager": "npm"}) 3`] = `
-"{
-  \\"name\\": \\"some-repo\\",
-  \\"version\\": \\"0.0.1\\",
-  \\"license\\": \\"MIT\\",
-  \\"repository\\": \\"ursm/some-repo\\",
-  \\"dependencies\\": {
-    \\"togostanza\\": \\"togostanza/togostanza-js\\"
-  },
-  \\"engines\\": {
-    \\"node\\": \\">=12\\"
-  },
-  \\"private\\": true
-}
-"
-`;
-
-exports[`init non-interactive ({"packageManager": "npm"}) 4`] = `
-"name: Publish GitHub Pages
+Object {
+  "some-repo": Object {
+    ".github": Object {
+      "workflows": Object {
+        "publish.yml": "name: Publish GitHub Pages
 
 on:
   push:
@@ -149,7 +133,30 @@ jobs:
         with:
           github_token: \${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-"
+",
+      },
+    },
+    ".gitignore": "/dist/
+/node_modules/
+",
+    "README.md": "# some-repo
+",
+    "package.json": "{
+  \\"name\\": \\"some-repo\\",
+  \\"version\\": \\"0.0.1\\",
+  \\"license\\": \\"MIT\\",
+  \\"repository\\": \\"ursm/some-repo\\",
+  \\"dependencies\\": {
+    \\"togostanza\\": \\"togostanza/togostanza-js\\"
+  },
+  \\"engines\\": {
+    \\"node\\": \\">=12\\"
+  },
+  \\"private\\": true
+}
+",
+  },
+}
 `;
 
 exports[`init non-interactive ({"packageManager": "yarn"}) 1`] = `
@@ -190,29 +197,11 @@ Build stanzas for deployment:
 `;
 
 exports[`init non-interactive ({"packageManager": "yarn"}) 2`] = `
-"# some-repo
-"
-`;
-
-exports[`init non-interactive ({"packageManager": "yarn"}) 3`] = `
-"{
-  \\"name\\": \\"some-repo\\",
-  \\"version\\": \\"0.0.1\\",
-  \\"license\\": \\"MIT\\",
-  \\"repository\\": \\"ursm/some-repo\\",
-  \\"dependencies\\": {
-    \\"togostanza\\": \\"togostanza/togostanza-js\\"
-  },
-  \\"engines\\": {
-    \\"node\\": \\">=12\\"
-  },
-  \\"private\\": true
-}
-"
-`;
-
-exports[`init non-interactive ({"packageManager": "yarn"}) 4`] = `
-"name: Publish GitHub Pages
+Object {
+  "some-repo": Object {
+    ".github": Object {
+      "workflows": Object {
+        "publish.yml": "name: Publish GitHub Pages
 
 on:
   push:
@@ -240,7 +229,30 @@ jobs:
         with:
           github_token: \${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-"
+",
+      },
+    },
+    ".gitignore": "/dist/
+/node_modules/
+",
+    "README.md": "# some-repo
+",
+    "package.json": "{
+  \\"name\\": \\"some-repo\\",
+  \\"version\\": \\"0.0.1\\",
+  \\"license\\": \\"MIT\\",
+  \\"repository\\": \\"ursm/some-repo\\",
+  \\"dependencies\\": {
+    \\"togostanza\\": \\"togostanza/togostanza-js\\"
+  },
+  \\"engines\\": {
+    \\"node\\": \\">=12\\"
+  },
+  \\"private\\": true
+}
+",
+  },
+}
 `;
 
 exports[`upgrade move stanza into stanzas/ 1`] = `
@@ -251,4 +263,14 @@ Array [
 ",
   "",
 ]
+`;
+
+exports[`upgrade move stanza into stanzas/ 2`] = `
+Object {
+  "stanzas": Object {
+    "hello": Object {
+      "metadata.json": "{}",
+    },
+  },
+}
 `;

@@ -2,6 +2,7 @@ import os from 'os';
 import path from 'path';
 import { spawnSync } from 'child_process';
 
+import fixturify from 'fixturify';
 import { copySync, mkdtempSync, pathExistsSync, readFileSync, removeSync } from 'fs-extra';
 
 test('--help', () => {
@@ -28,10 +29,7 @@ describe('init', () => {
 
       expect(status).toBe(0);
       expect(output).toMatchSnapshot();
-
-      expect(readFileSync('some-repo/README.md', 'utf8')).toMatchSnapshot();
-      expect(readFileSync('some-repo/package.json', 'utf8')).toMatchSnapshot();
-      expect(readFileSync('some-repo/.github/workflows/publish.yml', 'utf8')).toMatchSnapshot();
+      expect(fixturify.readSync('.')).toMatchSnapshot();
     });
   });
 });
@@ -55,10 +53,7 @@ describe('generate stanza', () => {
 
       expect(status).toBe(0);
       expect(output).toMatchSnapshot();
-
-      expect(readFileSync('stanzas/hello/metadata.json', 'utf8')).toMatchSnapshot();
-      expect(readFileSync('stanzas/hello/index.js', 'utf8')).toMatchSnapshot();
-      expect(readFileSync('stanzas/hello/templates/stanza.html.hbs', 'utf8')).toMatchSnapshot();
+      expect(fixturify.readSync('.')).toMatchSnapshot();
     });
   });
 });
@@ -66,18 +61,17 @@ describe('generate stanza', () => {
 describe('upgrade', () => {
   test('move stanza into stanzas/', () => {
     withinTmpdir((here) => {
-      copySync(path.resolve(__dirname, 'fixtures/upgrade/move-stanza-into-stanzas'), here);
-
-      expect(pathExistsSync('hello')).toBe(true);
-      expect(pathExistsSync('stanzas/hello')).toBe(false);
+      fixturify.writeSync('.', {
+        hello: {
+          'metadata.json': '{}'
+        }
+      });
 
       const {status, output} = togostanza('upgrade');
 
       expect(status).toBe(0);
       expect(output).toMatchSnapshot();
-
-      expect(pathExistsSync('hello')).toBe(false);
-      expect(pathExistsSync('stanzas/hello')).toBe(true);
+      expect(fixturify.readSync('.')).toMatchSnapshot();
     });
   });
 });
