@@ -3,7 +3,7 @@ import path from 'path';
 import { spawnSync } from 'child_process';
 
 import fixturify from 'fixturify';
-import { copySync, mkdtempSync, pathExistsSync, readFileSync, removeSync } from 'fs-extra';
+import { mkdtempSync, removeSync } from 'fs-extra';
 
 test('--help', () => {
   const {stdout} = togostanza('--help');
