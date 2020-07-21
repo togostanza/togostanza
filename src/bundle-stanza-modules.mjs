@@ -34,7 +34,7 @@ export default class BundleStanzaModules extends BroccoliPlugin {
           entries: [
             {
               find: /^@\/stanzas\/([^/]+)$/,
-              replacement: './$1.js'
+              replacement: '../$1.js'
             },
             {
               find: '@',
