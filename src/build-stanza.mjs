@@ -61,9 +61,9 @@ export default class BuildStanza extends BroccoliPlugin {
 
     this.output.writeFileSync(`${stanza.id}.js`, templates.entrypoint({
       metadata,
-      script:    await stanza.script,
-      templates: await stanza.templates,
-      outer:     await stanza.outer
+      scriptPath: stanza.scriptPath,
+      templates:  await stanza.templates,
+      outer:      await stanza.outer
     }));
 
     this.output.writeFileSync(`${stanza.id}.html`, templates.help({metadata}));
@@ -79,14 +79,11 @@ export default class BuildStanza extends BroccoliPlugin {
       const stanzaDir = path.dirname(metadataPath);
 
       return {
-        id: path.basename(stanzaDir),
+        id:         path.basename(stanzaDir),
+        scriptPath: path.join(stanzaDir, 'index.js'),
 
         get metadata() {
           return fs.readFile(metadataPath).then(JSON.parse);
-        },
-
-        get script() {
-          return fs.readFile(path.join(stanzaDir, 'index.js'), 'utf8');
         },
 
         get templates() {

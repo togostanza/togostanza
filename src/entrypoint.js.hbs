@@ -1,16 +1,5 @@
-let main = null;
-
-function Stanza(_main) {
-  main = _main;
-}
-
-{{script}}
-
-if (!main) {
-  throw new Error('Stanza() is not called');
-}
-
 import { defineStanzaElement } from '-togostanza/stanza-element';
+import main from {{to-json scriptPath}};
 
 const metadata = {{to-json metadata}};
 const outer    = {{to-json outer}};
