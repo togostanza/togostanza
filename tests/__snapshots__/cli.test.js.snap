@@ -36,7 +36,7 @@ exports[`generate stanza non-interactive 2`] = `
 Object {
   "stanzas": Object {
     "hello": Object {
-      "index.js": "Stanza((stanza, params) => {
+      "index.js": "export default function(stanza, params) {
   const sayTo = params['say-to'] || 'world';
 
   stanza.render({
@@ -45,7 +45,7 @@ Object {
       greeting: \`Hello, \${sayTo}!\`
     }
   });
-});
+}
 ",
       "lib": Object {},
       "metadata.json": "{

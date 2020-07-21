@@ -1,4 +1,4 @@
-Stanza((stanza, params) => {
+export default function(stanza, params) {
   const sayTo = params['say-to'] || 'world';
 
   stanza.render({
@@ -7,4 +7,4 @@ Stanza((stanza, params) => {
       greeting: `Hello, ${sayTo}!`
     }
   });
-});
+}
