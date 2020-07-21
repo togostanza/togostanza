@@ -64,7 +64,6 @@ export default class BuildStanza extends BroccoliPlugin {
 
     this.output.writeFileSync(`${stanza.id}.js`, templates.entrypoint({
       metadata,
-      scriptPath: stanza.scriptPath,
       templates:  await stanza.templates,
       outer:      await stanza.outer
     }));

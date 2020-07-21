@@ -54,9 +54,13 @@ export function composeTree(repositoryDir) {
     }
   });
 
-  return new MergeTrees([
+  const mergedTree = new MergeTrees([
     buildTree,
     bundleTree,
     css
   ], {overwrite: true});
+
+  return new Funnel(mergedTree, {
+    exclude: ['*/index.js']
+  });
 }
