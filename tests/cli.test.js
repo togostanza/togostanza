@@ -138,6 +138,7 @@ function togostanza(args, opts = {}) {
     encoding: 'utf8',
     timeout: 3000,
     env: {
+      ...process.env,
       FORCE_COLOR: '0'
     },
     ...opts
