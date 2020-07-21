@@ -1,5 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`build simple 1`] = `
+Array [
+  null,
+  "",
+  "   create stanzas/hello/metadata.json
+   create stanzas/hello/index.js
+   create stanzas/hello/templates/stanza.html.hbs
+",
+]
+`;
+
+exports[`build simple 2`] = `
+Array [
+  "hello.html",
+  "hello.js",
+  "hello.js.map",
+  "index.html",
+  "togostanza.css",
+]
+`;
+
 exports[`generate stanza non-interactive 1`] = `
 Array [
   null,

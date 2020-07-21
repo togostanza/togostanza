@@ -3,10 +3,11 @@ import path from 'path';
 import { spawnSync } from 'child_process';
 
 import fixturify from 'fixturify';
-import { mkdtempSync, removeSync } from 'fs-extra';
+import fs from 'fs-extra';
+import walkSync from 'walk-sync';
 
 test('--help', () => {
-  const {stdout, status} = togostanza('--help');
+  const {stdout, status} = togostanza(['--help']);
 
   expect(stdout).toContain('Usage: togostanza [options] [command]');
   expect(status).toBe(0);
@@ -18,7 +19,7 @@ describe('init', () => {
     {packageManager: 'yarn'}
   ])('non-interactive (%p)', ({packageManager}) => {
     withinTmpdir(() => {
-      const {output, status} = togostanza(
+      const {output, status} = togostanza([
         'init', 'some-repo',
         '--license',         'MIT',
         '--package-manager', packageManager,
@@ -26,7 +27,7 @@ describe('init', () => {
         '--repo',            'some-repo',
         '--skip-install',
         '--skip-git'
-      );
+      ]);
 
       expect(output).toMatchSnapshot();
       expect(fixturify.readSync('.')).toMatchSnapshot();
@@ -38,7 +39,7 @@ describe('init', () => {
 describe('generate stanza', () => {
   test('non-interactive', () => {
     withinTmpdir(() => {
-      const {output, status} = togostanza(
+      const {output, status} = togostanza([
         'generate', 'stanza', 'hello',
         '--label',      'LABEL',
         '--definition', 'DEFINITION',
@@ -50,7 +51,7 @@ describe('generate stanza', () => {
         '--author',     'AUTHOR',
         '--address',    'ADDRESS',
         '--timestamp',  '2020-10-05'
-      );
+      ]);
 
       expect(output).toMatchSnapshot();
       expect(fixturify.readSync('.')).toMatchSnapshot();
@@ -68,7 +69,7 @@ describe('upgrade', () => {
         }
       });
 
-      const {output, status} = togostanza('upgrade');
+      const {output, status} = togostanza(['upgrade']);
 
       expect(output).toMatchSnapshot();
       expect(fixturify.readSync('.')).toMatchSnapshot();
@@ -77,7 +78,58 @@ describe('upgrade', () => {
   });
 });
 
-function togostanza(...args) {
+describe('build', () => {
+  test('simple', () => {
+    withinTmpdir(() => {
+      const init = togostanza([
+        'init', 'some-repo',
+        '--license',         'MIT',
+        '--package-manager', 'yarn',
+        '--owner',           'ursm',
+        '--repo',            'some-repo',
+        '--skip-git',
+      ], {
+        timeout: 30_000
+      });
+
+      expect(init.stderr).toContain('Getting Started');
+      expect(init.status).toBe(0);
+
+      process.chdir('some-repo');
+
+      const generateStanza = togostanza([
+        'generate', 'stanza', 'hello',
+        '--label',      'LABEL',
+        '--definition', 'DEFINITION',
+        '--type',       'TYPE',
+        '--context',    'CONTEXT',
+        '--display',    'DISPLAY',
+        '--provider',   'PROVIDER',
+        '--license',    'LICENSE',
+        '--author',     'AUTHOR',
+        '--address',    'ADDRESS',
+        '--timestamp',  '2020-10-05'
+      ]);
+
+      expect(generateStanza.output).toMatchSnapshot();
+      expect(generateStanza.status).toBe(0);
+
+      const build = togostanza(['build']);
+
+      expect(build.status).toBe(0);
+
+      expect(walkSync('dist', {
+        ignore: [
+          'node_modules'
+        ]
+      })).toMatchSnapshot();
+
+      expect(fs.readFileSync('dist/hello.js', 'utf8')).toContain('Stanza(');
+    });
+  });
+});
+
+function togostanza(args, opts = {}) {
   const bin = path.resolve(__dirname, '../bin/togostanza.mjs');
 
   // --no-warnings is necessary to avoid including ESM warnings in the snapshot, which change with each test run
@@ -87,12 +139,13 @@ function togostanza(...args) {
     timeout: 3000,
     env: {
       FORCE_COLOR: '0'
-    }
+    },
+    ...opts
   });
 }
 
 function withinTmpdir(cb) {
-  const tmp = mkdtempSync(path.join(os.tmpdir(), 'togostanza-'));
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'togostanza-'));
 
   try {
     const cwd = process.cwd();
@@ -105,6 +158,6 @@ function withinTmpdir(cb) {
       process.chdir(cwd);
     }
   } finally {
-    removeSync(tmp);
+    fs.removeSync(tmp);
   }
 }
