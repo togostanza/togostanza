@@ -26,6 +26,7 @@ Object {
   });
 });
 ",
+      "lib": Object {},
       "metadata.json": "{
   \\"@context\\": {
     \\"stanza\\": \\"http://togostanza.org/resource/stanza#\\"
@@ -141,6 +142,7 @@ jobs:
 ",
     "README.md": "# some-repo
 ",
+    "lib": Object {},
     "package.json": "{
   \\"name\\": \\"some-repo\\",
   \\"version\\": \\"0.0.1\\",
@@ -237,6 +239,7 @@ jobs:
 ",
     "README.md": "# some-repo
 ",
+    "lib": Object {},
     "package.json": "{
   \\"name\\": \\"some-repo\\",
   \\"version\\": \\"0.0.1\\",

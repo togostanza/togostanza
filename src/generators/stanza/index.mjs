@@ -1,6 +1,7 @@
 import path from 'path';
 
 import Generator from 'yeoman-generator';
+import fs from 'fs-extra';
 import lowerCase from 'lodash.lowercase';
 import pick from 'lodash.pick';
 import upperFirst from 'lodash.upperfirst';
@@ -110,6 +111,10 @@ export default class StanzaGenerator extends Generator {
         return this.destinationPath(this._stanzaDestinationPath(dotted));
       }
     });
+  }
+
+  async end() {
+    await fs.mkdirs(this._stanzaDestinationPath('lib'));
   }
 
   _stanzaDestinationPath(...paths) {

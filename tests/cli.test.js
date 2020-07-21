@@ -6,9 +6,10 @@ import fixturify from 'fixturify';
 import { mkdtempSync, removeSync } from 'fs-extra';
 
 test('--help', () => {
-  const {stdout} = togostanza('--help');
+  const {stdout, status} = togostanza('--help');
 
   expect(stdout).toContain('Usage: togostanza [options] [command]');
+  expect(status).toBe(0);
 });
 
 describe('init', () => {
@@ -17,7 +18,7 @@ describe('init', () => {
     {packageManager: 'yarn'}
   ])('non-interactive (%p)', ({packageManager}) => {
     withinTmpdir(() => {
-      const {status, output} = togostanza(
+      const {output, status} = togostanza(
         'init', 'some-repo',
         '--license',         'MIT',
         '--package-manager', packageManager,
@@ -27,9 +28,9 @@ describe('init', () => {
         '--skip-git'
       );
 
-      expect(status).toBe(0);
       expect(output).toMatchSnapshot();
       expect(fixturify.readSync('.')).toMatchSnapshot();
+      expect(status).toBe(0);
     });
   });
 });
@@ -37,7 +38,7 @@ describe('init', () => {
 describe('generate stanza', () => {
   test('non-interactive', () => {
     withinTmpdir(() => {
-      const {status, output} = togostanza(
+      const {output, status} = togostanza(
         'generate', 'stanza', 'hello',
         '--label',      'LABEL',
         '--definition', 'DEFINITION',
@@ -51,9 +52,9 @@ describe('generate stanza', () => {
         '--timestamp',  '2020-10-05'
       );
 
-      expect(status).toBe(0);
       expect(output).toMatchSnapshot();
       expect(fixturify.readSync('.')).toMatchSnapshot();
+      expect(status).toBe(0);
     });
   });
 });
@@ -67,11 +68,11 @@ describe('upgrade', () => {
         }
       });
 
-      const {status, output} = togostanza('upgrade');
+      const {output, status} = togostanza('upgrade');
 
-      expect(status).toBe(0);
       expect(output).toMatchSnapshot();
       expect(fixturify.readSync('.')).toMatchSnapshot();
+      expect(status).toBe(0);
     });
   });
 });
@@ -81,7 +82,13 @@ function togostanza(...args) {
 
   // --no-warnings is necessary to avoid including ESM warnings in the snapshot, which change with each test run
   // (not required in Node.js 14)
-  return spawnSync(process.argv0, ['--no-warnings', bin, ...args], {encoding: 'utf8', timeout: 3000});
+  return spawnSync(process.argv0, ['--no-warnings', bin, ...args], {
+    encoding: 'utf8',
+    timeout: 3000,
+    env: {
+      FORCE_COLOR: '0'
+    }
+  });
 }
 
 function withinTmpdir(cb) {

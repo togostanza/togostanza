@@ -1,5 +1,6 @@
 import Generator from 'yeoman-generator';
 import dedent from 'dedent';
+import fs from 'fs-extra';
 import pick from 'lodash.pick';
 
 import MemoryStorage from '../memory-storage.mjs';
@@ -83,7 +84,9 @@ export default class RepositoryGenerator extends Generator {
     });
   }
 
-  end() {
+  async end() {
+    await fs.mkdirs('lib');
+
     this._setupGit();
 
     this.log();
