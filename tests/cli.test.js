@@ -124,7 +124,7 @@ describe('build', () => {
         ]
       })).toMatchSnapshot();
 
-      expect(fs.readFileSync('dist/hello.js', 'utf8')).toContain('Stanza(');
+      expect(fs.readFileSync('dist/hello.js', 'utf8')).toContain('function hello(stanza, params) {');
     });
   });
 });

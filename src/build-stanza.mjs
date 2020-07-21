@@ -59,16 +59,16 @@ export default class BuildStanza extends BroccoliPlugin {
   async buildStanza(stanza, templates) {
     const metadata = await stanza.metadata;
 
-    this.output.mkdirSync(stanza.id);
-    this.output.writeFileSync(`${stanza.id}/index.js`, await fs.readFile(stanza.scriptPath));
-
     this.output.writeFileSync(`${stanza.id}.js`, templates.entrypoint({
       metadata,
-      templates:  await stanza.templates,
-      outer:      await stanza.outer
+      templates: await stanza.templates,
+      outer:     await stanza.outer
     }));
 
     this.output.writeFileSync(`${stanza.id}.html`, templates.help({metadata}));
+
+    this.output.mkdirSync(stanza.id);
+    await fs.copyFile(stanza.scriptPath, path.join(this.outputPath, stanza.id, 'index.js'));
   }
 
   get allStanzas() {

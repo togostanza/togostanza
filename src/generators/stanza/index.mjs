@@ -1,6 +1,7 @@
 import path from 'path';
 
 import Generator from 'yeoman-generator';
+import camelCase from 'lodash.camelcase';
 import fs from 'fs-extra';
 import lowerCase from 'lodash.lowercase';
 import pick from 'lodash.pick';
@@ -103,7 +104,7 @@ export default class StanzaGenerator extends Generator {
   writing() {
     this.writeDestinationJSON(this._stanzaDestinationPath('metadata.json'), metadataJSON(this.params));
 
-    this.renderTemplate('**/*', '.', this.params, null, {
+    this.renderTemplate('**/*', '.', {...this.params, camelCase}, null, {
       processDestinationPath: (fullPath) => {
         const relativePath = fullPath.slice(this.destinationRoot().length + 1);
         const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
