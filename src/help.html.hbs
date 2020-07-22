@@ -37,11 +37,11 @@
           {{#each metadata.[stanza:parameter] as |param|}}
             <li>
               <dl>
-                <dt>{{param.key}}</dt>
+                <dt>{{param.[stanza:key]}}</dt>
 
                 <dd>
                   <p class="id_box">
-                    <input type="text" value={{param.[stanza:example]}} data-param-key={{param.[stanza:key]}}>
+                    <input type="text" value="{{param.[stanza:example]}}" data-param-key={{param.[stanza:key]}}>
 
                     {{#if param.[stanza:required]}}
                       <span class="required">required</span>
