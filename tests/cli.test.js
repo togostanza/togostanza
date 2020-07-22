@@ -117,7 +117,7 @@ describe('build', () => {
       expect(generateStanza.output).toMatchSnapshot();
       expect(generateStanza.status).toBe(0);
 
-      const build = togostanza(['build']);
+      const build = togostanza(['build'], {timeout: 30_000});
 
       expect(build.status).toBe(0);
 
