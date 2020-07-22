@@ -118,7 +118,7 @@ function packageJSON({name, license, owner, repo}) {
     license,
     repository: owner && repo ? `${owner}/${repo}` : '',
     dependencies: {
-      togostanza: 'togostanza/togostanza-js'
+      togostanza: 'github:togostanza/togostanza-js'
     },
     engines: {
       node: '>=12'
