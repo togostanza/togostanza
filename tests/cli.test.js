@@ -30,8 +30,9 @@ describe('init', () => {
       ]);
 
       expect(output).toMatchSnapshot();
-      expect(fixturify.readSync('.')).toMatchSnapshot();
       expect(status).toBe(0);
+
+      expect(fixturify.readSync('.')).toMatchSnapshot();
     });
   });
 });
@@ -54,15 +55,16 @@ describe('generate stanza', () => {
       ]);
 
       expect(output).toMatchSnapshot();
-      expect(fixturify.readSync('.')).toMatchSnapshot();
       expect(status).toBe(0);
+
+      expect(fixturify.readSync('.')).toMatchSnapshot();
     });
   });
 });
 
 describe('upgrade', () => {
   test('move stanza into stanzas/', () => {
-    withinTmpdir((here) => {
+    withinTmpdir(() => {
       fixturify.writeSync('.', {
         hello: {
           'metadata.json': '{}'
@@ -72,8 +74,9 @@ describe('upgrade', () => {
       const {output, status} = togostanza(['upgrade']);
 
       expect(output).toMatchSnapshot();
-      expect(fixturify.readSync('.')).toMatchSnapshot();
       expect(status).toBe(0);
+
+      expect(fixturify.readSync('.')).toMatchSnapshot();
     });
   });
 });
@@ -134,7 +137,7 @@ function togostanza(args, opts = {}) {
 
   // --no-warnings is necessary to avoid including ESM warnings in the snapshot, which change with each test run
   // (not required in Node.js 14)
-  return spawnSync(process.argv0, ['--no-warnings', bin, ...args], {
+  const ps = spawnSync(process.argv0, ['--no-warnings', bin, ...args], {
     encoding: 'utf8',
     timeout: 3000,
     env: {
@@ -143,6 +146,10 @@ function togostanza(args, opts = {}) {
     },
     ...opts
   });
+
+  expect(ps.error).toBeUndefined();
+
+  return ps;
 }
 
 function withinTmpdir(cb) {
