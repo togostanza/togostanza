@@ -1,7 +1,7 @@
-import path from 'path';
-import camelCase from 'lodash.camelcase';
+const path = require('path');
+const camelCase = require('lodash.camelcase');
 
-export default function stanzaAsModuleTransformer(file, api) {
+module.exports = function stanzaAsModuleTransformer(file, api) {
   const j = api.jscodeshift;
   const root = j(file.source);
 
@@ -19,7 +19,7 @@ export default function stanzaAsModuleTransformer(file, api) {
     const { node } = path;
 
     const exdef = j.exportDefaultDeclaration(
-      j.functionExpression(
+      j.functionDeclaration(
         j.identifier(functionName),
         [
           j.identifier('stanza'),
@@ -32,5 +32,6 @@ export default function stanzaAsModuleTransformer(file, api) {
     return exdef;
   });
 
-  return root.toSource();
+  // TODO remove trailing EmptyStatement instead of string replacement
+  return root.toSource().replace(/;(\s*)$/m, '$1');
 }

@@ -71,12 +71,28 @@ describe('upgrade', () => {
         }
       });
 
-      const {output, status} = togostanza(['upgrade']);
+      const {stdout, stderr, status} = togostanza(['upgrade']);
 
-      expect(output).toMatchSnapshot();
+      expect(stdout.replace(/^Time elapsed: .*$/m, '')).toMatchSnapshot();
+      expect(stderr).toMatchSnapshot();
       expect(status).toBe(0);
 
       expect(fixturify.readSync('.')).toMatchSnapshot();
+    });
+  });
+
+  test('convert Stanza() to default exported function', () => {
+    withinTmpdir(() => {
+      fixturify.writeSync('stanzas/hello', {
+        'index.js': 'Stanza(function(stanza, params) {});'
+      })
+
+      const {stdout, status} = togostanza(['upgrade']);
+
+      expect(stdout).toContain('1 ok');
+      expect(status).toBe(0);
+
+      expect(fs.readFileSync('stanzas/hello/index.js', 'utf8')).toBe('export default function hello(stanza, params) {}')
     });
   });
 });

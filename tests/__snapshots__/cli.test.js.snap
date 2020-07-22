@@ -280,16 +280,22 @@ jobs:
 `;
 
 exports[`upgrade move stanza into stanzas/ 1`] = `
-Array [
-  null,
-  "move  hello -> stanzas/hello
+"move  hello -> stanzas/hello
 
-",
-  "",
-]
+No files selected, nothing to do. 
+All done. 
+Results: 
+0 errors
+0 unmodified
+0 skipped
+0 ok
+
+"
 `;
 
-exports[`upgrade move stanza into stanzas/ 2`] = `
+exports[`upgrade move stanza into stanzas/ 2`] = `""`;
+
+exports[`upgrade move stanza into stanzas/ 3`] = `
 Object {
   "stanzas": Object {
     "hello": Object {

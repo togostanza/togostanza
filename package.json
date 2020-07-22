@@ -25,6 +25,7 @@
     "fecha": "^4.2.0",
     "fs-extra": "^9.0.1",
     "handlebars": "^4.7.6",
+    "jscodeshift": "^0.10.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.debounce": "^4.0.8",
     "lodash.lowercase": "^4.3.0",

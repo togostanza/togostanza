@@ -4,6 +4,9 @@ import chalk from 'chalk';
 import commander from 'commander';
 import fs from 'fs-extra';
 import walkSync from 'walk-sync';
+import Runner from 'jscodeshift/src/Runner.js';
+
+import { packagePath } from '../util.mjs';
 
 const command = new commander.Command()
   .command('upgrade')
@@ -27,4 +30,10 @@ async function moveStanzaIntoStanzas() {
 
     console.log(chalk.green('move') + `  ${from} -> ${to}\n`);
   }));
+
+  Runner.run(
+    path.resolve(packagePath, 'src/transformers/stanza-as-module.js'),
+    walkSync('.', {globs: ['stanzas/*/index.js']}),
+    {}
+  )
 }
