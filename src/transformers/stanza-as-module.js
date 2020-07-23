@@ -12,26 +12,21 @@ module.exports = function stanzaAsModuleTransformer(file, api) {
     callee: {
       type: 'Identifier',
       name: 'Stanza',
-    },
+    }
   });
 
   callExpressions.replaceWith((path) => {
-    const { node } = path;
+    const {params, body} = path.node.arguments[0];
 
-    const exdef = j.exportDefaultDeclaration(
+    return j.exportDefaultDeclaration(
       j.functionDeclaration(
         j.identifier(functionName),
-        [
-          j.identifier('stanza'),
-          j.identifier('params'),
-        ],
-        node.arguments[0].body
+        params,
+        body
       )
-    )
-
-    return exdef;
+    );
   });
 
   // TODO remove trailing EmptyStatement instead of string replacement
   return root.toSource().replace(/;(\s*)$/m, '$1');
-}
+};
