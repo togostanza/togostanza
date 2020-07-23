@@ -106,10 +106,9 @@ describe('build', () => {
         '--package-manager', 'yarn',
         '--owner',           'ursm',
         '--repo',            'some-repo',
+        '--skip-install',
         '--skip-git',
-      ], {
-        timeout: 30_000
-      });
+      ]);
 
       expect(init.stderr).toContain('Getting Started');
       expect(init.status).toBe(0);
