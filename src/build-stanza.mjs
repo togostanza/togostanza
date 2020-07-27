@@ -18,6 +18,14 @@ Handlebars.registerHelper('to-json', function(val) {
   return JSON.stringify(val);
 });
 
+Handlebars.registerHelper('eq', function(x, y) {
+  return x === y;
+});
+
+Handlebars.registerHelper('or', function(x, y) {
+  return x || y;
+});
+
 async function handlebarsTemplate(fpath, opts = {}) {
   const hbs = await fs.readFile(fpath, 'utf8');
 

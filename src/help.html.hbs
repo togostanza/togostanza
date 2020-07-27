@@ -57,6 +57,37 @@
           {{/each}}
         </ul>
 
+        <ul class="showcase_id">
+          <li>Styling</li>
+
+          {{#each metadata.[stanza:style] as |style|}}
+            <li>
+              <dl>
+                <dt>{{style.[stanza:key]}}</dt>
+
+                <dd>
+                  <p class="id_box">
+                    {{#with (or style.[stanza:type] "text") as |type|}}
+                      {{#each style.[stanza:choice] as |choice|}}
+                        <label>
+                          <input type={{type}} value={{choice}} {{#if (eq choice style.[stanza:default])}}checked{{/if}} name={{style.[stanza:key]}} data-style-key={{style.[stanza:key]}}>
+                          {{choice}}
+                        </input>
+                      {{else}}
+                        <input type={{type}} value="{{style.[stanza:default]}}" data-style-key={{style.[stanza:key]}}>
+                      {{/each}}
+                    {{/with}}
+                  </p>
+
+                  <p class="eg">
+                    {{style.[stanza:description]}}
+                  </p>
+                </dd>
+              </dl>
+            </li>
+          {{/each}}
+        </ul>
+
         <div class="showcase_code">
           <code>{{metadata.[stanza:usage]}}</code>
         </div>
@@ -72,16 +103,27 @@
     </div>
 
     <script>
-      const stanza = document.querySelector('togostanza-{{metadata.[@id]}}');
-      const inputs = document.querySelectorAll('.showcase_id input');
+      const stanza      = document.querySelector('togostanza-{{metadata.[@id]}}');
+      const paramFields = document.querySelectorAll('input[data-param-key]');
 
-      for (const input of inputs) {
-        function onParamChange() {
-          stanza.setAttribute(input.dataset.paramKey, input.value);
+      for (const field of paramFields) {
+        function onInput() {
+          stanza.setAttribute(field.dataset.paramKey, field.value);
         }
 
-        input.addEventListener('input', onParamChange);
-        onParamChange();
+        field.addEventListener('input', onInput);
+        onInput();
+      }
+
+      const styleFields = document.querySelectorAll('input[data-style-key]');
+
+      for (const field of styleFields) {
+        function onInput() {
+          stanza.style.setProperty(field.dataset.styleKey, field.value);
+        }
+
+        field.addEventListener('input', onInput);
+        onInput();
       }
     </script>
   </body>
