@@ -3,7 +3,7 @@ const camelCase = require('lodash.camelcase');
 
 module.exports = function stanzaAsModuleTransformer(file, api) {
   const j = api.jscodeshift;
-  const root = j(file.source);
+  let root = j(file.source);
 
   const id = path.basename(path.dirname(file.path));
   const functionName = camelCase(id);
@@ -27,6 +27,20 @@ module.exports = function stanzaAsModuleTransformer(file, api) {
     );
   });
 
-  // TODO remove trailing EmptyStatement instead of string replacement
-  return root.toSource().replace(/;(\s*)$/m, '$1');
+  // remove the trailing EmptyStatement
+  root = j(root.toSource()); // parse again to obtain the correct AST of the modified code
+  root.find(j.EmptyStatement).forEach((path) => {
+    // check the depth of EmptyStatement placement
+    if (path.parentPath.parentPath.value.type !== 'Program') {
+      // skip; `path` doesn't point the EmptyStatement of "top level"
+      return;
+    }
+
+    const lastNodeInParent = path.parentPath.value.slice(-1)[0];
+    if (path.node === lastNodeInParent) {
+      path.prune();
+    }
+  });
+
+  return root.toSource();
 };
