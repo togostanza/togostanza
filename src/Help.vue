@@ -15,7 +15,15 @@
 </template>
 
 <script>
-  export default {
-    props: ['metadata']
-  };
+  import { defineComponent } from 'vue';
+
+  export default defineComponent({
+    props: ['metadata'],
+
+    setup({metadata}) {
+      return {
+        metadata
+      };
+    }
+  });
 </script>
