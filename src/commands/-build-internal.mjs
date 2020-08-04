@@ -1,6 +1,6 @@
-import UI from 'console-ui';
 import Funnel from 'broccoli-funnel'
 import MergeTrees from 'broccoli-merge-trees';
+import UI from 'console-ui';
 import broccoli from 'broccoli';
 import messages from 'broccoli/dist/messages.js';
 

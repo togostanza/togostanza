@@ -4,7 +4,12 @@ import path from 'path';
 import BroccoliPlugin from 'broccoli-plugin';
 import RSVP from 'rsvp';
 import _Handlebars from 'handlebars';
+import commonjs from '@rollup/plugin-commonjs';
+import replace from '@rollup/plugin-replace';
+import resolve from '@rollup/plugin-node-resolve';
+import vue from 'rollup-plugin-vue';
 import walkSync from 'walk-sync';
+import { rollup } from 'rollup';
 
 import { packagePath } from './util.mjs';
 
@@ -42,7 +47,8 @@ export default class BuildStanza extends BroccoliPlugin {
 
     await Promise.all([
       this.buildIndex(stanzas),
-      this.buildStanzas(stanzas)
+      this.buildStanzas(stanzas),
+      this.buildHelpApp()
     ]);
   }
 
@@ -77,6 +83,27 @@ export default class BuildStanza extends BroccoliPlugin {
 
     this.output.mkdirSync(stanza.id);
     await fs.copyFile(stanza.scriptPath, path.join(this.outputPath, stanza.id, 'index.js'));
+  }
+
+  async buildHelpApp() {
+    const bundle = await rollup({
+      input: path.join(packagePath, 'src', 'help-app.js'),
+
+      plugins: [
+        resolve(),
+        commonjs(),
+        vue(),
+        replace({
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        })
+      ]
+    });
+
+    await bundle.write({
+      format:    'esm',
+      file:      path.join(this.outputPath, '-help-app.js'),
+      sourcemap: true
+    });
   }
 
   get allStanzas() {

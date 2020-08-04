@@ -4,33 +4,20 @@
   <head>
     <meta charset="utf-8">
     <title>{{metadata.[stanza:label]}}</title>
-    <script type="module" src="./{{metadata.[@id]}}.js" async></script>
     <link rel="stylesheet" href="./togostanza.css">
+    <script type="module" src="./{{metadata.[@id]}}.js" async></script>
+
+    <script type="module">
+      import createHelpApp from './-help-app.js';
+
+      createHelpApp({{{to-json metadata}}}).mount('#app');
+    </script>
   </head>
 
   <body>
     <div id="contents">
-      <h1 class="page_ttl">
-        {{metadata.[stanza:label]}}
-      </h1>
-
-      <ul class="showcase_icn">
-        {{#with metadata.[stanza:context] as |val|}}
-          <li>{{val}}</li>
-        {{/with}}
-
-        {{#with metadata.[stanza:display] as |val|}}
-          <li>{{val}}</li>
-        {{/with}}
-
-        {{#with metadata.[stanza:license] as |val|}}
-          <li>{{val}}</li>
-        {{/with}}
-      </ul>
-
-      <p class="lead">
-        {{metadata.[stanza:usage]}}
-      </p>
+      <div id="app">
+      </div>
 
       <div class="showcase_detail">
         <ul class="showcase_id">
