@@ -10,108 +10,15 @@
     <script type="module">
       import createHelpApp from './-help-app.js';
 
-      createHelpApp({{{to-json metadata}}}).mount('#app');
+      const metadata = {{{to-json metadata}}};
+
+      createHelpApp(metadata).mount('#app');
     </script>
   </head>
 
   <body>
     <div id="contents">
-      <div id="app">
-      </div>
-
-      <div class="showcase_detail">
-        <ul class="showcase_id">
-          {{#each metadata.[stanza:parameter] as |param|}}
-            <li>
-              <dl>
-                <dt>{{param.[stanza:key]}}</dt>
-
-                <dd>
-                  <p class="id_box">
-                    <input type="text" value="{{param.[stanza:example]}}" data-param-key={{param.[stanza:key]}}>
-
-                    {{#if param.[stanza:required]}}
-                      <span class="required">required</span>
-                    {{/if}}
-                  </p>
-
-                  <p class="eg">
-                    {{param.[stanza:description]}}
-                  </p>
-                </dd>
-              </dl>
-            </li>
-          {{/each}}
-        </ul>
-
-        <ul class="showcase_id">
-          <li>Styling</li>
-
-          {{#each metadata.[stanza:style] as |style|}}
-            <li>
-              <dl>
-                <dt>{{style.[stanza:key]}}</dt>
-
-                <dd>
-                  <p class="id_box">
-                    {{#with (or style.[stanza:type] "text") as |type|}}
-                      {{#each style.[stanza:choice] as |choice|}}
-                        <label>
-                          <input type={{type}} value={{choice}} {{#if (eq choice style.[stanza:default])}}checked{{/if}} name={{style.[stanza:key]}} data-style-key={{style.[stanza:key]}}>
-                          {{choice}}
-                        </input>
-                      {{else}}
-                        <input type={{type}} value="{{style.[stanza:default]}}" data-style-key={{style.[stanza:key]}}>
-                      {{/each}}
-                    {{/with}}
-                  </p>
-
-                  <p class="eg">
-                    {{style.[stanza:description]}}
-                  </p>
-                </dd>
-              </dl>
-            </li>
-          {{/each}}
-        </ul>
-
-        <div class="showcase_code">
-          <code>{{metadata.[stanza:usage]}}</code>
-        </div>
-
-        <p class="explain">
-          The above element will automatically embed the following Stanza in your HTML page.
-        </p>
-
-        <div class="showcase_box">
-          {{{metadata.[stanza:usage]}}}
-        </div>
-      </div>
+      <div id="app"></div>
     </div>
-
-    <script>
-      const stanza      = document.querySelector('togostanza-{{metadata.[@id]}}');
-      const paramFields = document.querySelectorAll('input[data-param-key]');
-
-      for (const field of paramFields) {
-        function onInput() {
-          stanza.setAttribute(field.dataset.paramKey, field.value);
-        }
-
-        field.addEventListener('input', onInput);
-        onInput();
-      }
-
-      const styleFields = document.querySelectorAll('input[data-style-key]');
-
-      for (const field of styleFields) {
-        function onInput() {
-          stanza.style.setProperty(field.dataset.styleKey, field.value);
-        }
-
-        field.addEventListener('input', onInput);
-        onInput();
-      }
-    </script>
   </body>
 </html>
