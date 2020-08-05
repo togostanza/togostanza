@@ -106,7 +106,7 @@
 
         return outdent`
           <${tagName}
-          ${attrs.map(s => '    ' + s).join('\n')}
+          ${attrs.map(s => ' '.repeat(4) + s).join('\n')}
           ></${tagName}>
         `;
       });
@@ -119,7 +119,7 @@
         return styles.length === 0 ? null : outdent`
           <style>
               ${tagName} {
-          ${styles.map(s => '        ' + s).join('\n')}
+          ${styles.map(s => ' '.repeat(8) + s).join('\n')}
               }
           </style>
         `;
