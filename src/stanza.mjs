@@ -5,9 +5,9 @@ export default class Stanza {
   groupBy                = groupBy;
   unwrapValueFromBinding = unwrapValueFromBinding;
 
-  constructor(element, metadata, templates) {
-    this.element  = element;
-    this.root     = element.shadowRoot;
+  constructor(host, metadata, templates) {
+    this.host     = host;
+    this.root     = host.shadowRoot;
     this.metadata = metadata;
 
     this.templates = Object.fromEntries(templates.map(([name, spec]) => {
