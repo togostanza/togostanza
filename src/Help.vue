@@ -86,14 +86,14 @@
       const id      = metadata['@id'];
       const tagName = `togostanza-${id}`;
 
-      const paramFields = metadata['stanza:parameter'].map((param) => {
+      const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
         return reactive({
           param,
           value: param['stanza:example']
         });
       });
 
-      const styleFields = metadata['stanza:style'].map((style) => {
+      const styleFields = (metadata['stanza:style'] || []).map((style) => {
         return reactive({
           style,
           value: style['stanza:default']
