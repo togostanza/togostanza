@@ -61,7 +61,7 @@
     </ul>
 
     <div class="showcase_code">
-      <code style="white-space: pre-wrap">{{snippet}}</code>
+      <code style="white-space: pre-wrap">{{combinedSnippet}}</code>
     </div>
 
     <p class="explain">
@@ -127,7 +127,7 @@
 
       const scriptSrc = new URL(`./${id}.js`, location.href).href;
 
-      const snippet = computed(() => {
+      const combinedSnippet = computed(() => {
         return [
           `<script type="module" src="${scriptSrc}" async><\/script>`,
           styleSnippet.value,
@@ -141,7 +141,7 @@
         styleFields,
         elementSnippet,
         styleSnippet,
-        snippet
+        combinedSnippet
       };
     }
   });
