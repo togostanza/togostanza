@@ -15,18 +15,18 @@
 
   <div class="showcase_detail">
     <ul class="showcase_id">
-      <li v-for="field in paramFields">
+      <li v-for="{param, valueRef} in paramFields">
         <dl>
-          <dt>{{field.param['stanza:key']}}</dt>
+          <dt>{{param['stanza:key']}}</dt>
 
           <dd>
             <p class="id_box">
-              <input type="text" v-model="field.value">
-              <span v-if="field.param['stanza:required']" class="required">required</span>
+              <input type="text" v-model="valueRef.value">
+              <span v-if="param['stanza:required']" class="required">required</span>
             </p>
 
             <p class="eg">
-              {{field.param['stanza:description']}}
+              {{param['stanza:description']}}
             </p>
           </dd>
         </dl>
@@ -36,24 +36,24 @@
     <ul class="showcase_id">
       <li>Styling</li>
 
-      <li v-for="field in styleFields">
+      <li v-for="{style, valueRef} in styleFields">
         <dl>
-          <dt>{{field.style['stanza:key']}}</dt>
+          <dt>{{style['stanza:key']}}</dt>
 
           <dd>
             <p class="id_box">
-              <template v-if="field.style['stanza:choice']">
-                <label v-for="choice in field.style['stanza:choice']">
-                  <input :type="field.style['stanza:type']" :value="choice" v-model="field.value">
+              <template v-if="style['stanza:choice']">
+                <label v-for="choice in style['stanza:choice']">
+                  <input :type="style['stanza:type']" :value="choice" v-model="valueRef.value">
                   {{choice}}
                 </label>
               </template>
 
-              <input v-else :type="field.style['stanza:type']" v-model="field.value">
+              <input v-else :type="style['stanza:type']" v-model="valueRef.value">
             </p>
 
             <p class="eg">
-              {{field.style['stanza:description']}}
+              {{style['stanza:description']}}
             </p>
           </dd>
         </dl>
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-  import { defineComponent, reactive, computed } from 'vue';
+  import { defineComponent, ref, computed } from 'vue';
   import outdent from 'outdent';
 
   export default defineComponent({
@@ -87,22 +87,22 @@
       const tagName = `togostanza-${id}`;
 
       const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
-        return reactive({
+        return {
           param,
-          value: param['stanza:example']
-        });
+          valueRef: ref(param['stanza:example'])
+        };
       });
 
       const styleFields = (metadata['stanza:style'] || []).map((style) => {
-        return reactive({
+        return {
           style,
-          value: style['stanza:default']
-        });
+          valueRef: ref(style['stanza:default'])
+        };
       });
 
       const elementSnippet = computed(() => {
         const attrs = paramFields
-          .map(({param, value}) => `${param['stanza:key']}=${JSON.stringify(value)}`);
+          .map(({param, valueRef}) => `${param['stanza:key']}=${JSON.stringify(valueRef.value)}`);
 
         return outdent`
           <${tagName}
@@ -113,8 +113,8 @@
 
       const styleSnippet = computed(() => {
         const styles = styleFields
-          .filter(({style, value}) => value !== style['stanza:default'])
-          .map(({style, value}) => `${style['stanza:key']}: ${value};`);
+          .filter(({style, valueRef}) => valueRef.value !== style['stanza:default'])
+          .map(({style, valueRef}) => `${style['stanza:key']}: ${valueRef.value};`);
 
         return styles.length === 0 ? null : outdent`
           <style>
