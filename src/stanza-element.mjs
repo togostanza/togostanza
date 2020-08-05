@@ -1,4 +1,5 @@
 import debounce from 'lodash.debounce';
+import outdent from 'outdent';
 
 import Stanza from './stanza.mjs';
 
@@ -50,9 +51,11 @@ function applyDefaultStyles(el, defs) {
 
   const style = document.createElement('style');
 
-  style.textContent = `:root {
-${defs.map(def => `  ${def['stanza:key']}: ${def['stanza:default']};`).join('\n')}
-}`;
+  style.textContent = outdent`
+    :root {
+    ${defs.map(def => `  ${def['stanza:key']}: ${def['stanza:default']};`).join('\n')}
+    }
+  `;
 
   el.append(style);
 }
