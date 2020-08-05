@@ -18,7 +18,7 @@ export function defineStanzaElement(main, {metadata, templates, outer}) {
 
       this.stanza = new Stanza(this, metadata, templates);
 
-      setCSSCustomProperties(this, metadata['stanza:style']);
+      applyDefaultStyles(this, metadata['stanza:style']);
     }
 
     connectedCallback() {
@@ -45,12 +45,16 @@ export function defineStanzaElement(main, {metadata, templates, outer}) {
   customElements.define(`togostanza-${id}`, StanzaElement);
 }
 
-function setCSSCustomProperties(el, defs) {
+function applyDefaultStyles(el, defs) {
   if (!defs) { return; }
 
-  for (const def of defs) {
-    el.style.setProperty(def['stanza:key'], def['stanza:default']);
-  }
+  const style = document.createElement('style');
+
+  style.textContent = `:root {
+${defs.map(def => `  ${def['stanza:key']}: ${def['stanza:default']};`).join('\n')}
+}`;
+
+  el.append(style);
 }
 
 function ensureOuterInserted(id, outer) {

@@ -65,21 +65,27 @@
     </div>
 
     <p class="explain">
-      The above element will automatically embed the following Stanza in your HTML page.
+      The above snippet will automatically embed the following Stanza in your HTML page.
     </p>
 
-    <div class="showcase_box" v-html="snippet">
+    <div class="showcase_box">
+      <div v-html="styleSnippet"></div>
+      <div v-html="elementSnippet"></div>
     </div>
   </div>
 </template>
 
 <script>
-  import { defineComponent, reactive, ref, computed } from 'vue';
+  import { defineComponent, reactive, computed } from 'vue';
+  import outdent from 'outdent';
 
   export default defineComponent({
     props: ['metadata'],
 
     setup({metadata}) {
+      const id      = metadata['@id'];
+      const tagName = `togostanza-${id}`;
+
       const paramFields = metadata['stanza:parameter'].map((param) => {
         return reactive({
           param,
@@ -94,31 +100,47 @@
         });
       });
 
+      const elementSnippet = computed(() => {
+        const attrs = paramFields
+          .map(({param, value}) => `${param['stanza:key']}=${JSON.stringify(value)}`);
+
+        return outdent`
+          <${tagName}
+          ${attrs.map(s => '    ' + s).join('\n')}
+          ></${tagName}>
+        `;
+      });
+
+      const styleSnippet = computed(() => {
+        const styles = styleFields
+          .filter(({style, value}) => value !== style['stanza:default'])
+          .map(({style, value}) => `${style['stanza:key']}: ${value};`);
+
+        return styles.length === 0 ? null : outdent`
+          <style>
+              ${tagName} {
+          ${styles.map(s => '        ' + s).join('\n')}
+              }
+          </style>
+        `;
+      });
+
+      const scriptSrc = new URL(`./${id}.js`, location.href).href;
+
       const snippet = computed(() => {
-        const styles = styleFields.map(({style, value}) => {
-          return `        ${style['stanza:key']}: ${value};`;
-        });
-
-        const tagName = `togostanza-${metadata['@id']}`;
-
-        const attrs = paramFields.map(({param, value}) => {
-          return `    ${param['stanza:key']}=${JSON.stringify(value)}`;
-        });
-
-        return '<style>\n'
-          + `    ${tagName} {\n`
-          + styles.join('\n') + '\n'
-          + '    }\n'
-          + '</style>\n\n'
-          + `<${tagName}\n`
-          + attrs.join('\n') + '\n'
-          +`></${tagName}>`;
+        return [
+          `<script type="module" src="${scriptSrc}" async><\/script>`,
+          styleSnippet.value,
+          elementSnippet.value
+        ].filter(Boolean).join('\n\n');
       });
 
       return {
         metadata,
         paramFields,
         styleFields,
+        elementSnippet,
+        styleSnippet,
         snippet
       };
     }

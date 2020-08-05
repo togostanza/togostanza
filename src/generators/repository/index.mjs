@@ -1,5 +1,5 @@
 import Generator from 'yeoman-generator';
-import dedent from 'dedent';
+import outdent from 'outdent';
 import fs from 'fs-extra';
 import pick from 'lodash.pick';
 
@@ -130,7 +130,7 @@ function packageJSON({name, license, owner, repo}) {
 function gettingStarted({name, packageManager}) {
   const {runner} = packageManagers[packageManager];
 
-  return dedent`
+  return outdent`
     Getting Started
     ---------------
 
