@@ -43,21 +43,9 @@ export function composeTree(repositoryDir) {
   const buildTree  = new BuildStanza(repositoryDir);
   const bundleTree = new BundleStanzaModules(buildTree, {repositoryDir});
 
-  const css = new Funnel(packagePath, {
-    srcDir: 'src',
-    files:  ['app.css'],
-
-    getDestinationPath(fpath) {
-      if (fpath === 'app.css') { return 'togostanza.css'; }
-
-      return fpath;
-    }
-  });
-
   const mergedTree = new MergeTrees([
     buildTree,
-    bundleTree,
-    css
+    bundleTree
   ], {overwrite: true});
 
   return new Funnel(mergedTree, {

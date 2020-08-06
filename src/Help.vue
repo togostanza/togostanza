@@ -1,71 +1,65 @@
 <template>
-  <h1 class="page_ttl">
-    {{metadata['stanza:label']}}
-  </h1>
+  <h1>{{metadata['stanza:label']}}</h1>
 
-  <ul class="showcase_icn">
-    <li v-if="metadata['stanza:context']">{{metadata['stanza:context']}}</li>
-    <li v-if="metadata['stanza:display']">{{metadata['stanza:display']}}</li>
-    <li v-if="metadata['stanza:license']">{{metadata['stanza:license']}}</li>
+  <ul class="list-inline">
+    <li v-for="tag in tags" :key="tag" class="list-inline-item">
+      <span class="badge badge-secondary">{{tag}}</span>
+    </li>
   </ul>
 
-  <div class="showcase_detail">
-    <ul class="showcase_id">
-      <li v-for="{param, valueRef} in paramFields" :key="param['stanza:key']">
-        <dl>
-          <dt>{{param['stanza:key']}}</dt>
+  <form>
+    <fieldset>
+      <legend>Parameters</legend>
 
-          <dd>
-            <p class="id_box">
-              <input type="text" v-model="valueRef.value">
-              <span v-if="param['stanza:required']" class="required">required</span>
-            </p>
+      <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="form-group row">
+        <label class="col-form-label col-3 text-right">
+          <span v-if="param['stanza:required']" class="text-danger">*</span>
+          {{param['stanza:key']}}
+        </label>
 
-            <p class="eg">
-              {{param['stanza:description']}}
-            </p>
-          </dd>
-        </dl>
-      </li>
-    </ul>
+        <div class="col-3">
+          <input type="text" v-model="valueRef.value" class="form-control">
+        </div>
 
-    <ul class="showcase_id">
-      <li v-for="{style, valueRef} in styleFields" :key="style['stanza:key']">
-        <dl>
-          <dt>{{style['stanza:key']}}</dt>
+        <div class="col text-muted">
+          {{param['stanza:description']}}
+        </div>
+      </div>
+    </fieldset>
 
-          <dd>
-            <p class="id_box">
-              <template v-if="style['stanza:type'] === 'single-choice'">
-                <select v-model="valueRef.value">
-                  <option v-for="choice in style['stanza:choice']" :value="choice" :key="choice">{{choice}}</option>
-                </select>
-              </template>
+    <fieldset>
+      <legend>Styles</legend>
 
-              <input v-else :type="style['stanza:type']" v-model="valueRef.value">
-            </p>
+      <div v-for="{style, valueRef} in styleFields" :key="style['stanza:key']" class="form-group row">
+        <label class="col-form-label col-3 text-right">
+          {{style['stanza:key']}}
+        </label>
 
-            <p class="eg">
-              {{style['stanza:description']}}
-            </p>
-          </dd>
-        </dl>
-      </li>
-    </ul>
+        <div class="col-3">
+          <template v-if="style['stanza:type'] === 'single-choice'">
+            <select v-model="valueRef.value" class="form-control">
+              <option v-for="choice in style['stanza:choice']" :value="choice" :key="choice">{{choice}}</option>
+            </select>
+          </template>
 
-    <div class="showcase_code">
-      <code style="white-space: pre-wrap; font-family: monospace">{{combinedSnippet}}</code>
-    </div>
+          <input v-else :type="style['stanza:type']" v-model="valueRef.value" class="form-control">
+        </div>
 
-    <p class="explain">
-      The above snippet will automatically embed the following Stanza in your HTML page.
-    </p>
+        <div class="col text-muted">
+          {{style['stanza:description']}}
+        </div>
+      </div>
+    </fieldset>
 
-    <div class="showcase_box">
+    <pre class="bg-dark text-white p-3"><code>{{combinedSnippet}}</code></pre>
+
+    <p>The above snippet will automatically embed the following Stanza in your HTML page.</p>
+
+    <div class="bg-light p-3">
       <div v-html="styleSnippet"></div>
       <div v-html="elementSnippet"></div>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
@@ -134,7 +128,9 @@
         styleFields,
         elementSnippet,
         styleSnippet,
-        combinedSnippet
+        combinedSnippet,
+
+        tags: ['stanza:context', 'stanza:display', 'stanza:license'].map(k => metadata[k]).filter(Boolean)
       };
     }
   });

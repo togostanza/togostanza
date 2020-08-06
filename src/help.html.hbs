@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <title>{{metadata.[stanza:label]}}</title>
-    <link rel="stylesheet" href="./togostanza.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" crossorigin="anonymous">
     <script type="module" src="./{{metadata.[@id]}}.js" async></script>
 
     <script type="module">
@@ -17,7 +17,11 @@
   </head>
 
   <body>
-    <div id="contents">
+    <nav class="navbar navbar-light bg-light">
+      <a href="./" class="navbar-brand">TogoStanza</a>
+    </nav>
+
+    <div class="container my-3">
       <div id="app"></div>
     </div>
   </body>

@@ -4,20 +4,20 @@
   <head>
     <meta charset="utf-8">
     <title>List of Stanzas</title>
-    <link rel="stylesheet" href="./togostanza.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" crossorigin="anonymous">
   </head>
 
   <body>
-    <div id="contents">
-      <h1 class="page_ttl">List of Stanzas</h1>
+    <nav class="navbar navbar-light bg-light">
+      <a href="./" class="navbar-brand">TogoStanza</a>
+    </nav>
 
-      <div class="showcase_index">
+    <div class="container my-3">
+      <h1>List of Stanzas</h1>
+
+      <div class="list-group mt-3">
         {{#each stanzas as |stanza|}}
-          <div class="list_item">
-            <div class="list_ttl">
-              <a href="./{{stanza.[@id]}}.html">{{stanza.[stanza:label]}}</a>
-            </div>
-          </div>
+          <a href="./{{stanza.[@id]}}.html" class="list-group-item list-group-item-action">{{stanza.[stanza:label]}}</a>
         {{/each}}
       </div>
     </div>
