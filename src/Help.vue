@@ -36,11 +36,10 @@
 
           <dd>
             <p class="id_box">
-              <template v-if="style['stanza:choice']">
-                <label v-for="choice in style['stanza:choice']" :key="choice">
-                  <input :type="style['stanza:type']" :value="choice" v-model="valueRef.value">
-                  {{choice}}
-                </label>
+              <template v-if="style['stanza:type'] === 'single-choice'">
+                <select v-model="valueRef.value">
+                  <option v-for="choice in style['stanza:choice']" :value="choice" :key="choice">{{choice}}</option>
+                </select>
               </template>
 
               <input v-else :type="style['stanza:type']" v-model="valueRef.value">
