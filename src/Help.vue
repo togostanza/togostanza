@@ -34,8 +34,6 @@
     </ul>
 
     <ul class="showcase_id">
-      <li>Styling</li>
-
       <li v-for="{style, valueRef} in styleFields">
         <dl>
           <dt>{{style['stanza:key']}}</dt>
