@@ -11,7 +11,7 @@
 
   <div class="showcase_detail">
     <ul class="showcase_id">
-      <li v-for="{param, valueRef} in paramFields">
+      <li v-for="{param, valueRef} in paramFields" :key="param['stanza:key']">
         <dl>
           <dt>{{param['stanza:key']}}</dt>
 
@@ -30,14 +30,14 @@
     </ul>
 
     <ul class="showcase_id">
-      <li v-for="{style, valueRef} in styleFields">
+      <li v-for="{style, valueRef} in styleFields" :key="style['stanza:key']">
         <dl>
           <dt>{{style['stanza:key']}}</dt>
 
           <dd>
             <p class="id_box">
               <template v-if="style['stanza:choice']">
-                <label v-for="choice in style['stanza:choice']">
+                <label v-for="choice in style['stanza:choice']" :key="choice">
                   <input :type="style['stanza:type']" :value="choice" v-model="valueRef.value">
                   {{choice}}
                 </label>
