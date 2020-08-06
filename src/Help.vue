@@ -54,7 +54,7 @@
     </ul>
 
     <div class="showcase_code">
-      <code style="white-space: pre-wrap">{{combinedSnippet}}</code>
+      <code style="white-space: pre-wrap; font-family: monospace">{{combinedSnippet}}</code>
     </div>
 
     <p class="explain">
@@ -99,7 +99,7 @@
 
         return outdent`
           <${tagName}
-          ${attrs.map(s => ' '.repeat(4) + s).join('\n')}
+          ${attrs.map(s => ' '.repeat(2) + s).join('\n')}
           ></${tagName}>
         `;
       });
@@ -111,9 +111,9 @@
 
         return styles.length === 0 ? null : outdent`
           <style>
-              ${tagName} {
-          ${styles.map(s => ' '.repeat(8) + s).join('\n')}
-              }
+            ${tagName} {
+          ${styles.map(s => ' '.repeat(4) + s).join('\n')}
+            }
           </style>
         `;
       });
