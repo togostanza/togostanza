@@ -9,10 +9,6 @@
     <li v-if="metadata['stanza:license']">{{metadata['stanza:license']}}</li>
   </ul>
 
-  <p class="lead">
-    {{metadata['stanza:usage']}}
-  </p>
-
   <div class="showcase_detail">
     <ul class="showcase_id">
       <li v-for="{param, valueRef} in paramFields">
