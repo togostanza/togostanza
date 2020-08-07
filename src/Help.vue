@@ -40,18 +40,24 @@
         <h2>Styles</h2>
 
         <div class="form-row mt-3">
-          <div v-for="{style, valueRef} in styleFields" :key="style['stanza:key']" class="form-group col-sm-6">
+          <div v-for="{style, valueRef, defaultValue, resetToDefault} in styleFields" :key="style['stanza:key']" class="form-group col-sm-6">
             <label>
               {{style['stanza:key']}}
             </label>
 
-            <template v-if="style['stanza:type'] === 'single-choice'">
-              <select v-model="valueRef.value" class="form-control">
-                <option v-for="choice in style['stanza:choice']" :value="choice" :key="choice">{{choice}}</option>
-              </select>
-            </template>
+            <div class="input-group">
+              <template v-if="style['stanza:type'] === 'single-choice'">
+                <select v-model="valueRef.value" class="form-control">
+                  <option v-for="choice in style['stanza:choice']" :value="choice" :key="choice">{{choice}}</option>
+                </select>
+              </template>
 
-            <input v-else :type="style['stanza:type']" v-model="valueRef.value" class="form-control">
+              <input v-else :type="style['stanza:type']" v-model="valueRef.value" class="form-control">
+
+              <div class="input-group-append">
+                <button @click="resetToDefault()" :disabled="valueRef.value === defaultValue" class="btn btn-light border" type="button">Reset</button>
+              </div>
+            </div>
 
             <small class="form-text text-muted">
               {{style['stanza:description']}}
@@ -98,9 +104,17 @@
       });
 
       const styleFields = (metadata['stanza:style'] || []).map((style) => {
+        const defaultValue = style['stanza:default'];
+        const valueRef     = ref(defaultValue);
+
         return {
           style,
-          valueRef: ref(style['stanza:default'])
+          valueRef,
+          defaultValue,
+
+          resetToDefault() {
+            valueRef.value = defaultValue;
+          }
         };
       });
 
