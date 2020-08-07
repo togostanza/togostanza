@@ -77,7 +77,7 @@
       <div class="bg-dark">
         <div class="text-right p-2">
           <button @click="copyCombinedSnippetToClipboard()" type="button" class="btn btn-sm btn-light">
-            Copy
+            Copy to clipboard
           </button>
         </div>
 
