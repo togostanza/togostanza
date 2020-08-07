@@ -15,7 +15,7 @@
         <h2>Parameters</h2>
 
         <div class="form-row mt-3">
-          <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="form-group col-md-6">
+          <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="form-group col-sm-6">
             <label>
               <span v-if="param['stanza:required']" class="text-danger">*</span>
               {{param['stanza:key']}}
@@ -40,7 +40,7 @@
         <h2>Styles</h2>
 
         <div class="form-row mt-3">
-          <div v-for="{style, valueRef} in styleFields" :key="style['stanza:key']" class="form-group col-md-6">
+          <div v-for="{style, valueRef} in styleFields" :key="style['stanza:key']" class="form-group col-sm-6">
             <label>
               {{style['stanza:key']}}
             </label>
@@ -68,10 +68,10 @@
     <div class="col-xl-6">
       <hr class="d-xl-none mb-4">
 
-      <pre class="overflow-auto bg-dark text-white p-3"><code>{{combinedSnippet}}</code></pre>
+      <pre class="overflow-auto p-3 bg-dark text-white"><code>{{combinedSnippet}}</code></pre>
       <p>The above snippet will automatically embed the following Stanza in your HTML page.</p>
 
-      <div class="bg-light p-3">
+      <div class="overflow-auto p-3 bg-light">
         <div v-html="styleSnippet"></div>
         <div v-html="elementSnippet"></div>
       </div>
