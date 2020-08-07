@@ -2,8 +2,8 @@
   <h1>{{metadata['stanza:label']}}</h1>
 
   <ul class="list-inline">
-    <li v-for="tag in tags" :key="tag" class="list-inline-item">
-      <span class="badge badge-secondary">{{tag}}</span>
+    <li v-for="badge in badges" :key="badge" class="list-inline-item">
+      <span class="badge badge-pill badge-secondary">{{badge}}</span>
     </li>
   </ul>
 
@@ -55,7 +55,7 @@
               <input v-else :type="style['stanza:type']" v-model="valueRef.value" class="form-control">
 
               <div class="input-group-append">
-                <button @click="resetToDefault()" :disabled="valueRef.value === defaultValue" class="btn btn-light border" type="button">Reset</button>
+                <button @click="resetToDefault()" :disabled="valueRef.value === defaultValue" type="button" class="btn btn-light border">Reset</button>
               </div>
             </div>
 
@@ -74,7 +74,14 @@
     <div class="col-xl-6">
       <hr class="d-xl-none mb-4">
 
-      <pre class="overflow-auto p-3 bg-dark text-white"><code>{{combinedSnippet}}</code></pre>
+      <div class="position-relative">
+        <pre class="overflow-auto p-3 bg-dark text-white"><code>{{combinedSnippet}}</code></pre>
+
+        <button @click="copyCombinedSnippetToClipboard()" type="button" class="btn btn-sm btn-light position-absolute m-2" style="top: 0; right: 0">
+          Copy
+        </button>
+      </div>
+
       <p>The above snippet will automatically embed the following Stanza in your HTML page.</p>
 
       <div class="overflow-auto p-3 bg-light">
@@ -95,6 +102,7 @@
     setup({metadata}) {
       const id      = metadata['@id'];
       const tagName = `togostanza-${id}`;
+      const badges  = ['stanza:context', 'stanza:display', 'stanza:license'].map(k => metadata[k]).filter(Boolean);
 
       const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
         return {
@@ -153,15 +161,19 @@
         ].filter(Boolean).join('\n\n');
       });
 
+      function copyCombinedSnippetToClipboard() {
+        navigator.clipboard.writeText(combinedSnippet.value);
+      }
+
       return {
         metadata,
+        badges,
         paramFields,
         styleFields,
         elementSnippet,
         styleSnippet,
         combinedSnippet,
-
-        tags: ['stanza:context', 'stanza:display', 'stanza:license'].map(k => metadata[k]).filter(Boolean)
+        copyCombinedSnippetToClipboard
       };
     }
   });
