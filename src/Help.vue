@@ -26,9 +26,9 @@
         </div>
       </div>
 
-      <div v-if="paramFields.length === 0">
-        <p><i>No parameters defined</i></p>
-      </div>
+      <p v-if="paramFields.length === 0" class="font-italic">
+        No parameters defined.
+      </p>
     </fieldset>
 
     <fieldset>
@@ -54,9 +54,9 @@
         </div>
       </div>
 
-      <div v-if="styleFields.length === 0">
-        <p><i>No styles defined</i></p>
-      </div>
+      <p v-if="styleFields.length === 0" class="font-italic">
+        No styles defined.
+      </p>
     </fieldset>
 
     <pre class="bg-dark text-white p-3"><code>{{combinedSnippet}}</code></pre>
