@@ -7,67 +7,76 @@
     </li>
   </ul>
 
-  <form>
-    <fieldset>
-      <legend>Parameters</legend>
+  <hr>
 
-      <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="form-group row">
-        <label class="col-form-label col-3 text-right">
-          <span v-if="param['stanza:required']" class="text-danger">*</span>
-          {{param['stanza:key']}}
-        </label>
+  <div class="row">
+    <div class="col-xl-6">
+      <section>
+        <h2>Parameters</h2>
 
-        <div class="col-3">
-          <input type="text" v-model="valueRef.value" class="form-control">
+        <div class="form-row mt-3">
+          <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="form-group col-md-6">
+            <label>
+              <span v-if="param['stanza:required']" class="text-danger">*</span>
+              {{param['stanza:key']}}
+            </label>
+
+            <input type="text" v-model="valueRef.value" class="form-control">
+
+            <small class="form-text text-muted">
+              {{param['stanza:description']}}
+            </small>
+          </div>
         </div>
 
-        <div class="col text-muted">
-          {{param['stanza:description']}}
+        <p v-if="paramFields.length === 0" class="font-italic">
+          No parameters defined.
+        </p>
+      </section>
+
+      <hr>
+
+      <section>
+        <h2>Styles</h2>
+
+        <div class="form-row mt-3">
+          <div v-for="{style, valueRef} in styleFields" :key="style['stanza:key']" class="form-group col-md-6">
+            <label>
+              {{style['stanza:key']}}
+            </label>
+
+            <template v-if="style['stanza:type'] === 'single-choice'">
+              <select v-model="valueRef.value" class="form-control">
+                <option v-for="choice in style['stanza:choice']" :value="choice" :key="choice">{{choice}}</option>
+              </select>
+            </template>
+
+            <input v-else :type="style['stanza:type']" v-model="valueRef.value" class="form-control">
+
+            <small class="form-text text-muted">
+              {{style['stanza:description']}}
+            </small>
+          </div>
         </div>
-      </div>
 
-      <p v-if="paramFields.length === 0" class="font-italic">
-        No parameters defined.
-      </p>
-    </fieldset>
-
-    <fieldset>
-      <legend>Styles</legend>
-
-      <div v-for="{style, valueRef} in styleFields" :key="style['stanza:key']" class="form-group row">
-        <label class="col-form-label col-3 text-right">
-          {{style['stanza:key']}}
-        </label>
-
-        <div class="col-3">
-          <template v-if="style['stanza:type'] === 'single-choice'">
-            <select v-model="valueRef.value" class="form-control">
-              <option v-for="choice in style['stanza:choice']" :value="choice" :key="choice">{{choice}}</option>
-            </select>
-          </template>
-
-          <input v-else :type="style['stanza:type']" v-model="valueRef.value" class="form-control">
-        </div>
-
-        <div class="col text-muted">
-          {{style['stanza:description']}}
-        </div>
-      </div>
-
-      <p v-if="styleFields.length === 0" class="font-italic">
-        No styles defined.
-      </p>
-    </fieldset>
-
-    <pre class="bg-dark text-white p-3"><code>{{combinedSnippet}}</code></pre>
-
-    <p>The above snippet will automatically embed the following Stanza in your HTML page.</p>
-
-    <div class="bg-light p-3">
-      <div v-html="styleSnippet"></div>
-      <div v-html="elementSnippet"></div>
+        <p v-if="styleFields.length === 0" class="font-italic">
+          No styles defined.
+        </p>
+      </section>
     </div>
-  </form>
+
+    <div class="col-xl-6">
+      <hr class="d-xl-none mb-4">
+
+      <pre class="overflow-auto bg-dark text-white p-3"><code>{{combinedSnippet}}</code></pre>
+      <p>The above snippet will automatically embed the following Stanza in your HTML page.</p>
+
+      <div class="bg-light p-3">
+        <div v-html="styleSnippet"></div>
+        <div v-html="elementSnippet"></div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
