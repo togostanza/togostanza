@@ -8,10 +8,16 @@ export function defineStanzaElement(main, {metadata, templates, outer}) {
   const paramKeys = metadata['stanza:parameter'].map(param => param['stanza:key']);
 
   class StanzaElement extends HTMLElement {
-    static observedAttributes = paramKeys;
+    static get observedAttributes() {
+      return paramKeys;
+    }
 
     constructor() {
       super(...arguments);
+
+      this.renderDebounced = debounce(() => {
+        this.render();
+      }, 50);
 
       ensureOuterInserted(id, outer);
 
@@ -37,10 +43,6 @@ export function defineStanzaElement(main, {metadata, templates, outer}) {
 
       main(this.stanza, params);
     }
-
-    renderDebounced = debounce(() => {
-      this.render();
-    }, 50);
   }
 
   customElements.define(`togostanza-${id}`, StanzaElement);

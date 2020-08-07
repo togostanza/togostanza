@@ -1,10 +1,6 @@
 import HandlebarsRuntime from 'handlebars/runtime.js';
 
 export default class Stanza {
-  grouping               = grouping;
-  groupBy                = groupBy;
-  unwrapValueFromBinding = unwrapValueFromBinding;
-
   constructor(host, metadata, templates) {
     this.host     = host;
     this.root     = host.shadowRoot;
@@ -17,6 +13,11 @@ export default class Stanza {
     const main = document.createElement('main');
 
     this.root.appendChild(main);
+
+    // TODO migrate
+    this.grouping               = grouping;
+    this.groupBy                = groupBy;
+    this.unwrapValueFromBinding = unwrapValueFromBinding;
   }
 
   select(selector) {
