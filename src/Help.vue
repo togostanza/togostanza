@@ -74,12 +74,14 @@
     <div class="col-xl-6">
       <hr class="d-xl-none mb-4">
 
-      <div class="position-relative">
-        <pre class="overflow-auto p-3 bg-dark text-white"><code>{{combinedSnippet}}</code></pre>
+      <div class="bg-dark">
+        <div class="text-right p-2">
+          <button @click="copyCombinedSnippetToClipboard()" type="button" class="btn btn-sm btn-light">
+            Copy
+          </button>
+        </div>
 
-        <button @click="copyCombinedSnippetToClipboard()" type="button" class="btn btn-sm btn-light position-absolute m-2" style="top: 0; right: 0">
-          Copy
-        </button>
+        <pre class="overflow-auto p-3 mt-n3 text-white"><code>{{combinedSnippet}}</code></pre>
       </div>
 
       <p>The above snippet will automatically embed the following Stanza in your HTML page.</p>
