@@ -25,6 +25,10 @@
           {{param['stanza:description']}}
         </div>
       </div>
+
+      <div v-if="paramFields.length === 0">
+        <p><i>No parameters defined</i></p>
+      </div>
     </fieldset>
 
     <fieldset>
@@ -48,6 +52,10 @@
         <div class="col text-muted">
           {{style['stanza:description']}}
         </div>
+      </div>
+
+      <div v-if="styleFields.length === 0">
+        <p><i>No styles defined</i></p>
       </div>
     </fieldset>
 
