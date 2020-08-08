@@ -10,12 +10,12 @@
   <hr>
 
   <div class="row">
-    <div class="col-xl-6">
+    <div class="col-lg-6">
       <section>
         <h2>Parameters</h2>
 
         <div class="form-row mt-3">
-          <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="form-group col-sm-6">
+          <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="form-group col-sm-6 col-lg-12 col-xl-6">
             <label>
               <span v-if="param['stanza:required']" class="text-danger">*</span>
               {{param['stanza:key']}}
@@ -40,7 +40,7 @@
         <h2>Styles</h2>
 
         <div class="form-row mt-3">
-          <div v-for="{style, valueRef, defaultValue, resetToDefault} in styleFields" :key="style['stanza:key']" class="form-group col-sm-6">
+          <div v-for="{style, valueRef, defaultValue, resetToDefault} in styleFields" :key="style['stanza:key']" class="form-group col-sm-6 col-lg-12 col-xl-6">
             <label>
               {{style['stanza:key']}}
             </label>
@@ -71,8 +71,8 @@
       </section>
     </div>
 
-    <div class="col-xl-6">
-      <hr class="d-xl-none mb-4">
+    <div class="col-lg-6">
+      <hr class="d-lg-none mb-4">
 
       <div class="bg-dark">
         <div class="text-right p-2">
