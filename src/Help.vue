@@ -132,7 +132,7 @@
         const attrs = paramFields
           .map(({param, valueRef}) => `${param['stanza:key']}=${JSON.stringify(valueRef.value)}`);
 
-        return outdent`
+        return attrs.length === 0 ? `<${tagName}></${tagName}>` : outdent`
           <${tagName}
           ${attrs.map(s => ' '.repeat(2) + s).join('\n')}
           ></${tagName}>
