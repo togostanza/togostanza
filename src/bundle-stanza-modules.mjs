@@ -4,7 +4,6 @@ import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import resolveModule from 'resolve';
 import walkSync from 'walk-sync';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 import { rollup } from 'rollup';
