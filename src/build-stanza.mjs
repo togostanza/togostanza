@@ -1,17 +1,17 @@
-import { promises as fs } from 'fs';
 import path from 'path';
+import { promises as fs } from 'fs';
+import { promisify } from 'util';
 
 import BroccoliPlugin from 'broccoli-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import RSVP from 'rsvp';
 import _Handlebars from 'handlebars';
-import commonjs from '@rollup/plugin-commonjs';
-import replace from '@rollup/plugin-replace';
-import resolve from '@rollup/plugin-node-resolve';
-import vue from 'rollup-plugin-vue';
+import vueLoader from 'vue-loader/dist/index.js';
 import walkSync from 'walk-sync';
-import { rollup } from 'rollup';
+import webpack from 'webpack';
 
-import { packagePath } from './util.mjs';
+import { packagePath, resolvePackage } from './util.mjs';
 
 const Handlebars = _Handlebars.create();
 
@@ -46,19 +46,66 @@ export default class BuildStanza extends BroccoliPlugin {
     const stanzas = this.allStanzas;
 
     await Promise.all([
-      this.buildIndex(stanzas),
+      this.buildIndexApp(stanzas),
       this.buildStanzas(stanzas),
       this.buildHelpApp()
     ]);
   }
 
-  async buildIndex(stanzas) {
-    const template = await handlebarsTemplate(path.join(packagePath, 'src', 'index.html.hbs'));
-    const metadata = await Promise.all(stanzas.map(({metadata}) => metadata));
+  async buildIndexApp(stanzas) {
+    const allMetadata = await Promise.all(stanzas.map(({metadata}) => metadata));
 
-    this.output.writeFileSync('index.html', template({
-      stanzas: metadata
-    }));
+    const compiler = webpack({
+      mode: 'production',
+      entry: path.join(packagePath, 'src', 'index-app.js'),
+
+      output: {
+        path:     this.outputPath,
+        filename: '-index-app.js',
+        library:  'createIndexApp'
+      },
+
+      module: {
+        rules: [
+          {
+            test: /\.vue$/,
+            use: resolvePackage('vue-loader')
+          },
+          {
+            test: /\.css$/,
+            use:  [
+              MiniCssExtractPlugin.loader,
+              resolvePackage('css-loader')
+            ]
+          }
+        ]
+      },
+
+      plugins: [
+        new vueLoader.VueLoaderPlugin(),
+
+        new webpack.DefinePlugin({
+          allMetadata: JSON.stringify(allMetadata)
+        }),
+
+        new HtmlWebpackPlugin({
+          filename: 'index.html',
+          title:    'List of Stanzas',
+
+          meta: {
+            viewport: 'width=device-width, initial-scale=1'
+          }
+        }),
+
+        new MiniCssExtractPlugin({
+          filename: 'index.css'
+        })
+      ]
+    });
+
+    const stats = await promisify(compiler.run.bind(compiler))();
+
+    console.log(stats.toString('errors-warnings'));
   }
 
   async buildStanzas(stanzas) {
@@ -86,24 +133,44 @@ export default class BuildStanza extends BroccoliPlugin {
   }
 
   async buildHelpApp() {
-    const bundle = await rollup({
-      input: path.join(packagePath, 'src', 'help-app.js'),
+    const compiler = webpack({
+      mode: 'production',
+      entry: path.join(packagePath, 'src', 'help-app.js'),
+
+      output: {
+        path:     this.outputPath,
+        filename: '-help-app.js',
+        library:  'createHelpApp'
+      },
+
+      module: {
+        rules: [
+          {
+            test: /\.vue$/,
+            use: resolvePackage('vue-loader')
+          },
+          {
+            test: /\.css$/,
+            use:  [
+              MiniCssExtractPlugin.loader,
+              resolvePackage('css-loader')
+            ]
+          }
+        ]
+      },
 
       plugins: [
-        resolve(),
-        commonjs(),
-        vue(),
-        replace({
-          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        new vueLoader.VueLoaderPlugin(),
+
+        new MiniCssExtractPlugin({
+          filename: 'help.css'
         })
       ]
     });
 
-    await bundle.write({
-      format:    'esm',
-      file:      path.join(this.outputPath, '-help-app.js'),
-      sourcemap: true
-    });
+    const stats = await promisify(compiler.run.bind(compiler))();
+
+    console.log(stats.toString('errors-warnings'));
   }
 
   get allStanzas() {

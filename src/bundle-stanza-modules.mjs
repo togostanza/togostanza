@@ -22,6 +22,7 @@ export default class BundleStanzaModules extends BroccoliPlugin {
 
     const paths = walkSync(inputPath, {
       globs:           ['*.js'],
+      ignore:          ['-*.js'],
       includeBasePath: true
     });
 

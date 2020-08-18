@@ -14,10 +14,12 @@ Array [
 exports[`build simple 2`] = `
 Array [
   "-help-app.js",
-  "-help-app.js.map",
+  "-index-app.js",
   "hello.html",
   "hello.js",
   "hello.js.map",
+  "help.css",
+  "index.css",
   "index.html",
 ]
 `;

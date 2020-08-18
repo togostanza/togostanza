@@ -4,7 +4,7 @@
 
     <ul class="list-inline">
       <li v-for="badge in badges" :key="badge" class="list-inline-item">
-        <span class="badge badge-pill badge-secondary">{{badge}}</span>
+        <span class="badge rounded-pill bg-secondary">{{badge}}</span>
       </li>
     </ul>
 
@@ -15,9 +15,9 @@
         <section>
           <h2>Parameters</h2>
 
-          <div class="form-row mt-3">
-            <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="form-group col-sm-6 col-lg-12 col-xl-6">
-              <label>
+          <div class="row mt-3">
+            <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
+              <label class="form-label">
                 <span v-if="param['stanza:required']" class="text-danger">*</span>
                 {{param['stanza:key']}}
               </label>
@@ -40,9 +40,9 @@
         <section>
           <h2>Styles</h2>
 
-          <div class="form-row mt-3">
-            <div v-for="{style, valueRef, defaultValue, resetToDefault} in styleFields" :key="style['stanza:key']" class="form-group col-sm-6 col-lg-12 col-xl-6">
-              <label>
+          <div class="row mt-3">
+            <div v-for="{style, valueRef, defaultValue, resetToDefault} in styleFields" :key="style['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
+              <label class="form-label">
                 {{style['stanza:key']}}
               </label>
 
@@ -82,7 +82,7 @@
             </button>
           </div>
 
-          <pre class="overflow-auto p-3 mt-n3 text-white"><code>{{combinedSnippet}}</code></pre>
+          <pre class="overflow-auto p-3 pt-0 text-white"><code>{{combinedSnippet}}</code></pre>
         </div>
 
         <p>The above snippet will automatically embed the following Stanza in your HTML page.</p>
