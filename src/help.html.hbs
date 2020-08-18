@@ -5,19 +5,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{{metadata.[stanza:label]}}</title>
-    <link rel="stylesheet" href="./help.css" />
+    <link rel="stylesheet" href="./-help-app.css" />
+
+    <script type="module" src="./{{metadata.[@id]}}.js" async></script>
+
+    <script type="module">
+      import createHelpApp from './-help-app.js';
+
+      const metadata = {{{to-json metadata}}};
+
+      createHelpApp(metadata).mount('body');
+    </script>
   </head>
 
   <body>
-    <div id="app"></div>
-
-    <script type="module" src="./{{metadata.[@id]}}.js" async></script>
-    <script src="./-help-app.js"></script>
-
-    <script>
-      const metadata = {{{to-json metadata}}};
-
-      createHelpApp.default(metadata).mount('#app');
-    </script>
   </body>
 </html>

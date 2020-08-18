@@ -1,17 +1,18 @@
 import path from 'path';
 import { promises as fs } from 'fs';
-import { promisify } from 'util';
 
+import scss from 'rollup-plugin-scss';
 import BroccoliPlugin from 'broccoli-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import RSVP from 'rsvp';
 import _Handlebars from 'handlebars';
-import vueLoader from 'vue-loader/dist/index.js';
 import walkSync from 'walk-sync';
-import webpack from 'webpack';
+import { rollup } from 'rollup';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import vue from 'rollup-plugin-vue';
+import replace from '@rollup/plugin-replace';
 
-import { packagePath, resolvePackage } from './util.mjs';
+import { packagePath } from './util.mjs';
 
 const Handlebars = _Handlebars.create();
 
@@ -46,66 +47,10 @@ export default class BuildStanza extends BroccoliPlugin {
     const stanzas = this.allStanzas;
 
     await Promise.all([
-      this.buildIndexApp(stanzas),
       this.buildStanzas(stanzas),
+      this.buildIndexApp(stanzas),
       this.buildHelpApp()
     ]);
-  }
-
-  async buildIndexApp(stanzas) {
-    const allMetadata = await Promise.all(stanzas.map(({metadata}) => metadata));
-
-    const compiler = webpack({
-      mode: 'production',
-      entry: path.join(packagePath, 'src', 'index-app.js'),
-
-      output: {
-        path:     this.outputPath,
-        filename: '-index-app.js',
-        library:  'createIndexApp'
-      },
-
-      module: {
-        rules: [
-          {
-            test: /\.vue$/,
-            use: resolvePackage('vue-loader')
-          },
-          {
-            test: /\.css$/,
-            use:  [
-              MiniCssExtractPlugin.loader,
-              resolvePackage('css-loader')
-            ]
-          }
-        ]
-      },
-
-      plugins: [
-        new vueLoader.VueLoaderPlugin(),
-
-        new webpack.DefinePlugin({
-          allMetadata: JSON.stringify(allMetadata)
-        }),
-
-        new HtmlWebpackPlugin({
-          filename: 'index.html',
-          title:    'List of Stanzas',
-
-          meta: {
-            viewport: 'width=device-width, initial-scale=1'
-          }
-        }),
-
-        new MiniCssExtractPlugin({
-          filename: 'index.css'
-        })
-      ]
-    });
-
-    const stats = await promisify(compiler.run.bind(compiler))();
-
-    console.log(stats.toString('errors-warnings'));
   }
 
   async buildStanzas(stanzas) {
@@ -132,45 +77,55 @@ export default class BuildStanza extends BroccoliPlugin {
     await fs.copyFile(stanza.scriptPath, path.join(this.outputPath, stanza.id, 'index.js'));
   }
 
-  async buildHelpApp() {
-    const compiler = webpack({
-      mode: 'production',
-      entry: path.join(packagePath, 'src', 'help-app.js'),
+  async buildIndexApp(stanzas) {
+    const template = await handlebarsTemplate(path.join(packagePath, 'src', 'index.html.hbs'));
 
-      output: {
-        path:     this.outputPath,
-        filename: '-help-app.js',
-        library:  'createHelpApp'
-      },
+    this.output.writeFileSync('index.html', template());
 
-      module: {
-        rules: [
-          {
-            test: /\.vue$/,
-            use: resolvePackage('vue-loader')
-          },
-          {
-            test: /\.css$/,
-            use:  [
-              MiniCssExtractPlugin.loader,
-              resolvePackage('css-loader')
-            ]
-          }
-        ]
-      },
+    const allMetadata = await Promise.all(stanzas.map(({metadata}) => metadata));
+
+    const bundle = await rollup({
+      input: path.join(packagePath, 'src', 'index-app.js'),
 
       plugins: [
-        new vueLoader.VueLoaderPlugin(),
-
-        new MiniCssExtractPlugin({
-          filename: 'help.css'
+        resolve(),
+        commonjs(),
+        vue(),
+        scss(),
+        replace({
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+          ALL_METADATA:           JSON.stringify(allMetadata)
         })
       ]
     });
 
-    const stats = await promisify(compiler.run.bind(compiler))();
+    await bundle.write({
+      format:    'esm',
+      file:      path.join(this.outputPath, '-index-app.js'),
+      sourcemap: true
+    });
+  }
 
-    console.log(stats.toString('errors-warnings'));
+  async buildHelpApp() {
+    const bundle = await rollup({
+      input: path.join(packagePath, 'src', 'help-app.js'),
+
+      plugins: [
+        resolve(),
+        commonjs(),
+        vue(),
+        scss(),
+        replace({
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        })
+      ]
+    });
+
+    await bundle.write({
+      format:    'esm',
+      file:      path.join(this.outputPath, '-help-app.js'),
+      sourcemap: true
+    });
   }
 
   get allStanzas() {

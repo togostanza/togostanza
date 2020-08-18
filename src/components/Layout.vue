@@ -1,3 +1,7 @@
+<style lang="scss">
+  @import 'bootstrap/scss/bootstrap.scss';
+</style>
+
 <template>
   <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
@@ -12,8 +16,6 @@
 
 <script>
   import { defineComponent } from 'vue';
-
-  import 'bootstrap/dist/css/bootstrap.min.css';
 
   export default defineComponent({
     props: ['containerClass'],
