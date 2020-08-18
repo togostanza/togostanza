@@ -13,13 +13,16 @@ Array [
 
 exports[`build simple 2`] = `
 Array [
-  "-help-app.js",
-  "-index-app.js",
+  "-togostanza/",
+  "-togostanza/Layout-08dba3d9.js",
+  "-togostanza/Layout-08dba3d9.js.map",
+  "-togostanza/help-app.js",
+  "-togostanza/help-app.js.map",
+  "-togostanza/index-app.js",
+  "-togostanza/index-app.js.map",
   "hello.html",
   "hello.js",
   "hello.js.map",
-  "help.css",
-  "index.css",
   "index.html",
 ]
 `;

@@ -48,8 +48,7 @@ export default class BuildStanza extends BroccoliPlugin {
 
     await Promise.all([
       this.buildStanzas(stanzas),
-      this.buildIndexApp(stanzas),
-      this.buildHelpApp()
+      this.buildApps(stanzas)
     ]);
   }
 
@@ -77,7 +76,7 @@ export default class BuildStanza extends BroccoliPlugin {
     await fs.copyFile(stanza.scriptPath, path.join(this.outputPath, stanza.id, 'index.js'));
   }
 
-  async buildIndexApp(stanzas) {
+  async buildApps(stanzas) {
     const template = await handlebarsTemplate(path.join(packagePath, 'src', 'index.html.hbs'));
 
     this.output.writeFileSync('index.html', template());
@@ -85,13 +84,18 @@ export default class BuildStanza extends BroccoliPlugin {
     const allMetadata = await Promise.all(stanzas.map(({metadata}) => metadata));
 
     const bundle = await rollup({
-      input: path.join(packagePath, 'src', 'index-app.js'),
+      input: [
+        path.join(packagePath, 'src', 'index-app.js'),
+        path.join(packagePath, 'src', 'help-app.js')
+      ],
 
       plugins: [
         resolve(),
         commonjs(),
         vue(),
-        scss(),
+        scss({
+          output: path.join(this.outputPath, '-togostanza', 'app.css')
+        }),
         replace({
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
           ALL_METADATA:           JSON.stringify(allMetadata)
@@ -101,29 +105,7 @@ export default class BuildStanza extends BroccoliPlugin {
 
     await bundle.write({
       format:    'esm',
-      file:      path.join(this.outputPath, '-index-app.js'),
-      sourcemap: true
-    });
-  }
-
-  async buildHelpApp() {
-    const bundle = await rollup({
-      input: path.join(packagePath, 'src', 'help-app.js'),
-
-      plugins: [
-        resolve(),
-        commonjs(),
-        vue(),
-        scss(),
-        replace({
-          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-        })
-      ]
-    });
-
-    await bundle.write({
-      format:    'esm',
-      file:      path.join(this.outputPath, '-help-app.js'),
+      dir:       path.join(this.outputPath, '-togostanza'),
       sourcemap: true
     });
   }
