@@ -140,7 +140,7 @@ describe('build', () => {
         ignore: [
           'node_modules'
         ]
-      }).map(fn => fn.replace(/^(-togostanza\/Layout-)[0-9a-f]+(\.js(?:\.map))?$/, '$1HASH$2')
+      }).map(fn => fn.replace(/^(-togostanza\/Layout-)[0-9a-f]+(\.js(?:\.map)?)$/, '$1HASH$2')
       )).toMatchSnapshot();
 
       expect(fs.readFileSync('dist/hello.js', 'utf8')).toContain('function hello(stanza, params) {');

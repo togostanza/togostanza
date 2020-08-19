@@ -14,7 +14,7 @@ Array [
 exports[`build simple 2`] = `
 Array [
   "-togostanza/",
-  "-togostanza/Layout-cc757832.js",
+  "-togostanza/Layout-HASH.js",
   "-togostanza/Layout-HASH.js.map",
   "-togostanza/help-app.js",
   "-togostanza/help-app.js.map",
