@@ -22,7 +22,7 @@ export function defineStanzaElement(main, {metadata, templates, outer, url}) {
       ensureOuterInserted(id, outer);
       ensureAboutLinkElementDefined();
 
-      this.attachShadow({mode: "open"});
+      this.attachShadow({mode: 'open'});
 
       this.stanza = new Stanza(this, metadata, templates, url);
 
@@ -91,9 +91,9 @@ class AboutLinkElement extends HTMLElement {
   constructor() {
     super(...arguments);
 
-    this.attachShadow({mode: "open"});
+    this.attachShadow({mode: 'open'});
 
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.textContent = `:host {
       position: absolute;
       bottom: 0;
