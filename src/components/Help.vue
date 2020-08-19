@@ -85,8 +85,6 @@
           <pre class="overflow-auto p-3 pt-0 text-white"><code>{{combinedSnippet}}</code></pre>
         </div>
 
-        <p>The above snippet will automatically embed the following Stanza in your HTML page.</p>
-
         <div class="overflow-auto p-3 bg-light">
           <div v-html="styleSnippet"></div>
           <div v-html="elementSnippet"></div>
