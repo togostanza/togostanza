@@ -3,7 +3,7 @@ import outdent from 'outdent';
 
 import Stanza from './stanza.mjs';
 
-export function defineStanzaElement(main, {metadata, templates, outer}) {
+export function defineStanzaElement(main, {metadata, templates, outer, url}) {
   const id        = metadata['@id'];
   const paramKeys = metadata['stanza:parameter'].map(param => param['stanza:key']);
 
@@ -24,7 +24,7 @@ export function defineStanzaElement(main, {metadata, templates, outer}) {
 
       this.attachShadow({mode: "open"});
 
-      this.stanza = new Stanza(this, metadata, templates);
+      this.stanza = new Stanza(this, metadata, templates, url);
 
       applyDefaultStyles(this, metadata['stanza:style']);
     }

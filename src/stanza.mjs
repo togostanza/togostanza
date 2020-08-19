@@ -1,14 +1,15 @@
 import HandlebarsRuntime from 'handlebars/runtime.js';
 
 export default class Stanza {
-  constructor(host, metadata, templates) {
+  constructor(host, metadata, templates, url) {
     this.host     = host;
     this.root     = host.shadowRoot;
     this.metadata = metadata;
+    this.url      = url;
 
     const handlebarsRuntime = HandlebarsRuntime.create();
     handlebarsRuntime.registerHelper('about-url', function() {
-      return metadata["stanza:about"];
+      return url.replace(/\.js$/, '.html');
     });
 
     this.templates = Object.fromEntries(templates.map(([name, spec]) => {
@@ -16,7 +17,7 @@ export default class Stanza {
     }));
 
     const main = document.createElement('main');
-    main.style.position = "relative";
+    main.style.position = 'relative';
 
     this.root.appendChild(main);
 
