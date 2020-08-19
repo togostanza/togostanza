@@ -93,11 +93,6 @@ class AboutLinkElement extends HTMLElement {
 
     this.attachShadow({mode: "open"});
 
-    const href = this.attributes.href.textContent;
-    if (!href) {
-      return;
-    }
-
     const style = document.createElement("style");
     style.textContent = `:host {
       position: absolute;
@@ -121,7 +116,7 @@ class AboutLinkElement extends HTMLElement {
 
     const anchor = document.createElement('a');
     anchor.innerHTML = infoIcon;
-    anchor.href = href;
+    anchor.href = this.attributes.href.textContent;
     anchor.title = 'About this stanza';
     anchor.target = '_blank';
     anchor.rel = 'noopener noreferrer';
