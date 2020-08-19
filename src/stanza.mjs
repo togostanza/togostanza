@@ -6,11 +6,17 @@ export default class Stanza {
     this.root     = host.shadowRoot;
     this.metadata = metadata;
 
+    const handlebarsRuntime = HandlebarsRuntime.create();
+    handlebarsRuntime.registerHelper('about-url', function() {
+      return metadata["stanza:about"];
+    });
+
     this.templates = Object.fromEntries(templates.map(([name, spec]) => {
-      return [name, HandlebarsRuntime.template(spec)];
+      return [name, handlebarsRuntime.template(spec)];
     }));
 
     const main = document.createElement('main');
+    main.style.position = "relative";
 
     this.root.appendChild(main);
 

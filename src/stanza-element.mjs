@@ -20,6 +20,7 @@ export function defineStanzaElement(main, {metadata, templates, outer}) {
       }, 50);
 
       ensureOuterInserted(id, outer);
+      ensureAboutLinkElementDefined();
 
       this.attachShadow({mode: "open"});
 
@@ -84,4 +85,48 @@ function ensureOuterInserted(id, outer) {
 
     orig.replaceWith(el);
   });
+}
+
+class AboutLinkElement extends HTMLElement {
+  constructor() {
+    super(...arguments);
+
+    this.attachShadow({mode: "open"});
+
+    const href = this.attributes.href.textContent;
+    if (!href) {
+      return;
+    }
+
+    const style = document.createElement("style");
+    style.textContent = `:host {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background-color: white;
+      opacity: 0.5;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    :host(:hover) {
+      opacity: 0.8;
+    }
+
+    a {
+      text-decoration: none;
+      padding: 0.2rem 0.5rem;
+    }
+    `;
+
+    const anchor = document.createElement("a");
+    anchor.innerHTML = this.innerHTML || "About this stanza";
+    anchor.href = href;
+
+    this.shadowRoot.appendChild(style);
+    this.shadowRoot.appendChild(anchor);
+  }
+}
+
+function ensureAboutLinkElementDefined() {
+  customElements.define(`togostanza-about-link`, AboutLinkElement);
 }
