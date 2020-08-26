@@ -28,11 +28,25 @@
                 {{param['stanza:description']}}
               </small>
             </div>
-          </div>
 
-          <p v-if="paramFields.length === 0" class="font-italic">
-            No parameters defined.
-          </p>
+            <div class="col-sm-6 col-lg-12 col-xl-6 mb-3">
+              <label class="form-label">
+                togostanza-about-link-placement
+              </label>
+
+              <select v-model="aboutLinkPlacementValueRef" class="form-select">
+                <option value="top-left">top-left</option>
+                <option value="top-right">top-right</option>
+                <option value="bottom-left">bottom-left</option>
+                <option value="bottom-right">bottom-right</option>
+                <option value="none">none</option>
+              </select>
+
+              <small class="form-text text-muted">
+                Placement of the information icon which links to this page.
+              </small>
+            </div>
+          </div>
         </section>
 
         <hr>
@@ -48,7 +62,7 @@
 
               <div class="input-group">
                 <template v-if="style['stanza:type'] === 'single-choice'">
-                  <select v-model="valueRef.value" class="form-control">
+                  <select v-model="valueRef.value" class="form-select">
                     <option v-for="choice in style['stanza:choice']" :value="choice" :key="choice">{{choice}}</option>
                   </select>
                 </template>
@@ -119,6 +133,9 @@
         };
       });
 
+      const aboutLinkPlacementDefault  = metadata['stanza:about-link-placement'] || 'bottom-right';
+      const aboutLinkPlacementValueRef = ref(aboutLinkPlacementDefault);
+
       const styleFields = (metadata['stanza:style'] || []).map((style) => {
         const defaultValue = style['stanza:default'];
         const valueRef     = ref(defaultValue);
@@ -136,7 +153,8 @@
 
       const elementSnippet = computed(() => {
         const attrs = paramFields
-          .map(({param, valueRef}) => `${param['stanza:key']}=${JSON.stringify(valueRef.value)}`);
+          .map(({param, valueRef}) => `${param['stanza:key']}=${JSON.stringify(valueRef.value)}`)
+          .concat(aboutLinkPlacementValueRef.value === aboutLinkPlacementDefault ? [] : [`togostanza-about-link-placement=${JSON.stringify(aboutLinkPlacementValueRef.value)}`]);
 
         return attrs.length === 0 ? `<${tagName}></${tagName}>` : outdent`
           <${tagName}
@@ -177,6 +195,7 @@
         metadata,
         badges,
         paramFields,
+        aboutLinkPlacementValueRef,
         styleFields,
         elementSnippet,
         styleSnippet,

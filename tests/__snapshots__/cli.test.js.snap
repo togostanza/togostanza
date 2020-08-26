@@ -69,6 +69,8 @@ Object {
       \\"stanza:required\\": false
     }
   ],
+  \\"stanza:about-link-placement\\": \\"bottom-right\\",
+  \\"stanza:style\\": [],
   \\"stanza:usage\\": \\"<togostanza-hello></togostanza-hello>\\",
   \\"stanza:type\\": \\"TYPE\\",
   \\"stanza:context\\": \\"CONTEXT\\",

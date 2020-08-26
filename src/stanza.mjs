@@ -17,12 +17,13 @@ export default class Stanza {
     bbox.style.position = 'relative';
 
     const main = document.createElement('main');
-
-    const aboutLink = document.createElement('togostanza-about-link');
-    aboutLink.setAttribute('href', url.replace(/\.js$/, '.html'));
-
     bbox.appendChild(main);
-    bbox.appendChild(aboutLink);
+
+    this.aboutLink = document.createElement('togostanza-about-link');
+    this.aboutLink.setAttribute('href', url.replace(/\.js$/, '.html'));
+    this.aboutLink.setAttribute('placement', host.getAttribute('togostanza-about-link-placement'));
+
+    bbox.appendChild(this.aboutLink);
 
     this.root.appendChild(bbox);
 
@@ -30,6 +31,10 @@ export default class Stanza {
     this.grouping               = grouping;
     this.groupBy                = groupBy;
     this.unwrapValueFromBinding = unwrapValueFromBinding;
+  }
+
+  setAboutLinkPlacement(placement) {
+    this.aboutLink.setAttribute('placement', placement);
   }
 
   select(selector) {

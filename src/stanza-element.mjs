@@ -1,6 +1,7 @@
 import debounce from 'lodash.debounce';
 import outdent from 'outdent';
 
+import AboutLinkElement from './about-link.mjs';
 import Stanza from './stanza.mjs';
 
 export function defineStanzaElement(main, {metadata, templates, outer, url}) {
@@ -9,7 +10,7 @@ export function defineStanzaElement(main, {metadata, templates, outer, url}) {
 
   class StanzaElement extends HTMLElement {
     static get observedAttributes() {
-      return paramKeys;
+      return [...paramKeys, 'togostanza-about-link-placement'];
     }
 
     constructor() {
@@ -33,8 +34,12 @@ export function defineStanzaElement(main, {metadata, templates, outer, url}) {
       this.renderDebounced.flush();
     }
 
-    attributeChangedCallback() {
-      this.renderDebounced();
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (name === 'togostanza-about-link-placement') {
+        this.stanza.setAboutLinkPlacement(newValue);
+      } else {
+        this.renderDebounced();
+      }
     }
 
     render() {
@@ -85,53 +90,6 @@ function ensureOuterInserted(id, outer) {
 
     orig.replaceWith(el);
   });
-}
-
-class AboutLinkElement extends HTMLElement {
-  constructor() {
-    super(...arguments);
-
-    this.attachShadow({mode: 'open'});
-  }
-
-  connectedCallback() {
-    const style = document.createElement('style');
-    style.textContent = `
-      :host {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        background-color: white;
-        opacity: 0.5;
-        transition: opacity 0.2s ease-in-out;
-      }
-
-      :host(:hover) {
-        opacity: 0.8;
-      }
-
-      a {
-        display: block;
-        padding: 8px;
-      }
-
-      a svg {
-        display: block;
-      }
-    `;
-
-    const infoIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 100-2 1 1 0 000 2z"></path></svg>`;
-
-    const anchor = document.createElement('a');
-    anchor.innerHTML = infoIcon;
-    anchor.href = this.attributes.href.textContent;
-    anchor.title = 'About this stanza';
-    anchor.target = '_blank';
-    anchor.rel = 'noopener noreferrer';
-
-    this.shadowRoot.appendChild(style);
-    this.shadowRoot.appendChild(anchor);
-  }
 }
 
 function ensureAboutLinkElementDefined() {

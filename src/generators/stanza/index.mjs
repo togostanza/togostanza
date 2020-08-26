@@ -139,6 +139,9 @@ function metadataJSON({id, label, definition, type, context, display, provider, 
         'stanza:required': false
       }
     ],
+    'stanza:about-link-placement': 'bottom-right',
+    'stanza:style': [
+    ],
     'stanza:usage': `<togostanza-${id}></togostanza-${id}>`,
     'stanza:type': type,
     'stanza:context': context,
