@@ -9,6 +9,8 @@ import StanzaGenerator from '../../generators/stanza/index.mjs';
 import { packagePath } from '../../util.mjs';
 
 const command = new commander.Command()
+  .storeOptionsAsProperties(false)
+  .passCommandToAction(false)
   .command('stanza [id]')
   .description('generate a stanza')
   .option('--label <label>',           'label')

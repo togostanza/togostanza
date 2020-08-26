@@ -5,6 +5,8 @@ import commander from 'commander';
 import { composeTree, runWatcher } from './-build-internal.mjs';
 
 const command = new commander.Command()
+  .storeOptionsAsProperties(false)
+  .passCommandToAction(false)
   .command('build')
   .alias('b')
   .description('build stanzas for deployment')

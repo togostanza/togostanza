@@ -7,6 +7,8 @@ import PreviewServer from '../preview-server.mjs';
 import { composeTree, runWatcher } from './-build-internal.mjs';
 
 const command = new commander.Command()
+  .storeOptionsAsProperties(false)
+  .passCommandToAction(false)
   .command('serve')
   .alias('s')
   .description('serve the repository locally')

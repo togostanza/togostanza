@@ -8,6 +8,8 @@ import RepositoryGenerator from '../generators/repository/index.mjs';
 import { packagePath } from '../util.mjs';
 
 const command = new commander.Command()
+  .storeOptionsAsProperties(false)
+  .passCommandToAction(false)
   .command('init [name]')
   .description('create a new stanza repository')
   .option('--license <license>',          'license')
