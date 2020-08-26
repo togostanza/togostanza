@@ -8,18 +8,23 @@ export default class Stanza {
     this.url      = url;
 
     const handlebarsRuntime = HandlebarsRuntime.create();
-    handlebarsRuntime.registerHelper('about-url', function() {
-      return url.replace(/\.js$/, '.html');
-    });
 
     this.templates = Object.fromEntries(templates.map(([name, spec]) => {
       return [name, handlebarsRuntime.template(spec)];
     }));
 
-    const main = document.createElement('main');
-    main.style.position = 'relative';
+    const bbox = document.createElement('div');
+    bbox.style.position = 'relative';
 
-    this.root.appendChild(main);
+    const main = document.createElement('main');
+
+    const aboutLink = document.createElement('togostanza-about-link');
+    aboutLink.setAttribute('href', url.replace(/\.js$/, '.html'));
+
+    bbox.appendChild(main);
+    bbox.appendChild(aboutLink);
+
+    this.root.appendChild(bbox);
 
     // TODO migrate
     this.grouping               = grouping;
