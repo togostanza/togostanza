@@ -97,18 +97,22 @@ class AboutLinkElement extends HTMLElement {
   connectedCallback() {
     const style = document.createElement('style');
     style.textContent = `
-      a {
+      :host {
         position: absolute;
         bottom: 0;
         right: 0;
         background-color: white;
         opacity: 0.5;
         transition: opacity 0.2s ease-in-out;
-        padding: 8px;
       }
 
-      a:hover {
+      :host(:hover) {
         opacity: 0.8;
+      }
+
+      a {
+        display: block;
+        padding: 8px;
       }
 
       a svg {
