@@ -21,7 +21,7 @@ export default command;
 
 async function serve(port) {
   const ui   = new UI();
-  const tree = composeTree('.');
+  const tree = composeTree('.', {environment: 'development'});
 
   const server = new MergeTrees([
     tree,

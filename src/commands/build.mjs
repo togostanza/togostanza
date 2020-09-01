@@ -18,7 +18,7 @@ const command = new commander.Command()
 export default command;
 
 async function build(outputPath) {
-  const builder    = new broccoli.Builder(composeTree('.'));
+  const builder    = new broccoli.Builder(composeTree('.', {environment: 'production'}));
   const outputTree = new TreeSync(builder.outputPath, outputPath);
 
   await runWatcher(builder, outputPath, (watcher) => {

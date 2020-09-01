@@ -41,6 +41,8 @@ async function handlebarsTemplate(fpath, opts = {}) {
 export default class BuildStanza extends BroccoliPlugin {
   constructor(inputNode, options) {
     super([inputNode], options);
+
+    this.environment = options.environment;
   }
 
   async build() {
@@ -48,7 +50,7 @@ export default class BuildStanza extends BroccoliPlugin {
 
     await Promise.all([
       this.buildStanzas(stanzas),
-      this.buildApps(stanzas)
+      this.buildApps(stanzas, this.environment)
     ]);
   }
 
@@ -76,7 +78,7 @@ export default class BuildStanza extends BroccoliPlugin {
     await fs.copyFile(stanza.scriptPath, path.join(this.outputPath, stanza.id, 'index.js'));
   }
 
-  async buildApps(stanzas) {
+  async buildApps(stanzas, environment) {
     const template = await handlebarsTemplate(path.join(packagePath, 'src', 'index.html.hbs'));
 
     this.output.writeFileSync('index.html', template());
@@ -97,7 +99,9 @@ export default class BuildStanza extends BroccoliPlugin {
           output: path.join(this.outputPath, '-togostanza', 'app.css')
         }),
         replace({
-          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+          'process.env.NODE_ENV': JSON.stringify(environment),
+          __VUE_OPTIONS_API__:    'false',
+          __VUE_PROD_DEVTOOLS__:  'false',
           ALL_METADATA:           JSON.stringify(allMetadata)
         })
       ]
