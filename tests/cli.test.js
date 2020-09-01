@@ -19,12 +19,11 @@ describe('init', () => {
     {packageManager: 'yarn'}
   ])('non-interactive (%p)', ({packageManager}) => {
     withinTmpdir(() => {
-      const {output, status} = togostanza([
-        'init', 'some-repo',
+      const {output, status} = togostanza(['init',
+        '--git-url',         'https://github.com/ursm/some-repo.git',
+        '--name',            'some-repo',
         '--license',         'MIT',
         '--package-manager', packageManager,
-        '--owner',           'ursm',
-        '--repo',            'some-repo',
         '--skip-install',
         '--skip-git'
       ]);
@@ -40,8 +39,7 @@ describe('init', () => {
 describe('generate stanza', () => {
   test('non-interactive', () => {
     withinTmpdir(() => {
-      const {output, status} = togostanza([
-        'generate', 'stanza', 'hello',
+      const {output, status} = togostanza(['generate', 'stanza', 'hello',
         '--label',      'LABEL',
         '--definition', 'DEFINITION',
         '--type',       'TYPE',
@@ -100,12 +98,11 @@ describe('upgrade', () => {
 describe('build', () => {
   test('simple', () => {
     withinTmpdir(() => {
-      const init = togostanza([
-        'init', 'some-repo',
+      const init = togostanza(['init',
+        '--git-url',         '',
+        '--name',            'some-repo',
         '--license',         'MIT',
         '--package-manager', 'yarn',
-        '--owner',           'ursm',
-        '--repo',            'some-repo',
         '--skip-install',
         '--skip-git',
       ]);
@@ -115,8 +112,7 @@ describe('build', () => {
 
       process.chdir('some-repo');
 
-      const generateStanza = togostanza([
-        'generate', 'stanza', 'hello',
+      const generateStanza = togostanza(['generate', 'stanza', 'hello',
         '--label',      'LABEL',
         '--definition', 'DEFINITION',
         '--type',       'TYPE',

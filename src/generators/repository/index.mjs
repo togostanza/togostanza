@@ -19,14 +19,51 @@ const packageManagers = {
 
 export default class RepositoryGenerator extends Generator {
   async prompting() {
-    const args    = pick(this.options, ['name', 'license', 'packageManager', 'skipGit', 'owner', 'repo']);
+    const args    = pick(this.options, ['gitUrl', 'name', 'license', 'packageManager', 'skipGit']);
     const storage = new MemoryStorage(args);
 
     await this.prompt([
       {
-        name:     'name',
-        message:  'stanza repository name (used as a directory name):',
-        validate: required
+        name:    'gitUrl',
+        message: 'Git repository URL (leave blank if you don\'t need to push to a remote Git repository):',
+
+        validate(val) {
+          if (!val) { return true; }
+
+          try {
+            new URL(val);
+          } catch (e) {
+            if (e.code === 'ERR_INVALID_URL') {
+              return e.message;
+            } else {
+              throw e;
+            }
+          }
+
+          return true;
+        }
+      },
+      {
+        name:    'name',
+        message: 'stanza repository name (used as a directory name):',
+
+        default({gitUrl}) {
+          if (!gitUrl) { return null; }
+
+          const path = new URL(gitUrl).pathname;
+
+          return path.split('/').slice(-1)[0].replace(/\.git$/, '');
+        },
+
+        validate: async (val) => {
+          const result = required(val);
+
+          if (result !== true) { return result; }
+
+          const dest = this.destinationPath(val);
+
+          return await fs.pathExists(dest) ? `destination path already exists: ${dest}` : true;
+        }
       },
       {
         name:    'license',
@@ -37,34 +74,24 @@ export default class RepositoryGenerator extends Generator {
         message: 'package manager:',
         type:    'list',
         choices: Object.keys(packageManagers)
-      },
-      {
-        name:    'owner',
-        message: 'GitHub repository owner (https://github.com/OWNER/repo):',
-        default: () => this.user.github.username(),
-      },
-      {
-        name:    'repo',
-        message: 'GitHub repository name (https://github.com/owner/REPO):',
-        default: ({name})  => args.name  || name,
-        when:    ({owner}) => args.owner || owner
       }
     ], storage);
 
     this.params = storage.data;
   }
 
-  writing() {
-    const {name, packageManager} = this.params;
+  async writing() {
+    const {skipGit, gitUrl, name, packageManager} = this.params;
 
-    const root     = this.destinationRoot(name);
+    const dest     = this.destinationRoot(name);
     const commands = packageManagers[packageManager];
 
+    this._gitPrepare({skipGit, gitUrl, dest});
     this.writeDestinationJSON('package.json', packageJSON(this.params));
 
     this.renderTemplate('**/*', '.', Object.assign({}, this.params, {commands}), null, {
       processDestinationPath: (fullPath) => {
-        const relativePath = fullPath.slice(root.length + 1);
+        const relativePath = fullPath.slice(dest.length + 1);
         const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
 
         return this.destinationPath(dotted);
@@ -85,38 +112,42 @@ export default class RepositoryGenerator extends Generator {
   }
 
   async end() {
+    const {skipGit, name} = this.params;
+
     await fs.mkdirs('lib');
 
-    this._setupGit();
+    this._gitCommit({skipGit, name, dest: this.destinationPath()});
 
     this.log();
     this.log(gettingStarted(this.params));
     this.log();
   }
 
-  _setupGit() {
-    const {skipGit, name, owner, repo} = this.params;
-
+  _gitPrepare({skipGit, gitUrl, dest}) {
     if (skipGit) { return; }
 
-    const root = this.destinationRoot();
-
-    this.spawnCommandSync('git', ['-C', root, 'init']);
-    this.spawnCommandSync('git', ['-C', root, 'add', '--all']);
-    this.spawnCommandSync('git', ['-C', root, 'commit', '--message', `Initialize new stanza repository: ${name}`]);
-
-    if (owner && repo) {
-      this.spawnCommandSync('git', ['-C', root, 'remote', 'add', 'origin', `https://github.com/${owner}/${repo}.git`]);
+    if (gitUrl) {
+      this.spawnCommandSync('git', ['clone', gitUrl, dest]);
+    } else {
+      this.spawnCommandSync('git', ['-C', dest, 'init']);
     }
+  }
+
+  _gitCommit({skipGit, name, dest}) {
+    if (skipGit) { return; }
+
+    this.spawnCommandSync('git', ['-C', dest, 'init']);
+    this.spawnCommandSync('git', ['-C', dest, 'add', '--all']);
+    this.spawnCommandSync('git', ['-C', dest, 'commit', '--message', `Initialize new stanza repository: ${name}`]);
   }
 };
 
-function packageJSON({name, license, owner, repo}) {
+function packageJSON({name, license, gitUrl}) {
   return {
     name,
     version: '0.0.1',
     license,
-    repository: owner && repo ? `${owner}/${repo}` : '',
+    repository: gitUrl,
     dependencies: {
       togostanza: 'github:togostanza/togostanza-js'
     },
