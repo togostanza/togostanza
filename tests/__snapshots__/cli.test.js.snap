@@ -178,7 +178,7 @@ jobs:
   \\"license\\": \\"MIT\\",
   \\"repository\\": \\"https://github.com/ursm/some-repo.git\\",
   \\"dependencies\\": {
-    \\"togostanza\\": \\"github:togostanza/togostanza-js\\"
+    \\"togostanza\\": \\"github:togostanza/togostanza\\"
   },
   \\"engines\\": {
     \\"node\\": \\">=12\\"
@@ -275,7 +275,7 @@ jobs:
   \\"license\\": \\"MIT\\",
   \\"repository\\": \\"https://github.com/ursm/some-repo.git\\",
   \\"dependencies\\": {
-    \\"togostanza\\": \\"github:togostanza/togostanza-js\\"
+    \\"togostanza\\": \\"github:togostanza/togostanza\\"
   },
   \\"engines\\": {
     \\"node\\": \\">=12\\"

@@ -9,5 +9,5 @@
 ## Usage
 
 ```
-$ npx togostanza/togostanza-js init
+$ npx togostanza/togostanza init
 ```

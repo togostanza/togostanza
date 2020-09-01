@@ -149,7 +149,7 @@ function packageJSON({name, license, gitUrl}) {
     license,
     repository: gitUrl,
     dependencies: {
-      togostanza: 'github:togostanza/togostanza-js'
+      togostanza: 'github:togostanza/togostanza'
     },
     engines: {
       node: '>=12'
