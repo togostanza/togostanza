@@ -88,6 +88,10 @@ export default class RepositoryGenerator extends Generator {
 
           if (result !== true) { return result; }
 
+          if (!isValidRepositoryName(val)) {
+            return 'invalid repository name';
+          }
+
           const dest = this.destinationPath(val);
 
           return await fs.pathExists(dest) ? `destination path already exists: ${dest}` : true;
