@@ -17,20 +17,20 @@ const packageManagers = {
   }
 };
 
-function validateGitUrl(url) {
+function errorOfGitUrl(url) {
   if (!url) {
-    return [];
+    return null;
   }
   try {
     new URL(canonifyGitUrl(url));
   } catch (e) {
     if (e.code === 'ERR_INVALID_URL') {
-      return [`${url} is not valid as repository URL`];
+      return `${url} is not valid as repository URL`;
     } else {
       throw e;
     }
   }
-  return [];
+  return null;
 }
 
 export function canonifyGitUrl(url) {
@@ -49,8 +49,8 @@ export function canonifyGitUrl(url) {
   return url;
 }
 
-export function isValidRepositoryName(url) {
-  return /^[\da-z][\da-z\._-]*$/i.test(url);
+export function errorOfRepositoryName(name) {
+  return /^[\da-z][\da-z\._-]*$/i.test(name) ? null : `${name} is not valid repository name`;
 }
 
 export default class RepositoryGenerator extends Generator {
@@ -66,8 +66,7 @@ export default class RepositoryGenerator extends Generator {
         validate(val) {
           if (!val) { return true; }
 
-          const errors = validateGitUrl(val);
-          return errors.length > 0 ? errors.join(' ') : true;
+          return errorOfGitUrl(val) || true;
         }
       },
       {
@@ -80,7 +79,7 @@ export default class RepositoryGenerator extends Generator {
           const path = new URL(canonifyGitUrl(gitUrl)).pathname;
           const name = path.split('/').slice(-1)[0].replace(/\.git$/, '');
 
-          return isValidRepositoryName(name) ? name : null;
+          return errorOfRepositoryName(name) ? null : name;
         },
 
         validate: async (val) => {
@@ -88,8 +87,9 @@ export default class RepositoryGenerator extends Generator {
 
           if (result !== true) { return result; }
 
-          if (!isValidRepositoryName(val)) {
-            return 'invalid repository name';
+          const error = errorOfRepositoryName(val);
+          if (error) {
+            return error;
           }
 
           const dest = this.destinationPath(val);
@@ -114,6 +114,12 @@ export default class RepositoryGenerator extends Generator {
 
   async writing() {
     const {skipGit, gitUrl, name, packageManager} = this.params;
+
+    const error = errorOfRepositoryName(name)
+    if (error) {
+      this.log.error(error);
+      process.exit(1);
+    }
 
     const dest     = this.destinationRoot(name);
     const commands = packageManagers[packageManager];

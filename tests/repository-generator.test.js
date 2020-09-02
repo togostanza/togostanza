@@ -1,4 +1,4 @@
-import { canonifyGitUrl, isValidRepositoryName } from '../src/generators/repository/index.mjs';
+import { canonifyGitUrl, errorOfRepositoryName } from '../src/generators/repository/index.mjs';
 
 test.each([
   ['git@github.com:togostanza/togostanza.git', 'ssh://git@github.com/togostanza/togostanza.git'],
@@ -20,5 +20,9 @@ test.each([
   ['_name', false],
   ['name~', false],
 ])('isValidRepositoryName(%s) -> %s', (name, isValid) => {
-  expect(isValidRepositoryName(name)).toBe(isValid);
+  if (isValid) {
+    expect(errorOfRepositoryName(name)).toBeNull();
+  } else {
+    expect(errorOfRepositoryName(name)).not.toBeNull();
+  }
 });
