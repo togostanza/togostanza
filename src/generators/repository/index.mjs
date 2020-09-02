@@ -53,6 +53,10 @@ export function errorOfRepositoryName(name) {
   return /^[\da-z][\da-z\._-]*$/i.test(name) ? null : `${name} is not valid repository name`;
 }
 
+export async function errorOfRepositoryPathExistence(dest) {
+  return await fs.pathExists(dest) ? `destination path already exists: ${dest}` : null;
+}
+
 export default class RepositoryGenerator extends Generator {
   async prompting() {
     const args    = pick(this.options, ['gitUrl', 'name', 'license', 'packageManager', 'skipGit']);
@@ -94,7 +98,7 @@ export default class RepositoryGenerator extends Generator {
 
           const dest = this.destinationPath(val);
 
-          return await fs.pathExists(dest) ? `destination path already exists: ${dest}` : true;
+          return await errorOfRepositoryPathExistence(dest) || true;
         }
       },
       {
@@ -115,21 +119,24 @@ export default class RepositoryGenerator extends Generator {
   async writing() {
     const {skipGit, gitUrl, name, packageManager} = this.params;
 
+    const dest = this.destinationPath(name);
+
     const errors = [
       errorOfGitUrl(gitUrl),
-      errorOfRepositoryName(name)
-    ].filter(Boolean);
+      errorOfRepositoryName(name),
+      await errorOfRepositoryPathExistence(dest)
+    ];
 
-    if (errors.length > 0) {
-      errors.forEach(e => {
-        this.log.error(e);
-      });
+    for (const e of errors) {
+      if (!e) { continue; }
+
+      this.log.error(e);
       process.exit(1);
     }
 
-    const dest     = this.destinationRoot(name);
     const commands = packageManagers[packageManager];
 
+    this.destinationRoot(name);
     this._gitPrepare({skipGit, gitUrl, dest});
     this.writeDestinationJSON('package.json', packageJSON(this.params));
 
