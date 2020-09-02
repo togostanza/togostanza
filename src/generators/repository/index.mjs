@@ -49,7 +49,7 @@ export function canonifyGitUrl(url) {
   return url;
 }
 
-export function validRepositoryName(url) {
+export function isValidRepositoryName(url) {
   return /^[\da-z][\da-z\._-]*$/i.test(url);
 }
 
@@ -80,7 +80,7 @@ export default class RepositoryGenerator extends Generator {
           const path = new URL(canonifyGitUrl(gitUrl)).pathname;
           const name = path.split('/').slice(-1)[0].replace(/\.git$/, '');
 
-          return validRepositoryName(name) ? name : null;
+          return isValidRepositoryName(name) ? name : null;
         },
 
         validate: async (val) => {
