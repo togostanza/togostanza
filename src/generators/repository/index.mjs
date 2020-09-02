@@ -17,6 +17,38 @@ const packageManagers = {
   }
 };
 
+function validateGitUrl(url) {
+  if (!url) {
+    return [];
+  }
+  try {
+    new URL(canonifyGitUrl(url));
+  } catch (e) {
+    if (e.code === 'ERR_INVALID_URL') {
+      return [`${url} is not valid as repository URL`];
+    } else {
+      throw e;
+    }
+  }
+  return [];
+}
+
+export function canonifyGitUrl(url) {
+  try {
+    new URL(url)
+  } catch (e) {
+    if (e.code !== 'ERR_INVALID_URL') {
+      throw e;
+    }
+    const m = url.match(/^([^:]+):(.+)$/);
+    if (!m) {
+      return url;
+    }
+    return `ssh://${m[1]}/${m[2]}`;
+  }
+  return url;
+}
+
 export default class RepositoryGenerator extends Generator {
   async prompting() {
     const args    = pick(this.options, ['gitUrl', 'name', 'license', 'packageManager', 'skipGit']);
@@ -30,17 +62,8 @@ export default class RepositoryGenerator extends Generator {
         validate(val) {
           if (!val) { return true; }
 
-          try {
-            new URL(val);
-          } catch (e) {
-            if (e.code === 'ERR_INVALID_URL') {
-              return e.message;
-            } else {
-              throw e;
-            }
-          }
-
-          return true;
+          const errors = validateGitUrl(val);
+          return errors.length > 0 ? errors.join(' ') : true;
         }
       },
       {
@@ -50,7 +73,7 @@ export default class RepositoryGenerator extends Generator {
         default({gitUrl}) {
           if (!gitUrl) { return null; }
 
-          const path = new URL(gitUrl).pathname;
+          const path = new URL(canonifyGitUrl(gitUrl)).pathname;
 
           return path.split('/').slice(-1)[0].replace(/\.git$/, '');
         },
