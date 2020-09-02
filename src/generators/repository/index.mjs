@@ -115,9 +115,15 @@ export default class RepositoryGenerator extends Generator {
   async writing() {
     const {skipGit, gitUrl, name, packageManager} = this.params;
 
-    const error = errorOfRepositoryName(name)
-    if (error) {
-      this.log.error(error);
+    const errors = [
+      errorOfGitUrl(gitUrl),
+      errorOfRepositoryName(name)
+    ].filter(Boolean);
+
+    if (errors.length > 0) {
+      errors.forEach(e => {
+        this.log.error(e);
+      });
       process.exit(1);
     }
 
