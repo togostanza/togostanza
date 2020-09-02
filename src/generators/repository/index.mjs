@@ -57,6 +57,21 @@ export async function errorOfRepositoryPathExistence(dest) {
   return await fs.pathExists(dest) ? `destination path already exists: ${dest}` : null;
 }
 
+export function getHttpsRepositoryUrlIfPossible(url) {
+  let gitUrl;
+  try {
+    gitUrl = new URL(canonifyGitUrl(url));
+  } catch (e) {
+    return url;
+  }
+
+  if (gitUrl.protocol === 'ssh:' && gitUrl.host === 'github.com') {
+    return `https://${gitUrl.host}${gitUrl.pathname}`
+  }
+
+  return url;
+}
+
 export default class RepositoryGenerator extends Generator {
   async prompting() {
     const args    = pick(this.options, ['gitUrl', 'name', 'license', 'packageManager', 'skipGit']);
@@ -198,7 +213,7 @@ function packageJSON({name, license, gitUrl}) {
     name,
     version: '0.0.1',
     license,
-    repository: gitUrl,
+    repository: getHttpsRepositoryUrlIfPossible(gitUrl) || '',
     dependencies: {
       togostanza: 'github:togostanza/togostanza'
     },

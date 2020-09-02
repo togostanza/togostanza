@@ -34,6 +34,24 @@ describe('init', () => {
       expect(fixturify.readSync('.')).toMatchSnapshot();
     });
   });
+
+  test('with scp-like repository url', () => {
+    withinTmpdir(() => {
+      const {output, status} = togostanza(['init',
+        '--git-url',         'git@github.com:ursm/some-repo.git',
+        '--name',            'some-repo',
+        '--license',         'MIT',
+        '--package-manager', 'npm',
+        '--skip-install',
+        '--skip-git'
+      ]);
+
+      expect(output).toMatchSnapshot();
+      expect(status).toBe(0);
+
+      expect(fixturify.readSync('.')).toMatchSnapshot();
+    });
+  });
 });
 
 describe('generate stanza', () => {

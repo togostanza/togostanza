@@ -1,4 +1,4 @@
-import { canonifyGitUrl, errorOfRepositoryName } from '../src/generators/repository/index.mjs';
+import { canonifyGitUrl, errorOfRepositoryName, getHttpsRepositoryUrlIfPossible } from '../src/generators/repository/index.mjs';
 
 test.each([
   ['git@github.com:togostanza/togostanza.git', 'ssh://git@github.com/togostanza/togostanza.git'],
@@ -25,4 +25,13 @@ test.each([
   } else {
     expect(errorOfRepositoryName(name)).not.toBeNull();
   }
+});
+
+test.each([
+  ['git@github.com:togostanza/togostanza.git', 'https://github.com/togostanza/togostanza.git'],
+  ['ssh://git@github.com/togostanza/togostanza.git', 'https://github.com/togostanza/togostanza.git'],
+  ['https://github.com/togostanza/togostanza.git', 'https://github.com/togostanza/togostanza.git'],
+  ['hoge', 'hoge'],
+])('getHttpsRepositoryUrlIfPossible(%s) -> %s', (from, to) => {
+  expect(getHttpsRepositoryUrlIfPossible(from)).toBe(to);
 });
