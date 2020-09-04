@@ -3,6 +3,7 @@ import path from 'path';
 import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
 import walkSync from 'walk-sync';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
@@ -47,7 +48,8 @@ export default class BundleStanzaModules extends BroccoliPlugin {
             basedir: this.repositoryDir
           }
         }),
-        commonjs()
+        commonjs(),
+        json()
       ],
 
       external(id) {

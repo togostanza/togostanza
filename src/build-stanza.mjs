@@ -1,16 +1,18 @@
 import path from 'path';
 import { promises as fs } from 'fs';
 
-import scss from 'rollup-plugin-scss';
+import alias from '@rollup/plugin-alias';
 import BroccoliPlugin from 'broccoli-plugin';
 import RSVP from 'rsvp';
 import _Handlebars from 'handlebars';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import replace from '@rollup/plugin-replace';
+import resolve from '@rollup/plugin-node-resolve';
+import scss from 'rollup-plugin-scss';
+import vue from 'rollup-plugin-vue';
 import walkSync from 'walk-sync';
 import { rollup } from 'rollup';
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import vue from 'rollup-plugin-vue';
-import replace from '@rollup/plugin-replace';
 
 import { packagePath } from './util.mjs';
 
@@ -92,7 +94,16 @@ export default class BuildStanza extends BroccoliPlugin {
       ],
 
       plugins: [
-        resolve(),
+        alias({
+          entries: {
+            'package.json': this.inputPaths[0] + '/package.json'
+          }
+        }),
+        resolve({
+          customResolveOptions: {
+            basedir: this.inputPaths[0]
+          }
+        }),
         commonjs(),
         vue(),
         scss({
@@ -102,8 +113,9 @@ export default class BuildStanza extends BroccoliPlugin {
           'process.env.NODE_ENV': JSON.stringify(environment),
           __VUE_OPTIONS_API__:    'false',
           __VUE_PROD_DEVTOOLS__:  'false',
-          ALL_METADATA:           JSON.stringify(allMetadata)
-        })
+          ALL_METADATA:           JSON.stringify(allMetadata),
+        }),
+        json()
       ]
     });
 
