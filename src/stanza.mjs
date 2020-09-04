@@ -21,7 +21,7 @@ export default class Stanza {
 
     this.aboutLink = document.createElement('togostanza-about-link');
     this.aboutLink.setAttribute('href', url.replace(/\.js$/, '.html'));
-    this.aboutLink.setAttribute('placement', host.getAttribute('togostanza-about-link-placement'));
+    this.setAboutLinkPlacement(host.getAttribute('togostanza-about-link-placement'));
 
     bbox.appendChild(this.aboutLink);
 
@@ -34,7 +34,11 @@ export default class Stanza {
   }
 
   setAboutLinkPlacement(placement) {
-    this.aboutLink.setAttribute('placement', placement);
+    if (placement) {
+      this.aboutLink.setAttribute('placement', placement);
+    } else {
+      this.aboutLink.removeAttribute('placement');
+    }
   }
 
   select(selector) {
