@@ -1,3 +1,5 @@
+import path from 'path';
+
 import TreeSync from 'tree-sync';
 import broccoli from 'broccoli';
 import commander from 'commander';
@@ -18,10 +20,11 @@ const command = new commander.Command()
 export default command;
 
 async function build(outputPath) {
-  const builder    = new broccoli.Builder(composeTree('.', {environment: 'production'}));
-  const outputTree = new TreeSync(builder.outputPath, outputPath);
+  const repositoryDir = path.resolve('.');
+  const builder       = new broccoli.Builder(composeTree(repositoryDir, {environment: 'production'}));
+  const outputTree    = new TreeSync(builder.outputPath, outputPath);
 
-  await runWatcher(builder, outputPath, (watcher) => {
+  await runWatcher(repositoryDir, builder, outputPath, (watcher) => {
     outputTree.sync();
     watcher.quit();
   });

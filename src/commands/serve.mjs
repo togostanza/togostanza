@@ -1,3 +1,5 @@
+import path from 'path';
+
 import MergeTrees from 'broccoli-merge-trees';
 import UI from 'console-ui';
 import broccoli from 'broccoli';
@@ -20,8 +22,10 @@ const command = new commander.Command()
 export default command;
 
 async function serve(port) {
+  const repositoryDir = path.resolve('.');
+
   const ui   = new UI();
-  const tree = composeTree('.', {environment: 'development'});
+  const tree = composeTree(repositoryDir, {environment: 'development'});
 
   const server = new MergeTrees([
     tree,
@@ -35,5 +39,5 @@ async function serve(port) {
 
   ui.writeInfoLine(`Serving at http://localhost:${port}`);
 
-  await runWatcher(builder);
+  await runWatcher(repositoryDir, builder);
 }

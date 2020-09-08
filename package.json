@@ -37,6 +37,7 @@
     "lodash.upperfirst": "^4.3.1",
     "mime": "^2.4.6",
     "outdent": "^0.7.1",
+    "picomatch": "^2.2.2",
     "resolve": "^1.17.0",
     "rollup": "^2.23.0",
     "rollup-plugin-scss": "^2.6.0",
