@@ -24,7 +24,7 @@ async function build(outputPath) {
   const builder       = new broccoli.Builder(composeTree(repositoryDir, {environment: 'production'}));
   const outputTree    = new TreeSync(builder.outputPath, outputPath);
 
-  await runWatcher(repositoryDir, builder, outputPath, (watcher) => {
+  await runWatcher(repositoryDir, builder, (watcher) => {
     outputTree.sync();
     watcher.quit();
   });

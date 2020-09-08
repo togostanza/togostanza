@@ -11,7 +11,7 @@ import BuildStanza from '../build-stanza.mjs';
 import BundleStanzaModules from '../bundle-stanza-modules.mjs';
 import { packagePath } from '../util.mjs';
 
-export async function runWatcher(repositoryDir, builder, outputPath = null, onBuildSuccess = () => {}) {
+export async function runWatcher(repositoryDir, builder, onBuildSuccess = () => {}) {
   const watchMatcher = picomatch([
     '.',
     'README.md',
