@@ -66,7 +66,18 @@ export async function runWatcher(repositoryDir, builder, {onReady, onBuildSucces
 }
 
 function watchPackageFiles(repositoryDir, builder) {
-  const packageJsonPath = resolve.sync('togostanza/package.json', {basedir: repositoryDir});
+  let packageJsonPath;
+
+  try {
+    packageJsonPath = resolve.sync('togostanza/package.json', {basedir: repositoryDir});
+  } catch (e) {
+    if (e.code === 'MODULE_NOT_FOUND') {
+      return;
+    } else {
+      throw e;
+    }
+  }
+
   const installedPath   = path.resolve(packageJsonPath, '..');
 
   if (!fs.lstatSync(installedPath).isSymbolicLink()) { return; }
