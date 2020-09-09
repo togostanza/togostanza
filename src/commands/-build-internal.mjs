@@ -8,11 +8,11 @@ import broccoli from 'broccoli';
 import debounce from 'lodash.debounce';
 import messages from 'broccoli/dist/messages.js';
 import picomatch from 'picomatch';
+import resolve from 'resolve';
 import sane from 'sane';
 
 import BuildStanza from '../build-stanza.mjs';
 import BundleStanzaModules from '../bundle-stanza-modules.mjs';
-import { packagePath } from '../util.mjs';
 
 export async function runWatcher(repositoryDir, builder, onBuildSuccess = () => {}) {
   const watchMatcher = picomatch([
@@ -58,8 +58,6 @@ export async function runWatcher(repositoryDir, builder, onBuildSuccess = () => 
 
   process.exit(0); // perhaps LiveServer is still listening and needs to stop the process
 }
-
-import resolve from 'resolve';
 
 function watchPackageFiles(repositoryDir, builder) {
   const packageJsonPath = resolve.sync('togostanza/package.json', {basedir: repositoryDir});
