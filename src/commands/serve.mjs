@@ -39,5 +39,12 @@ async function serve(port) {
 
   ui.writeInfoLine(`Serving at http://localhost:${port}`);
 
-  await runWatcher(repositoryDir, builder);
+  await runWatcher(repositoryDir, builder, {
+    onReady(watcher) {
+      process.on('SIGINT',  () => watcher.quit());
+      process.on('SIGTERM', () => watcher.quit());
+    }
+  });
+
+  process.exit(0); // force terminate as we may have pending promises
 }

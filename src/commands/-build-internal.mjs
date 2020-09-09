@@ -14,7 +14,7 @@ import sane from 'sane';
 import BuildStanza from '../build-stanza.mjs';
 import BundleStanzaModules from '../bundle-stanza-modules.mjs';
 
-export async function runWatcher(repositoryDir, builder, {onBuildSuccess, onBuildFailure} = {}) {
+export async function runWatcher(repositoryDir, builder, {onReady, onBuildSuccess, onBuildFailure} = {}) {
   const watchMatcher = picomatch([
     '.',
     'README.md',
@@ -52,18 +52,17 @@ export async function runWatcher(repositoryDir, builder, {onBuildSuccess, onBuil
     }
   });
 
-  process.on('SIGINT',  () => watcher.quit());
-  process.on('SIGTERM', () => watcher.quit());
-
   watchPackageFiles(repositoryDir, builder);
+
+  if (onReady) {
+    onReady(watcher);
+  }
 
   try {
     await watcher.start();
   } finally {
     await builder.cleanup();
   }
-
-  process.exit(0); // perhaps LiveServer is still listening and needs to stop the process
 }
 
 function watchPackageFiles(repositoryDir, builder) {
