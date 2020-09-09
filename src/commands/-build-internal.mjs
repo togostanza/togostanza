@@ -14,7 +14,7 @@ import sane from 'sane';
 import BuildStanza from '../build-stanza.mjs';
 import BundleStanzaModules from '../bundle-stanza-modules.mjs';
 
-export async function runWatcher(repositoryDir, builder, onBuildSuccess = () => {}) {
+export async function runWatcher(repositoryDir, builder, {onBuildSuccess, onBuildFailure} = {}) {
   const watchMatcher = picomatch([
     '.',
     'README.md',
@@ -37,12 +37,19 @@ export async function runWatcher(repositoryDir, builder, onBuildSuccess = () => 
 
   watcher.on('buildSuccess', () => {
     messages.default.onBuildSuccess(builder, ui);
-    onBuildSuccess(watcher);
+
+    if (onBuildSuccess) {
+      onBuildSuccess(watcher);
+    };
   });
 
   watcher.on('buildFailure', (e) => {
     ui.writeLine('build failure', 'ERROR');
     ui.writeError(e);
+
+    if (onBuildFailure) {
+      onBuildFailure(watcher);
+    }
   });
 
   process.on('SIGINT',  () => watcher.quit());
