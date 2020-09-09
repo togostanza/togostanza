@@ -43,6 +43,7 @@
     "rollup-plugin-scss": "^2.6.0",
     "rollup-plugin-vue": "^6.0.0-beta.10",
     "rsvp": "^4.8.5",
+    "sane": "^4.1.0",
     "tree-sync": "^2.0.0",
     "vue": "^3.0.0-rc.5",
     "walk-sync": "^2.1.0",
