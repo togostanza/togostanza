@@ -1,10 +1,10 @@
 import path from 'path';
 import { promises as fs } from 'fs';
 
-import alias from '@rollup/plugin-alias';
 import BroccoliPlugin from 'broccoli-plugin';
 import RSVP from 'rsvp';
 import _Handlebars from 'handlebars';
+import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
