@@ -5,6 +5,7 @@ Array [
   null,
   "",
   "   create stanzas/hello/metadata.json
+   create stanzas/hello/README.md
    create stanzas/hello/index.js
    create stanzas/hello/templates/stanza.html.hbs
 ",
@@ -32,6 +33,7 @@ Array [
   null,
   "",
   "   create stanzas/hello/metadata.json
+   create stanzas/hello/README.md
    create stanzas/hello/index.js
    create stanzas/hello/templates/stanza.html.hbs
 ",
@@ -42,6 +44,10 @@ exports[`generate stanza non-interactive 2`] = `
 Object {
   "stanzas": Object {
     "hello": Object {
+      "README.md": "# LABEL
+
+Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
+",
       "index.js": "export default function hello(stanza, params) {
   const sayTo = params['say-to'] || 'world';
 
