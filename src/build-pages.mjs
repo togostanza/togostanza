@@ -6,22 +6,29 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
 import resolve from '@rollup/plugin-node-resolve';
-import scss from 'rollup-plugin-scss';
+import styles from 'rollup-plugin-styles';
+import virtual from '@rollup/plugin-virtual';
 import vue from 'rollup-plugin-vue';
 import { rollup } from 'rollup';
 
 import StanzaRepository from './stanza-repository.mjs';
-import { handlebarsTemplate, packagePath } from './util.mjs';
+import { handlebarsTemplate, packagePath, resolvePackage } from './util.mjs';
+
+const templates = {
+  index: handlebarsTemplate(path.join(packagePath, 'src', 'index.html.hbs')),
+  help:  handlebarsTemplate(path.join(packagePath, 'src', 'help.html.hbs'))
+};
 
 export default class BuildPages extends BroccoliPlugin {
-  constructor(inputNode, options) {
-    super([inputNode], options);
+  constructor(repositoryDir, options) {
+    super([repositoryDir], options);
 
-    this.environment = options.environment;
+    this.repositoryDir = repositoryDir;
+    this.environment   = options.environment;
   }
 
   async build() {
-    const stanzas = new StanzaRepository(this.inputPaths[0]).allStanzas;
+    const stanzas = new StanzaRepository(this.repositoryDir).allStanzas;
 
     await Promise.all([
       this.buildVueApps(stanzas),
@@ -40,28 +47,32 @@ export default class BuildPages extends BroccoliPlugin {
       ],
 
       plugins: [
+        virtual({
+          '-repository/all-metadata': `export default ${JSON.stringify(allMetadata)}`
+        }),
+
         alias({
           entries: {
-            'package.json': this.inputPaths[0] + '/package.json'
+            '-repository/package.json': `${this.repositoryDir}/package.json`
           }
         }),
-        resolve({
-          customResolveOptions: {
-            basedir: this.inputPaths[0]
-          }
-        }),
-        commonjs(),
-        vue(),
-        scss({
-          output: path.join(this.outputPath, '-togostanza', 'app.css')
-        }),
+
         replace({
           'process.env.NODE_ENV': JSON.stringify(this.environment),
           __VUE_OPTIONS_API__:    'false',
-          __VUE_PROD_DEVTOOLS__:  'false',
-          ALL_METADATA:           JSON.stringify(allMetadata),
+          __VUE_PROD_DEVTOOLS__:  'false'
         }),
-        json()
+
+        resolve(),
+        commonjs(),
+        vue(),
+        json(),
+
+        styles({
+          sass: {
+            impl: resolvePackage('sass')
+          }
+        })
       ]
     });
 
@@ -73,19 +84,15 @@ export default class BuildPages extends BroccoliPlugin {
   }
 
   async buildIndexPage() {
-    const template = await handlebarsTemplate(path.join(packagePath, 'src', 'index.html.hbs'));
-
-    this.output.writeFileSync('index.html', template());
+    this.output.writeFileSync('index.html', templates.index());
   }
 
   async buildHelpPages(stanzas) {
-    const template = await handlebarsTemplate(path.join(packagePath, 'src', 'help.html.hbs'));
-
     await Promise.all(stanzas.map(async (stanza) => {
       const metadata = await stanza.metadata;
       const readme   = await stanza.readme;
 
-      this.output.writeFileSync(`${stanza.id}.html`, template({metadata, readme}));
+      this.output.writeFileSync(`${stanza.id}.html`, templates.help({metadata, readme}));
     }));
   }
 }

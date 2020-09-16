@@ -56,6 +56,10 @@ export default class StanzaRepository {
 
         get outer() {
           return fs.readFile(path.join(stanzaDir, '_header.html'), 'utf8').catch(() => null);
+        },
+
+        filepath(...paths) {
+          return path.join(stanzaDir, ...paths);
         }
       };
     });

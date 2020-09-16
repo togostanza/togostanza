@@ -1,7 +1,3 @@
-<style lang="scss">
-  @import 'bootstrap/scss/bootstrap.scss';
-</style>
-
 <template>
   <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
@@ -53,8 +49,9 @@
 <script>
   import { defineComponent } from 'vue';
   import { repo as repoIcon } from '@primer/octicons';
+  import 'bootstrap/scss/bootstrap.scss';
 
-  import repositoryMetadata from 'package.json';
+  import repositoryMetadata from '-repository/package.json';
 
   export default defineComponent({
     props: ['containerClass'],

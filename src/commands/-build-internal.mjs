@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 
-import Funnel from 'broccoli-funnel'
 import MergeTrees from 'broccoli-merge-trees';
 import UI from 'console-ui';
 import broccoli from 'broccoli';
@@ -12,8 +11,7 @@ import resolve from 'resolve';
 import sane from 'sane';
 
 import BuildPages from '../build-pages.mjs';
-import BuildStanza from '../build-stanza.mjs';
-import BundleStanzaModules from '../bundle-stanza-modules.mjs';
+import BuildStanzas from '../build-stanzas.mjs';
 
 export async function runWatcher(repositoryDir, builder, {onReady, onBuildSuccess, onBuildFailure} = {}) {
   const watchMatcher = picomatch([
@@ -102,18 +100,11 @@ function watchPackageFiles(repositoryDir, builder) {
 }
 
 export function composeTree(repositoryDir, {environment}) {
-  const buildTree  = new BuildStanza(repositoryDir, {environment});
-  const bundleTree = new BundleStanzaModules(buildTree, {repositoryDir});
+  const stanzas = new BuildStanzas(repositoryDir);
+  const pages   = new BuildPages(repositoryDir, {environment});
 
-  const pagesTree = new BuildPages(repositoryDir, {environment});
-
-  const mergedTree = new MergeTrees([
-    buildTree,
-    bundleTree,
-    pagesTree
-  ], {overwrite: true});
-
-  return new Funnel(mergedTree, {
-    exclude: ['*/index.js']
-  });
+  return new MergeTrees([
+    stanzas,
+    pages
+  ]);
 }

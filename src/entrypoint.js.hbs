@@ -1,13 +1,8 @@
-import { defineStanzaElement } from 'togostanza/src/stanza-element.mjs';
-import main from './{{metadata.[@id]}}/index.js';
+import { defineStanzaElement } from '-togostanza/stanza-element';
 
-const metadata = {{to-json metadata}};
-const outer    = {{to-json outer}};
-
-const templates = [
-  {{#each templates as |template|}}
-    [{{to-json template.name}}, {{template.spec}}],
-  {{/each}}
-];
+import main from '-stanza/{{stanzaId}}/main';
+import metadata from '-stanza/{{stanzaId}}/metadata';
+import templates from '-stanza/{{stanzaId}}/templates';
+import outer from '-stanza/{{stanzaId}}/outer';
 
 defineStanzaElement(main, {metadata, templates, outer, url: import.meta.url});
