@@ -15,13 +15,17 @@
       </nav>
     </div>
 
-    <div class="tab-content">
-      <div class="tab-pane active" id="overview" role="tabpanel">
-        Overview
-      </div>
+    <div class="row">
+      <div class="col">
+        <div class="tab-content">
+          <div class="tab-pane active" id="overview" role="tabpanel">
+            Overview
+          </div>
 
-      <div class="tab-pane" id="how-to-use" role="tabpanel">
-        <StanzaTuner :metadata="metadata"></StanzaTuner>
+          <div class="tab-pane" id="how-to-use" role="tabpanel">
+            <StanzaTuner :metadata="metadata"></StanzaTuner>
+          </div>
+        </div>
       </div>
     </div>
   </Layout>

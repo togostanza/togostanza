@@ -78,20 +78,7 @@
     <div class="col-lg-6">
       <hr class="d-lg-none mb-4">
 
-      <div class="bg-dark">
-        <div class="text-right p-2">
-          <button @click="copyCombinedSnippetToClipboard()" type="button" class="btn btn-sm btn-light">
-            Copy to clipboard
-          </button>
-        </div>
-
-        <pre class="overflow-auto p-3 pt-0 text-white"><code>{{combinedSnippet}}</code></pre>
-      </div>
-
-      <div class="overflow-auto p-3 bg-light">
-        <div v-html="styleSnippet"></div>
-        <div v-html="elementSnippet"></div>
-      </div>
+      <StanzaPreviewer :metadata="metadata" :params="params" :styleVars="styleVars"></StanzaPreviewer>
     </div>
   </div>
 </template>
@@ -100,7 +87,13 @@
   import outdent from 'outdent';
   import { defineComponent, ref, computed } from 'vue';
 
+  import StanzaPreviewer from './StanzaPreviewer.vue';
+
   export default defineComponent({
+    components: {
+      StanzaPreviewer
+    },
+
     props: ['metadata'],
 
     setup({metadata}) {
@@ -132,55 +125,35 @@
         };
       });
 
-      const elementSnippet = computed(() => {
-        const attrs = paramFields
-          .map(({param, valueRef}) => `${param['stanza:key']}=${JSON.stringify(valueRef.value)}`)
-          .concat(aboutLinkPlacementValueRef.value === aboutLinkPlacementDefault ? [] : [`togostanza-about-link-placement=${JSON.stringify(aboutLinkPlacementValueRef.value)}`]);
-
-        return attrs.length === 0 ? `<${tagName}></${tagName}>` : outdent`
-          <${tagName}
-          ${attrs.map(s => ' '.repeat(2) + s).join('\n')}
-          ></${tagName}>
-        `;
-      });
-
-      const styleSnippet = computed(() => {
-        const styles = styleFields
-          .filter(({style, valueRef}) => valueRef.value !== style['stanza:default'])
-          .map(({style, valueRef}) => `${style['stanza:key']}: ${valueRef.value};`);
-
-        return styles.length === 0 ? null : outdent`
-          <style>
-            ${tagName} {
-          ${styles.map(s => ' '.repeat(4) + s).join('\n')}
+      const params = computed(() => {
+        return paramFields
+          .map(({param, valueRef}) => (
+            {
+              name:  param['stanza:key'],
+              value: valueRef.value
             }
-          </style>
-        `;
+          ))
+          .concat(
+            aboutLinkPlacementValueRef.value === aboutLinkPlacementDefault ? [] : [{
+              name:  'togostanza-about-link-placement',
+              value: aboutLinkPlacementValueRef.value
+            }]
+          );
       });
 
-      const scriptSrc = new URL(`./${id}.js`, location.href).href;
-
-      const combinedSnippet = computed(() => {
-        return [
-          `<script type="module" src="${scriptSrc}" async><\/script>`,
-          styleSnippet.value,
-          elementSnippet.value
-        ].filter(Boolean).join('\n\n');
+      const styleVars = computed(() => {
+        return styleFields
+          .filter(({style, valueRef}) => valueRef.value !== style['stanza:default'])
+          .map(({style, valueRef}) => ({name: style['stanza:key'], value: valueRef.value}));
       });
-
-      function copyCombinedSnippetToClipboard() {
-        navigator.clipboard.writeText(combinedSnippet.value);
-      }
 
       return {
         metadata,
         paramFields,
         aboutLinkPlacementValueRef,
         styleFields,
-        elementSnippet,
-        styleSnippet,
-        combinedSnippet,
-        copyCombinedSnippetToClipboard
+        params,
+        styleVars
       };
     }
   });
