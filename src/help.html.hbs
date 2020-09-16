@@ -13,8 +13,9 @@
       import createHelpApp from './-togostanza/help-app.js';
 
       const metadata = {{{to-json metadata}}};
+      const readme   = {{{to-json readme}}};
 
-      createHelpApp(metadata).mount('body');
+      createHelpApp(metadata, readme).mount('body');
     </script>
   </head>
 

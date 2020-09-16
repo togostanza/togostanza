@@ -5,15 +5,13 @@
 
     <div class="row">
       <div class="col-lg-6">
-        <div class="bg-white position-sticky pt-1 mb-3" style="top: 0">
-          <nav class="nav nav-tabs" role="tablist">
-            <a class="nav-link active" href="#overview" data-toggle="tab" role="tab">Overview</a>
-            <a class="nav-link" href="#customize" data-toggle="tab" role="tab">Customize</a>
-          </nav>
-        </div>
+        <nav class="nav nav-tabs" role="tablist">
+          <a class="nav-link active" href="#overview" data-toggle="tab" role="tab">Overview</a>
+          <a class="nav-link" href="#customize" data-toggle="tab" role="tab">Customize</a>
+        </nav>
 
-        <div class="tab-content">
-          <div class="tab-pane active" id="overview" role="tabpanel">
+        <div class="tab-content mt-3">
+          <div class="tab-pane active px-lg-5" id="overview" role="tabpanel">
             <div class="card">
               <div class="card-body">
                 <table class="table table-borderless mb-0">
@@ -72,6 +70,8 @@
                 </table>
               </div>
             </div>
+
+            <div v-html="renderMarkdown(readme)" class="mt-4"></div>
           </div>
 
           <div class="tab-pane" id="customize" role="tabpanel">
@@ -164,6 +164,7 @@
   import outdent from 'outdent';
   import { defineComponent, ref, computed } from 'vue';
   import 'bootstrap/js/dist/tab.js';
+  import * as commonmark from 'commonmark';
 
   import Layout from './Layout.vue';
   import StanzaPreviewer from './StanzaPreviewer.vue';
@@ -174,9 +175,9 @@
       StanzaPreviewer
     },
 
-    props: ['metadata'],
+    props: ['metadata', 'readme'],
 
-    setup({metadata}) {
+    setup({metadata, readme}) {
       const id      = metadata['@id'];
       const tagName = `togostanza-${id}`;
 
@@ -236,11 +237,21 @@
 
       return {
         metadata,
+        readme,
         paramFields,
         aboutLinkPlacementValueRef,
         styleFields,
         params,
-        styleVars
+        styleVars,
+
+        renderMarkdown(md) {
+          if (!md) { return ''; }
+
+          const parser   = new commonmark.Parser();
+          const renderer = new commonmark.HtmlRenderer();
+
+          return renderer.render(parser.parse(md));
+        }
       };
     }
   });
