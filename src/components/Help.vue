@@ -1,6 +1,7 @@
 <template>
   <Layout containerClass="container-fluid">
-    <h1 class="display-4 mb-4">{{metadata['stanza:label']}}</h1>
+    <h1 class="display-4">{{metadata['stanza:label']}}</h1>
+    <p class="lead">{{metadata['stanza:definition']}}</p>
 
     <div class="row">
       <div class="col-lg-6">
@@ -13,7 +14,64 @@
 
         <div class="tab-content">
           <div class="tab-pane active" id="overview" role="tabpanel">
-            Overview
+            <div class="card">
+              <div class="card-body">
+                <table class="table table-borderless mb-0">
+                  <tbody>
+                    <tr>
+                      <th>Context</th>
+                      <td>{{metadata['stanza:context']}}</td>
+                    </tr>
+
+                    <tr>
+                      <th>Display</th>
+                      <td>{{metadata['stanza:display']}}</td>
+                    </tr>
+
+                    <tr>
+                      <th>Type</th>
+                      <td>{{metadata['stanza:type']}}</td>
+                    </tr>
+
+                    <tr>
+                      <th>Provider</th>
+                      <td>{{metadata['stanza:provider']}}</td>
+                    </tr>
+
+                    <tr>
+                      <th>Author</th>
+
+                      <td>
+                        <address class="mb-0">
+                          {{metadata['stanza:author']}}
+
+                          <template v-if="metadata['stanza:address']">
+                            &lt;<a :href="`mailto:${metadata['stanza:address']}`">{{metadata['stanza:address']}}</a>&gt;
+                          </template>
+                        </address>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th>Contributors</th>
+
+                      <td>
+                        <ul class="list-unstyled mb-0">
+                          <li v-for="contributor in metadata['stanza:contributor']" :key="contributor">
+                            {{contributor}}
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th>License</th>
+                      <td>{{metadata['stanza:license']}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
 
           <div class="tab-pane" id="customize" role="tabpanel">
