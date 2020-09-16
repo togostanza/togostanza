@@ -11,6 +11,7 @@ import picomatch from 'picomatch';
 import resolve from 'resolve';
 import sane from 'sane';
 
+import BuildPages from '../build-pages.mjs';
 import BuildStanza from '../build-stanza.mjs';
 import BundleStanzaModules from '../bundle-stanza-modules.mjs';
 
@@ -104,9 +105,12 @@ export function composeTree(repositoryDir, {environment}) {
   const buildTree  = new BuildStanza(repositoryDir, {environment});
   const bundleTree = new BundleStanzaModules(buildTree, {repositoryDir});
 
+  const pagesTree = new BuildPages(repositoryDir, {environment});
+
   const mergedTree = new MergeTrees([
     buildTree,
-    bundleTree
+    bundleTree,
+    pagesTree
   ], {overwrite: true});
 
   return new Funnel(mergedTree, {
