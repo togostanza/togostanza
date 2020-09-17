@@ -97,7 +97,7 @@
               </tbody>
             </table>
 
-            <div v-html="renderMarkdown(readme)" class="mt-4"></div>
+            <div v-html="readmeHtml" class="mt-4"></div>
           </div>
 
           <div class="tab-pane" id="customize" role="tabpanel">
@@ -217,21 +217,6 @@
       const aboutLinkPlacementDefault  = metadata['stanza:about-link-placement'] || 'bottom-right';
       const aboutLinkPlacementValueRef = ref(aboutLinkPlacementDefault);
 
-      const styleFields = (metadata['stanza:style'] || []).map((style) => {
-        const defaultValue = style['stanza:default'];
-        const valueRef     = ref(defaultValue);
-
-        return {
-          style,
-          valueRef,
-          defaultValue,
-
-          resetToDefault() {
-            valueRef.value = defaultValue;
-          }
-        };
-      });
-
       const params = computed(() => {
         return paramFields
           .map(({param, valueRef}) => (
@@ -250,6 +235,21 @@
           );
       });
 
+      const styleFields = (metadata['stanza:style'] || []).map((style) => {
+        const defaultValue = style['stanza:default'];
+        const valueRef     = ref(defaultValue);
+
+        return {
+          style,
+          valueRef,
+          defaultValue,
+
+          resetToDefault() {
+            valueRef.value = defaultValue;
+          }
+        };
+      });
+
       const styleVars = computed(() => {
         return styleFields
           .filter(({style, valueRef}) => valueRef.value !== style['stanza:default'])
@@ -263,23 +263,22 @@
 
       return {
         metadata,
-        readme,
+        readmeHtml: renderMarkdown(readme),
         paramFields,
         aboutLinkPlacementValueRef,
-        styleFields,
         params,
-        styleVars,
-
-        renderMarkdown(md) {
-          if (!md) { return ''; }
-
-          const parser   = new commonmark.Parser();
-          const renderer = new commonmark.HtmlRenderer();
-
-          return renderer.render(parser.parse(md));
-        }
+        styleFields,
+        styleVars
       };
     }
   });
 
+  function renderMarkdown(md) {
+    if (!md) { return ''; }
+
+    const parser   = new commonmark.Parser();
+    const renderer = new commonmark.HtmlRenderer();
+
+    return renderer.render(parser.parse(md));
+  }
 </script>
