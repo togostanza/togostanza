@@ -1,3 +1,17 @@
+<style scoped>
+  th {
+    background-color: var(--bs-light);
+    text-align: center;
+    white-space: nowrap;
+    width: 1%;
+  }
+
+  th, td {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+</style>
+
 <template>
   <Layout containerClass="container-fluid">
     <h1 class="display-4">{{metadata['stanza:label']}}</h1>
@@ -12,80 +26,76 @@
 
         <div class="tab-content mt-3">
           <div class="tab-pane active px-lg-5" id="overview" role="tabpanel">
-            <div class="card">
-              <div class="card-body">
-                <table class="table table-borderless mb-0">
-                  <tbody>
-                    <tr>
-                      <th>Context</th>
-                      <td>{{metadata['stanza:context'] || '-'}}</td>
-                    </tr>
+            <table class="table table-borderless border">
+              <tbody>
+                <tr>
+                  <th>Context</th>
+                  <td>{{metadata['stanza:context'] || '-'}}</td>
+                </tr>
 
-                    <tr>
-                      <th>Display</th>
-                      <td>{{metadata['stanza:display'] || '-'}}</td>
-                    </tr>
+                <tr>
+                  <th>Display</th>
+                  <td>{{metadata['stanza:display'] || '-'}}</td>
+                </tr>
 
-                    <tr>
-                      <th>Type</th>
-                      <td>{{metadata['stanza:type'] || '-'}}</td>
-                    </tr>
+                <tr>
+                  <th>Type</th>
+                  <td>{{metadata['stanza:type'] || '-'}}</td>
+                </tr>
 
-                    <tr>
-                      <th>Provider</th>
-                      <td>{{metadata['stanza:provider'] || '-'}}</td>
-                    </tr>
+                <tr>
+                  <th>Provider</th>
+                  <td>{{metadata['stanza:provider'] || '-'}}</td>
+                </tr>
 
-                    <tr>
-                      <th>Author</th>
+                <tr>
+                  <th>Author</th>
 
-                      <td>
-                        <address class="mb-0">
-                          {{metadata['stanza:author'] || '-'}}
+                  <td>
+                    <address class="mb-0">
+                      {{metadata['stanza:author'] || '-'}}
 
-                          <template v-if="metadata['stanza:address']">
-                            &lt;<a :href="`mailto:${metadata['stanza:address']}`">{{metadata['stanza:address']}}</a>&gt;
-                          </template>
-                        </address>
-                      </td>
-                    </tr>
+                      <template v-if="metadata['stanza:address']">
+                        &lt;<a :href="`mailto:${metadata['stanza:address']}`">{{metadata['stanza:address']}}</a>&gt;
+                      </template>
+                    </address>
+                  </td>
+                </tr>
 
-                    <tr>
-                      <th>Contributors</th>
+                <tr>
+                  <th>Contributors</th>
 
-                      <td>
-                        <template v-if="metadata['stanza:contributor'] && metadata['stanza:contributor'].length > 0">
-                          <ul class="list-unstyled mb-0">
-                            <li v-for="contributor in metadata['stanza:contributor']" :key="contributor">
-                              {{contributor}}
-                            </li>
-                          </ul>
-                        </template>
+                  <td>
+                    <template v-if="metadata['stanza:contributor'] && metadata['stanza:contributor'].length > 0">
+                      <ul class="list-unstyled mb-0">
+                        <li v-for="contributor in metadata['stanza:contributor']" :key="contributor">
+                          {{contributor}}
+                        </li>
+                      </ul>
+                    </template>
 
-                        <template v-else>
-                          -
-                        </template>
-                      </td>
-                    </tr>
+                    <template v-else>
+                      -
+                    </template>
+                  </td>
+                </tr>
 
-                    <tr>
-                      <th>License</th>
-                      <td>{{metadata['stanza:license'] || '-'}}</td>
-                    </tr>
+                <tr>
+                  <th>License</th>
+                  <td>{{metadata['stanza:license'] || '-'}}</td>
+                </tr>
 
-                    <tr>
-                      <th>Created</th>
-                      <td>{{metadata['stanza:created'] || '-'}}</td>
-                    </tr>
+                <tr>
+                  <th>Created</th>
+                  <td>{{metadata['stanza:created'] || '-'}}</td>
+                </tr>
 
-                    <tr>
-                      <th>Updated</th>
-                      <td>{{metadata['stanza:updated'] || '-'}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                <tr>
+                  <th>Updated</th>
+                  <td>{{metadata['stanza:updated'] || '-'}}</td>
+                </tr>
+              </tbody>
+            </table>
 
             <div v-html="renderMarkdown(readme)" class="mt-4"></div>
           </div>
