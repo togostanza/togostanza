@@ -170,8 +170,6 @@ import FormField from './FormField.vue';
 import Layout from './Layout.vue';
 import StanzaPreviewer from './StanzaPreviewer.vue';
 
-const NO_DEFAULT = Symbol();
-
 export default defineComponent({
   components: {
     FormField,
@@ -188,28 +186,32 @@ export default defineComponent({
     const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
       return {
         param,
-        input: useInput(param['stanza:example'], NO_DEFAULT)
+        input: useInput(param['stanza:example'], false)
       };
     });
 
     const aboutLinkPlacement = useInput(metadata['stanza:about-link-placement'] || 'bottom-right');
 
     const params = computed(() => {
-      return paramFields
-        .map(({param, input}) => (
+      return [
+        ...paramFields.map(({param, input}) => (
           {
-            name:  param['stanza:key'],
-            value: input.ref.value
+            name: param['stanza:key'],
+            input
           }
-        ))
-        .concat(
-          aboutLinkPlacement.isDefault.value ? [] : [
-            {
-              name:  'togostanza-about-link-placement',
-              value: aboutLinkPlacement.ref.value
-            }
-          ]
-        );
+        )),
+        {
+          name:  'togostanza-about-link-placement',
+          input: aboutLinkPlacement
+        }
+      ].filter(({input}) => (
+        !input.isDefault.value
+      )).map(({name, input}) => (
+        {
+          name,
+          value: input.ref.value
+        }
+      ));
     });
 
     const styleFields = (metadata['stanza:style'] || []).map((style) => {
@@ -242,25 +244,26 @@ export default defineComponent({
   }
 });
 
-function useInput(initValue, defaultValue = initValue) {
+function useInput(initValue, hasDefault = true) {
   const _ref      = ref(initValue);
-  const isDefault = computed(() => _ref.value === defaultValue);
+  const isDefault = computed(() => hasDefault && (_ref.value === initValue));
 
   function setValue(newVal) {
     _ref.value = newVal;
   }
 
   function resetToDefault() {
-    _ref.value = defaultValue
+    if (!hasDefault) { return; }
+
+    _ref.value = initValue
   }
 
   return {
     ref: _ref,
     setValue,
+    hasDefault,
     isDefault,
-    resetToDefault,
-
-    hasDefault: defaultValue !== NO_DEFAULT
+    resetToDefault
   };
 }
 
