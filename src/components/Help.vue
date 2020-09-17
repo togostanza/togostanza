@@ -180,9 +180,6 @@ export default defineComponent({
   props: ['metadata', 'readme'],
 
   setup({metadata, readme}) {
-    const id      = metadata['@id'];
-    const tagName = `togostanza-${id}`;
-
     const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
       return {
         param,
