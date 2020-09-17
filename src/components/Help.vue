@@ -106,34 +106,23 @@
 
               <div class="row mt-3">
                 <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
-                  <label class="form-label">
-                    <span v-if="param['stanza:required']" class="text-danger">*</span>
-                    {{param['stanza:key']}}
-                  </label>
-
-                  <input type="text" v-model="valueRef.value" class="form-control">
-
-                  <small class="form-text text-muted">
-                    {{param['stanza:description']}}
-                  </small>
+                  <FormField
+                    v-model="valueRef.value"
+                    :label="param['stanza:key']"
+                    :required="param['stanza:required']"
+                    :help-text="param['stanza:description']"
+                  ></FormField>
                 </div>
 
                 <div class="col-sm-6 col-lg-12 col-xl-6 mb-3">
-                  <label class="form-label">
-                    togostanza-about-link-placement
-                  </label>
-
-                  <select v-model="aboutLinkPlacementValueRef" class="form-select">
-                    <option value="top-left">top-left</option>
-                    <option value="top-right">top-right</option>
-                    <option value="bottom-left">bottom-left</option>
-                    <option value="bottom-right">bottom-right</option>
-                    <option value="none">none</option>
-                  </select>
-
-                  <small class="form-text text-muted">
-                    Placement of the information icon which links to this page.
-                  </small>
+                  <FormField
+                    v-model="aboutLinkPlacementValueRef"
+                    :defaultValue="aboutLinkPlacementDefault"
+                    :label="'togostanza-about-link-placement'"
+                    :type="'single-choice'"
+                    :choices="['top-left', 'top-right', 'bottom-left', 'bottom-right', 'none']"
+                    :help-text="'Placement of the information icon which links to this page.'"
+                  ></FormField>
                 </div>
               </div>
             </section>
@@ -144,28 +133,15 @@
               <h2>Styles</h2>
 
               <div class="row mt-3">
-                <div v-for="{style, valueRef, defaultValue, resetToDefault} in styleFields" :key="style['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
-                  <label class="form-label">
-                    {{style['stanza:key']}}
-                  </label>
-
-                  <div class="input-group">
-                    <template v-if="style['stanza:type'] === 'single-choice'">
-                      <select v-model="valueRef.value" class="form-select">
-                        <option v-for="choice in style['stanza:choice']" :value="choice" :key="choice">{{choice}}</option>
-                      </select>
-                    </template>
-
-                    <input v-else :type="style['stanza:type']" v-model="valueRef.value" class="form-control">
-
-                    <div class="input-group-append">
-                      <button @click="resetToDefault()" :disabled="valueRef.value === defaultValue" type="button" class="btn btn-light border">Reset</button>
-                    </div>
-                  </div>
-
-                  <small class="form-text text-muted">
-                    {{style['stanza:description']}}
-                  </small>
+                <div v-for="{style, valueRef, defaultValue} in styleFields" :key="style['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
+                  <FormField
+                    v-model="valueRef.value"
+                    :defaultValue="defaultValue"
+                    :label="style['stanza:key']"
+                    :type="style['stanza:type']"
+                    :choices="style['stanza:choice']"
+                    :help-text="style['stanza:description']"
+                  ></FormField>
                 </div>
               </div>
 
@@ -187,98 +163,97 @@
 </template>
 
 <script>
-  import outdent from 'outdent';
-  import { defineComponent, ref, computed } from 'vue';
-  import 'bootstrap/js/dist/tab.js';
-  import * as commonmark from 'commonmark';
+import { defineComponent, ref, computed } from 'vue';
 
-  import Layout from './Layout.vue';
-  import StanzaPreviewer from './StanzaPreviewer.vue';
+import 'bootstrap/js/dist/tab.js';
+import * as commonmark from 'commonmark';
 
-  export default defineComponent({
-    components: {
-      Layout,
-      StanzaPreviewer
-    },
+import FormField from './FormField.vue';
+import Layout from './Layout.vue';
+import StanzaPreviewer from './StanzaPreviewer.vue';
 
-    props: ['metadata', 'readme'],
+export default defineComponent({
+  components: {
+    FormField,
+    Layout,
+    StanzaPreviewer
+  },
 
-    setup({metadata, readme}) {
-      const id      = metadata['@id'];
-      const tagName = `togostanza-${id}`;
+  props: ['metadata', 'readme'],
 
-      const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
-        return {
-          param,
-          valueRef: ref(param['stanza:example'])
-        };
-      });
+  setup({metadata, readme}) {
+    const id      = metadata['@id'];
+    const tagName = `togostanza-${id}`;
 
-      const aboutLinkPlacementDefault  = metadata['stanza:about-link-placement'] || 'bottom-right';
-      const aboutLinkPlacementValueRef = ref(aboutLinkPlacementDefault);
+    const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
+      return {
+        param,
+        valueRef: ref(param['stanza:example'])
+      };
+    });
 
-      const params = computed(() => {
-        return paramFields
-          .map(({param, valueRef}) => (
-            {
-              name:  param['stanza:key'],
-              value: valueRef.value
-            }
-          ))
-          .concat(
-            aboutLinkPlacementValueRef.value === aboutLinkPlacementDefault ? [] : [
-              {
-                name:  'togostanza-about-link-placement',
-                value: aboutLinkPlacementValueRef.value
-              }
-            ]
-          );
-      });
+    const aboutLinkPlacementDefault  = metadata['stanza:about-link-placement'] || 'bottom-right';
+    const aboutLinkPlacementValueRef = ref(aboutLinkPlacementDefault);
 
-      const styleFields = (metadata['stanza:style'] || []).map((style) => {
-        const defaultValue = style['stanza:default'];
-        const valueRef     = ref(defaultValue);
-
-        return {
-          style,
-          valueRef,
-          defaultValue,
-
-          resetToDefault() {
-            valueRef.value = defaultValue;
+    const params = computed(() => {
+      return paramFields
+        .map(({param, valueRef}) => (
+          {
+            name:  param['stanza:key'],
+            value: valueRef.value
           }
-        };
-      });
-
-      const styleVars = computed(() => {
-        return styleFields
-          .filter(({style, valueRef}) => valueRef.value !== style['stanza:default'])
-          .map(({style, valueRef}) => (
+        ))
+        .concat(
+          aboutLinkPlacementValueRef.value === aboutLinkPlacementDefault ? [] : [
             {
-              name:  style['stanza:key'],
-              value: valueRef.value
+              name:  'togostanza-about-link-placement',
+              value: aboutLinkPlacementValueRef.value
             }
-          ));
-      });
+          ]
+        );
+    });
+
+    const styleFields = (metadata['stanza:style'] || []).map((style) => {
+      const defaultValue = style['stanza:default'];
+      const valueRef     = ref(defaultValue);
 
       return {
-        metadata,
-        readmeHtml: renderMarkdown(readme),
-        paramFields,
-        aboutLinkPlacementValueRef,
-        params,
-        styleFields,
-        styleVars
+        style,
+        valueRef,
+        defaultValue
       };
-    }
-  });
+    });
 
-  function renderMarkdown(md) {
-    if (!md) { return ''; }
+    const styleVars = computed(() => {
+      return styleFields
+        .filter(({style, valueRef}) => valueRef.value !== style['stanza:default'])
+        .map(({style, valueRef}) => (
+          {
+            name:  style['stanza:key'],
+            value: valueRef.value
+          }
+        ));
+    });
 
-    const parser   = new commonmark.Parser();
-    const renderer = new commonmark.HtmlRenderer();
-
-    return renderer.render(parser.parse(md));
+    return {
+      metadata,
+      readmeHtml: renderMarkdown(readme),
+      paramFields,
+      aboutLinkPlacementValueRef,
+      aboutLinkPlacementDefault,
+      params,
+      styleFields,
+      styleVars
+    };
   }
+});
+
+function renderMarkdown(md) {
+  if (!md) { return ''; }
+
+  const parser   = new commonmark.Parser();
+  const renderer = new commonmark.HtmlRenderer();
+
+  return renderer.render(parser.parse(md));
+}
 </script>
