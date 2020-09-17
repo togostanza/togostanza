@@ -105,9 +105,9 @@
               <h2>Parameters</h2>
 
               <div class="row mt-3">
-                <div v-for="{param, valueRef} in paramFields" :key="param['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
+                <div v-for="{param, input} in paramFields" :key="param['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
                   <FormField
-                    v-model="valueRef.value"
+                    :input="input"
                     :label="param['stanza:key']"
                     :required="param['stanza:required']"
                     :help-text="param['stanza:description']"
@@ -116,8 +116,7 @@
 
                 <div class="col-sm-6 col-lg-12 col-xl-6 mb-3">
                   <FormField
-                    v-model="aboutLinkPlacementValueRef"
-                    :defaultValue="aboutLinkPlacementDefault"
+                    :input="aboutLinkPlacement"
                     :label="'togostanza-about-link-placement'"
                     :type="'single-choice'"
                     :choices="['top-left', 'top-right', 'bottom-left', 'bottom-right', 'none']"
@@ -133,10 +132,9 @@
               <h2>Styles</h2>
 
               <div class="row mt-3">
-                <div v-for="{style, valueRef, defaultValue} in styleFields" :key="style['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
+                <div v-for="{style, input} in styleFields" :key="style['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
                   <FormField
-                    v-model="valueRef.value"
-                    :defaultValue="defaultValue"
+                    :input="input"
                     :label="style['stanza:key']"
                     :type="style['stanza:type']"
                     :choices="style['stanza:choice']"
@@ -172,6 +170,8 @@ import FormField from './FormField.vue';
 import Layout from './Layout.vue';
 import StanzaPreviewer from './StanzaPreviewer.vue';
 
+const NO_DEFAULT = Symbol();
+
 export default defineComponent({
   components: {
     FormField,
@@ -188,49 +188,44 @@ export default defineComponent({
     const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
       return {
         param,
-        valueRef: ref(param['stanza:example'])
+        input: useInput(param['stanza:example'], NO_DEFAULT)
       };
     });
 
-    const aboutLinkPlacementDefault  = metadata['stanza:about-link-placement'] || 'bottom-right';
-    const aboutLinkPlacementValueRef = ref(aboutLinkPlacementDefault);
+    const aboutLinkPlacement = useInput(metadata['stanza:about-link-placement'] || 'bottom-right');
 
     const params = computed(() => {
       return paramFields
-        .map(({param, valueRef}) => (
+        .map(({param, input}) => (
           {
             name:  param['stanza:key'],
-            value: valueRef.value
+            value: input.ref.value
           }
         ))
         .concat(
-          aboutLinkPlacementValueRef.value === aboutLinkPlacementDefault ? [] : [
+          aboutLinkPlacement.isDefault.value ? [] : [
             {
               name:  'togostanza-about-link-placement',
-              value: aboutLinkPlacementValueRef.value
+              value: aboutLinkPlacement.ref.value
             }
           ]
         );
     });
 
     const styleFields = (metadata['stanza:style'] || []).map((style) => {
-      const defaultValue = style['stanza:default'];
-      const valueRef     = ref(defaultValue);
-
       return {
         style,
-        valueRef,
-        defaultValue
+        input: useInput(style['stanza:default'])
       };
     });
 
     const styleVars = computed(() => {
       return styleFields
-        .filter(({style, valueRef}) => valueRef.value !== style['stanza:default'])
-        .map(({style, valueRef}) => (
+        .filter(({input}) => !input.isDefault.value)
+        .map(({style, input}) => (
           {
             name:  style['stanza:key'],
-            value: valueRef.value
+            value: input.ref.value
           }
         ));
     });
@@ -239,14 +234,35 @@ export default defineComponent({
       metadata,
       readmeHtml: renderMarkdown(readme),
       paramFields,
-      aboutLinkPlacementValueRef,
-      aboutLinkPlacementDefault,
+      aboutLinkPlacement,
       params,
       styleFields,
       styleVars
     };
   }
 });
+
+function useInput(initValue, defaultValue = initValue) {
+  const _ref      = ref(initValue);
+  const isDefault = computed(() => _ref.value === defaultValue);
+
+  function setValue(newVal) {
+    _ref.value = newVal;
+  }
+
+  function resetToDefault() {
+    _ref.value = defaultValue
+  }
+
+  return {
+    ref: _ref,
+    setValue,
+    isDefault,
+    resetToDefault,
+
+    hasDefault: defaultValue !== NO_DEFAULT
+  };
+}
 
 function renderMarkdown(md) {
   if (!md) { return ''; }

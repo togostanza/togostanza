@@ -6,15 +6,15 @@
 
   <div class="input-group">
     <template v-if="type === 'single-choice'">
-      <select :value="modelValue" @change="$emit('update:modelValue', $event.target.value)" class="form-select">
+      <select :value="input.ref.value" @change="input.setValue($event.target.value)" class="form-select">
         <option v-for="choice in choices" :value="choice" :key="choice">{{choice}}</option>
       </select>
     </template>
 
-    <input v-else :type="type" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="form-control">
+    <input v-else :type="type" :value="input.ref.value" @input="input.setValue($event.target.value)" class="form-control">
 
-    <div v-if="defaultValue !== undefined" class="input-group-append">
-      <button @click="resetToDefault()" :disabled="modelValue === defaultValue" type="button" class="btn btn-light border">Reset</button>
+    <div v-if="input.hasDefault" class="input-group-append">
+      <button @click="input.resetToDefault()" :disabled="input.isDefault.value" type="button" class="btn btn-light border">Reset</button>
     </div>
   </div>
 
@@ -24,29 +24,20 @@
 </template>
 
 <script>
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: [
     'choices',
-    'defaultValue',
     'helpText',
+    'input',
     'label',
-    'modelValue',
     'required',
     'type',
   ],
 
-  setup(props, {emit}) {
-    function resetToDefault() {
-      emit('update:modelValue', props.defaultValue);
-    }
-
-    return {
-      resetToDefault,
-
-      ...toRefs(props)
-    };
+  setup(props) {
+    return props;
   }
 });
 </script>
