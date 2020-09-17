@@ -1,3 +1,4 @@
+import path from 'path';
 import { readFileSync } from 'fs';
 
 import _Handlebars from 'handlebars';
@@ -10,8 +11,8 @@ Handlebars.registerHelper('to-json', function(val) {
   return JSON.stringify(val);
 });
 
-export function handlebarsTemplate(fpath, opts = {}) {
-  const hbs = readFileSync(fpath, 'utf8');
+export function handlebarsTemplate(filename, opts = {}) {
+  const hbs = readFileSync(path.join(packagePath, 'src', 'templates', filename), 'utf8');
 
   return Handlebars.compile(hbs, opts);
 }

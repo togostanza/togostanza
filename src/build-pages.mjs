@@ -14,11 +14,6 @@ import { rollup } from 'rollup';
 import StanzaRepository from './stanza-repository.mjs';
 import { handlebarsTemplate, packagePath, resolvePackage } from './util.mjs';
 
-const templates = {
-  index: handlebarsTemplate(path.join(packagePath, 'src', 'index.html.hbs')),
-  help:  handlebarsTemplate(path.join(packagePath, 'src', 'help.html.hbs'))
-};
-
 export default class BuildPages extends BroccoliPlugin {
   constructor(repositoryDir, options) {
     super([repositoryDir], options);
@@ -84,15 +79,19 @@ export default class BuildPages extends BroccoliPlugin {
   }
 
   async buildIndexPage() {
-    this.output.writeFileSync('index.html', templates.index());
+    const template = handlebarsTemplate('index.html.hbs');
+
+    this.output.writeFileSync('index.html', template());
   }
 
   async buildHelpPages(stanzas) {
+    const template = handlebarsTemplate('help.html.hbs');
+
     await Promise.all(stanzas.map(async (stanza) => {
       const metadata = await stanza.metadata;
       const readme   = await stanza.readme;
 
-      this.output.writeFileSync(`${stanza.id}.html`, templates.help({metadata, readme}));
+      this.output.writeFileSync(`${stanza.id}.html`, template({metadata, readme}));
     }));
   }
 }

@@ -78,7 +78,7 @@ export default class BuildStanzas extends BroccoliPlugin {
   }
 }
 
-const entrypointTemplate = handlebarsTemplate(path.join(packagePath, 'src', 'entrypoint.js.hbs'), {noEscape: true});
+const entrypointTemplate = handlebarsTemplate('entrypoint.js.hbs', {noEscape: true});
 
 async function virtualModules(stanza) {
   const entrypoint = entrypointTemplate({
