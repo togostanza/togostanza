@@ -18,22 +18,22 @@
                   <tbody>
                     <tr>
                       <th>Context</th>
-                      <td>{{metadata['stanza:context']}}</td>
+                      <td>{{metadata['stanza:context'] || '-'}}</td>
                     </tr>
 
                     <tr>
                       <th>Display</th>
-                      <td>{{metadata['stanza:display']}}</td>
+                      <td>{{metadata['stanza:display'] || '-'}}</td>
                     </tr>
 
                     <tr>
                       <th>Type</th>
-                      <td>{{metadata['stanza:type']}}</td>
+                      <td>{{metadata['stanza:type'] || '-'}}</td>
                     </tr>
 
                     <tr>
                       <th>Provider</th>
-                      <td>{{metadata['stanza:provider']}}</td>
+                      <td>{{metadata['stanza:provider'] || '-'}}</td>
                     </tr>
 
                     <tr>
@@ -41,7 +41,7 @@
 
                       <td>
                         <address class="mb-0">
-                          {{metadata['stanza:author']}}
+                          {{metadata['stanza:author'] || '-'}}
 
                           <template v-if="metadata['stanza:address']">
                             &lt;<a :href="`mailto:${metadata['stanza:address']}`">{{metadata['stanza:address']}}</a>&gt;
@@ -54,17 +54,33 @@
                       <th>Contributors</th>
 
                       <td>
-                        <ul class="list-unstyled mb-0">
-                          <li v-for="contributor in metadata['stanza:contributor']" :key="contributor">
-                            {{contributor}}
-                          </li>
-                        </ul>
+                        <template v-if="metadata['stanza:contributor'] && metadata['stanza:contributor'].length > 0">
+                          <ul class="list-unstyled mb-0">
+                            <li v-for="contributor in metadata['stanza:contributor']" :key="contributor">
+                              {{contributor}}
+                            </li>
+                          </ul>
+                        </template>
+
+                        <template v-else>
+                          -
+                        </template>
                       </td>
                     </tr>
 
                     <tr>
                       <th>License</th>
-                      <td>{{metadata['stanza:license']}}</td>
+                      <td>{{metadata['stanza:license'] || '-'}}</td>
+                    </tr>
+
+                    <tr>
+                      <th>Created</th>
+                      <td>{{metadata['stanza:created'] || '-'}}</td>
+                    </tr>
+
+                    <tr>
+                      <th>Updated</th>
+                      <td>{{metadata['stanza:updated'] || '-'}}</td>
                     </tr>
                   </tbody>
                 </table>
