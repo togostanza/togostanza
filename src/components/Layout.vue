@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
-      <a href="./" class="navbar-brand">{{repositoryName}}</a>
+      <a href="./" class="navbar-brand">{{repositoryName || 'TogoStanza'}}</a>
 
       <div class="navbar-nav">
         <a v-if="repositoryUrl" :href="repositoryUrl" target="_blank" rel="noopener noreferrer" class="nav-link">
