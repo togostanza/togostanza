@@ -95,8 +95,7 @@ async function virtualModules(stanza) {
 
   return [
     [`${stanza.id}.js`,                entrypoint],
-    [`-stanza/${stanza.id}/templates`, templates],
-    [`-stanza/${stanza.id}/outer`,     `export default ${JSON.stringify(await stanza.outer)};`]
+    [`-stanza/${stanza.id}/templates`, templates]
   ];
 }
 

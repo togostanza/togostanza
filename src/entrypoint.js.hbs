@@ -3,6 +3,5 @@ import { defineStanzaElement } from '-togostanza/stanza-element';
 import main from '-stanza/{{stanzaId}}/main';
 import metadata from '-stanza/{{stanzaId}}/metadata';
 import templates from '-stanza/{{stanzaId}}/templates';
-import outer from '-stanza/{{stanzaId}}/outer';
 
-defineStanzaElement(main, {metadata, templates, outer, url: import.meta.url});
+defineStanzaElement(main, {metadata, templates, url: import.meta.url});

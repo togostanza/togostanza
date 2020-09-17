@@ -4,7 +4,7 @@ import outdent from 'outdent';
 import AboutLinkElement from './about-link.mjs';
 import Stanza from './stanza.mjs';
 
-export function defineStanzaElement(main, {metadata, templates, outer, url}) {
+export function defineStanzaElement(main, {metadata, templates, url}) {
   const id        = metadata['@id'];
   const paramKeys = metadata['stanza:parameter'].map(param => param['stanza:key']);
 
@@ -20,7 +20,6 @@ export function defineStanzaElement(main, {metadata, templates, outer, url}) {
         this.render();
       }, 50);
 
-      ensureOuterInserted(id, outer);
       ensureAboutLinkElementDefined();
 
       this.attachShadow({mode: 'open'});
@@ -66,30 +65,6 @@ function applyDefaultStyles(el, defs) {
   `;
 
   el.append(style);
-}
-
-function ensureOuterInserted(id, outer) {
-  if (!outer) { return; }
-  if (document.querySelector(`[data-togostanza-outer="${id}"]`)) { return; }
-
-  const outerEl = document.createElement('div');
-
-  outerEl.setAttribute('data-togostanza-outer', id);
-  outerEl.innerHTML = outer;
-
-  document.body.append(outerEl);
-
-  outerEl.querySelectorAll('script').forEach((orig) => {
-    const el = document.createElement('script');
-
-    el.textContent = orig.textContent;
-
-    Array.from(orig.attributes).forEach((attr) => {
-      el.setAttribute(attr.nodeName, attr.textContent);
-    });
-
-    orig.replaceWith(el);
-  });
 }
 
 function ensureAboutLinkElementDefined() {
