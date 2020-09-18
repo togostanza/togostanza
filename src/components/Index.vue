@@ -12,21 +12,21 @@
 </template>
 
 <script>
-  import { defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 
-  import Layout from './Layout.vue';
+import Layout from './Layout.vue';
 
-  export default defineComponent({
-    components: {
-      Layout
-    },
+export default defineComponent({
+  components: {
+    Layout
+  },
 
-    props: ['allMetadata'],
+  props: ['allMetadata'],
 
-    setup({allMetadata}) {
-      return {
-        allMetadata
-      };
-    }
-  });
+  setup({allMetadata}) {
+    return {
+      allMetadata
+    };
+  }
+});
 </script>

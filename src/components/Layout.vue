@@ -47,24 +47,24 @@
 </template>
 
 <script>
-  import { defineComponent } from 'vue';
-  import { repo as repoIcon } from '@primer/octicons';
+import { defineComponent } from 'vue';
+import { repo as repoIcon } from '@primer/octicons';
 
-  import '@primer/octicons/index.scss';
-  import 'bootstrap/scss/bootstrap.scss';
+import '@primer/octicons/index.scss';
+import 'bootstrap/scss/bootstrap.scss';
 
-  import repositoryMetadata from '-repository/package.json';
+import repositoryMetadata from '-repository/package.json';
 
-  export default defineComponent({
-    props: ['containerClass'],
+export default defineComponent({
+  props: ['containerClass'],
 
-    setup({containerClass}) {
-      return {
-        containerClass,
-        repositoryName: repositoryMetadata.name,
-        repositoryUrl:  repositoryMetadata.repository,
-        repoIcon
-      };
-    }
-  });
+  setup({containerClass}) {
+    return {
+      containerClass,
+      repositoryName: repositoryMetadata.name,
+      repositoryUrl:  repositoryMetadata.repository,
+      repoIcon
+    };
+  }
+});
 </script>

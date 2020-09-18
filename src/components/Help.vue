@@ -1,15 +1,15 @@
 <style scoped>
-  th {
-    background-color: var(--bs-light);
-    text-align: center;
-    white-space: nowrap;
-    width: 1%;
-  }
+th {
+  background-color: var(--bs-light);
+  text-align: center;
+  white-space: nowrap;
+  width: 1%;
+}
 
-  th, td {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
+th, td {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
 </style>
 
 <template>
