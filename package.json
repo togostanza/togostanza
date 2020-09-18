@@ -33,6 +33,7 @@
     "jscodeshift": "^0.11.0",
     "lodash.camelcase": "^4.3.0",
     "lodash.debounce": "^4.0.8",
+    "lodash.escape": "^4.0.1",
     "lodash.lowercase": "^4.3.0",
     "lodash.pick": "^4.4.0",
     "lodash.upperfirst": "^4.3.1",

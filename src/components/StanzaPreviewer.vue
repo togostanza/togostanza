@@ -1,21 +1,22 @@
 <template>
   <div class="bg-dark">
     <div class="text-right p-2">
-      <CopyButton :value="combinedSnippet" class="btn btn-sm btn-light"></CopyButton>
+      <CopyButton :value="snippetWithLoader" class="btn btn-sm btn-light"></CopyButton>
     </div>
 
-    <pre class="overflow-auto p-3 pt-0 text-white"><code>{{combinedSnippet}}</code></pre>
+    <pre class="overflow-auto p-3 pt-0 text-white"><code>{{snippetWithLoader}}</code></pre>
   </div>
 
   <div class="overflow-auto p-3 bg-light">
-    <div v-html="styleSnippet"></div>
-    <div v-html="elementSnippet"></div>
+    <div v-html="snippetWithoutLoader"></div>
   </div>
 </template>
 
 <script>
+import { defineComponent, computed } from 'vue';
+
+import escape from 'lodash.escape';
 import outdent from 'outdent';
-import { defineComponent, ref, computed } from 'vue';
 
 import CopyButton from './CopyButton.vue';
 
@@ -30,47 +31,54 @@ export default defineComponent({
     const id      = props.metadata['@id'];
     const tagName = `togostanza-${id}`;
 
-    const elementSnippet = computed(() => {
-      if (props.params.length === 0) { return `<${tagName}></${tagName}>`; }
-
-      const attrs = props.params.map(({name, value}) => `${name}=${JSON.stringify(value)}`)
-
-      return outdent`
-        <${tagName}
-        ${attrs.map(s => ' '.repeat(2) + s).join('\n')}
-        ></${tagName}>
-      `;
-    });
-
-    const styleSnippet = computed(() => {
-      if (props.styleVars.length === 0) { return null; }
-
-      const styles = props.styleVars.map(({name, value}) => `${name}: ${value};`);
-
-      return outdent`
-        <style>
-          ${tagName} {
-        ${styles.map(s => ' '.repeat(4) + s).join('\n')}
-          }
-        </style>
-      `;
-    });
-
-    const scriptSrc = new URL(`./${id}.js`, location.href).href;
-
-    const combinedSnippet = computed(() => {
+    const snippetWithoutLoader = computed(() => {
       return [
-        `<script type="module" src="${scriptSrc}" async><\/script>`,
-        styleSnippet.value,
-        elementSnippet.value
+        styleElementSnippet(tagName, props.styleVars),
+        stanzaElementSnippet(tagName, props.params)
       ].filter(Boolean).join('\n\n');
     });
 
+    const scriptSrc = new URL(`./${id}.js`, location.href).href;
+    const loader    = `<script type="module" src="${escape(scriptSrc)}" async><\/script>`;
+
+    const snippetWithLoader = computed(() => {
+      return outdent`
+        ${loader}
+
+        ${snippetWithoutLoader.value}
+      `;
+    });
+
     return {
-      elementSnippet,
-      styleSnippet,
-      combinedSnippet
+      snippetWithoutLoader,
+      snippetWithLoader
     };
   }
 });
+
+function styleElementSnippet(tagName, styleVars) {
+  if (styleVars.length === 0) { return null; }
+
+  const lines = styleVars.map(({name, value}) => `${name}: ${value};`);
+
+  return outdent`
+    <style>
+      ${tagName} {
+    ${lines.map(line => ' '.repeat(4) + line).join('\n')}
+      }
+    </style>
+  `;
+}
+
+function stanzaElementSnippet(tagName, params) {
+  if (params.length === 0) { return `<${tagName}></${tagName}>`; }
+
+  const lines = params.map(({name, value}) => `${escape(name)}="${escape(value)}"`);
+
+  return outdent`
+    <${tagName}
+    ${lines.map(line => ' '.repeat(2) + line).join('\n')}
+    ></${tagName}>
+  `;
+}
 </script>
