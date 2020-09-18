@@ -49,6 +49,8 @@
 <script>
   import { defineComponent } from 'vue';
   import { repo as repoIcon } from '@primer/octicons';
+
+  import '@primer/octicons/index.scss';
   import 'bootstrap/scss/bootstrap.scss';
 
   import repositoryMetadata from '-repository/package.json';

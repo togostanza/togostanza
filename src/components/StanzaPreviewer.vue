@@ -1,9 +1,7 @@
 <template>
   <div class="bg-dark">
     <div class="text-right p-2">
-      <button @click="copyCombinedSnippetToClipboard()" type="button" class="btn btn-sm btn-light">
-        Copy to clipboard
-      </button>
+      <CopyButton :value="combinedSnippet" class="btn btn-sm btn-light"></CopyButton>
     </div>
 
     <pre class="overflow-auto p-3 pt-0 text-white"><code>{{combinedSnippet}}</code></pre>
@@ -19,8 +17,14 @@
   import outdent from 'outdent';
   import { defineComponent, ref, computed } from 'vue';
 
+  import CopyButton from './CopyButton.vue';
+
   export default defineComponent({
     props: ['metadata', 'params', 'styleVars'],
+
+    components: {
+      CopyButton
+    },
 
     setup(props) {
       const id      = props.metadata['@id'];
@@ -62,15 +66,10 @@
         ].filter(Boolean).join('\n\n');
       });
 
-      function copyCombinedSnippetToClipboard() {
-        navigator.clipboard.writeText(combinedSnippet.value);
-      }
-
       return {
         elementSnippet,
         styleSnippet,
-        combinedSnippet,
-        copyCombinedSnippetToClipboard
+        combinedSnippet
       };
     }
   });
