@@ -23,10 +23,8 @@ export default defineComponent({
 
   props: ['allMetadata'],
 
-  setup({allMetadata}) {
-    return {
-      allMetadata
-    };
+  setup(props) {
+    return props;
   }
 });
 </script>

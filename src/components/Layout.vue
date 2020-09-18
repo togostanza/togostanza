@@ -58,9 +58,9 @@ import repositoryMetadata from '-repository/package.json';
 export default defineComponent({
   props: ['containerClass'],
 
-  setup({containerClass}) {
+  setup(props) {
     return {
-      containerClass,
+      containerClass: props.containerClass,
       repositoryName: repositoryMetadata.name,
       repositoryUrl:  repositoryMetadata.repository,
       repoIcon
