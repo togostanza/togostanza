@@ -191,24 +191,24 @@ export default defineComponent({
 
     const params = computed(() => {
       return [
-        ...paramFields.map(({param, input}) => (
-          {
+        ...paramFields.map(({param, input}) => {
+          return {
             name: param['stanza:key'],
             input
-          }
-        )),
+          };
+        }),
         {
           name:  'togostanza-about-link-placement',
           input: aboutLinkPlacement
         }
       ].filter(({input}) => (
         !input.isDefault.value
-      )).map(({name, input}) => (
-        {
+      )).map(({name, input}) => {
+        return {
           name,
           value: input.ref.value
-        }
-      ));
+        };
+      });
     });
 
     const styleFields = (metadata['stanza:style'] || []).map((style) => {
@@ -219,14 +219,14 @@ export default defineComponent({
     });
 
     const styleVars = computed(() => {
-      return styleFields
-        .filter(({input}) => !input.isDefault.value)
-        .map(({style, input}) => (
-          {
-            name:  style['stanza:key'],
-            value: input.ref.value
-          }
-        ));
+      return styleFields.filter(({input}) => (
+        !input.isDefault.value
+      )).map(({style, input}) => {
+        return {
+          name:  style['stanza:key'],
+          value: input.ref.value
+        };
+      });
     });
 
     return {
