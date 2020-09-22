@@ -1,0 +1,9 @@
+{{#if params}}
+<{{tagName}}
+  {{#each params as |param|}}
+  {{param.name}}="{{param.value}}"
+  {{/each}}
+></{{tagName}}>
+{{else}}
+<{{tagName}}></{{tagName}}>
+{{/if}}

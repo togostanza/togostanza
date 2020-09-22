@@ -3,6 +3,7 @@ import path from 'path';
 import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
+import handlebars from 'rollup-plugin-handlebars-plus';
 import json from '@rollup/plugin-json';
 import replace from '@rollup/plugin-replace';
 import resolve from '@rollup/plugin-node-resolve';
@@ -62,6 +63,7 @@ export default class BuildPages extends BroccoliPlugin {
         commonjs(),
         vue(),
         json(),
+        handlebars(),
 
         styles({
           sass: {

@@ -1,0 +1,9 @@
+{{#if styleVars}}
+<style>
+  {{tagName}} {
+    {{#each styleVars as |var|}}
+    {{var.name}}: {{var.value}}
+    {{/each}}
+  }
+</style>
+{{/if}}
