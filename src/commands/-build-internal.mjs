@@ -19,6 +19,7 @@ export async function runWatcher(repositoryDir, builder, {onReady, onBuildSucces
     'README.md',
     'package.json',
     'stanzas/**',
+    'styles/**',
     'lib/**'
   ].map(_path => path.resolve(repositoryDir, _path)));
 

@@ -36,7 +36,7 @@ export default class BuildStanzas extends BroccoliPlugin {
         virtual(
           Object.fromEntries(
             await Promise.all(
-              stanzas.map(virtualModules)
+              stanzas.map(stanza => virtualModules(stanza, this.repositoryDir))
             ).then(ary => ary.flat(1))
           )
         ),
@@ -83,7 +83,7 @@ export default class BuildStanzas extends BroccoliPlugin {
 
 const entrypointTemplate = handlebarsTemplate('entrypoint.js.hbs', {noEscape: true});
 
-async function virtualModules(stanza) {
+async function virtualModules(stanza, repositoryDir) {
   const entrypoint = entrypointTemplate({
     stanzaId: stanza.id,
   });
@@ -100,7 +100,11 @@ async function virtualModules(stanza) {
 
   try {
     css = (await promisify(sass.render)({
-      file: stanza.filepath('style.scss')
+      file: stanza.filepath('style.scss'),
+
+      importer(url) {
+        return {file: url.replace(/^@/, repositoryDir)};
+      }
     })).css.toString();
   } catch (e) {
     css = null;
