@@ -1,4 +1,5 @@
 import path from 'path';
+import { promisify } from 'util';
 
 import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
@@ -6,7 +7,9 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import outdent from 'outdent';
 import resolve from '@rollup/plugin-node-resolve';
+import sass from 'sass';
 import virtual from '@rollup/plugin-virtual';
+import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 import { rollup } from 'rollup';
 
 import StanzaRepository from './stanza-repository.mjs';
@@ -93,9 +96,22 @@ async function virtualModules(stanza) {
     ];
   `;
 
+  let css;
+
+  try {
+    css = (await promisify(sass.render)({
+      file: stanza.filepath('style.scss')
+    })).css.toString();
+  } catch (e) {
+    css = null;
+
+    console.error(e);
+  }
+
   return [
     [`${stanza.id}.js`,                entrypoint],
-    [`-stanza/${stanza.id}/templates`, templates]
+    [`-stanza/${stanza.id}/templates`, templates],
+    [`-stanza/${stanza.id}/css`,       `export default ${JSON.stringify(css)}`]
   ];
 }
 

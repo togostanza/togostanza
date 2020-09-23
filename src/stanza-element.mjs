@@ -4,7 +4,7 @@ import outdent from 'outdent';
 import AboutLinkElement from './about-link.mjs';
 import Stanza from './stanza.mjs';
 
-export function defineStanzaElement(main, {metadata, templates, url}) {
+export async function defineStanzaElement(main, {metadata, templates, css, url}) {
   const id        = metadata['@id'];
   const paramKeys = metadata['stanza:parameter'].map(param => param['stanza:key']);
 
@@ -26,7 +26,13 @@ export function defineStanzaElement(main, {metadata, templates, url}) {
 
       this.stanza = new Stanza(this, metadata, templates, url);
 
-      applyDefaultStyles(this, metadata['stanza:style']);
+      const hostStyle = document.createElement('style');
+      hostStyle.append(cssVariableDefaults(metadata['stanza:style']) || '');
+      this.append(hostStyle);
+
+      const shadowStyle = document.createElement('style');
+      shadowStyle.append(css || '');
+      this.shadowRoot.append(shadowStyle);
     }
 
     connectedCallback() {
@@ -53,18 +59,14 @@ export function defineStanzaElement(main, {metadata, templates, url}) {
   customElements.define(`togostanza-${id}`, StanzaElement);
 }
 
-function applyDefaultStyles(el, defs) {
-  if (!defs) { return; }
+function cssVariableDefaults(defs) {
+  if (!defs) { return null; }
 
-  const style = document.createElement('style');
-
-  style.textContent = outdent`
+  return outdent`
     :root {
     ${defs.map(def => `  ${def['stanza:key']}: ${def['stanza:default']};`).join('\n')}
     }
   `;
-
-  el.append(style);
 }
 
 function ensureAboutLinkElementDefined() {
