@@ -5,8 +5,9 @@ import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
+import nodeResolve from '@rollup/plugin-node-resolve';
 import outdent from 'outdent';
-import resolve from '@rollup/plugin-node-resolve';
+import resolve from 'resolve';
 import sass from 'sass';
 import virtual from '@rollup/plugin-virtual';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
@@ -51,7 +52,7 @@ export default class BuildStanzas extends BroccoliPlugin {
           ]
         }),
 
-        resolve(),
+        nodeResolve(),
         commonjs(),
         json()
       ],
@@ -103,8 +104,14 @@ async function virtualModules(stanza, repositoryDir) {
       file: stanza.filepath('style.scss'),
 
       importer(url) {
-        return {file: url.replace(/^@/, repositoryDir)};
-      }
+        return {
+          file: url.replace(/^@/, repositoryDir)
+        };
+      },
+
+      includePaths: [
+        path.join(repositoryDir, 'node_modules')
+      ]
     })).css.toString();
   } catch (e) {
     css = null;
