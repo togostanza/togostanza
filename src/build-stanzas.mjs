@@ -7,7 +7,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import outdent from 'outdent';
-import resolve from 'resolve';
 import sass from 'sass';
 import virtual from '@rollup/plugin-virtual';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
