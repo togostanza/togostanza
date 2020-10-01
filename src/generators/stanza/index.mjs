@@ -18,7 +18,7 @@ export default class StanzaGenerator extends Generator {
     await this.prompt([
       {
         name:     'id',
-        message:  'stanza id (<togostanza-ID></togostanza-ID>):',
+        message:  'stanza id (<togostanza-ID>):',
         validate: required
       },
       {
