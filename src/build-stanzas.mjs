@@ -100,7 +100,7 @@ async function virtualModules(stanza, repositoryDir) {
 
   try {
     css = (await promisify(sass.render)({
-      file: stanza.filepath('style.scss'),
+      file: stanza.filepath('stanza.scss'),
 
       importer(url) {
         return {

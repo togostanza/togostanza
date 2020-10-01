@@ -7,6 +7,7 @@ Array [
   "   create stanzas/hello/metadata.json
    create stanzas/hello/README.md
    create stanzas/hello/index.js
+   create stanzas/hello/stanza.scss
    create stanzas/hello/templates/stanza.html.hbs
 ",
 ]
@@ -35,6 +36,7 @@ Array [
   "   create stanzas/hello/metadata.json
    create stanzas/hello/README.md
    create stanzas/hello/index.js
+   create stanzas/hello/stanza.scss
    create stanzas/hello/templates/stanza.html.hbs
 ",
 ]
@@ -76,7 +78,25 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
     }
   ],
   \\"stanza:about-link-placement\\": \\"bottom-right\\",
-  \\"stanza:style\\": [],
+  \\"stanza:style\\": [
+    {
+      \\"stanza:key\\": \\"--greeting-color\\",
+      \\"stanza:type\\": \\"color\\",
+      \\"stanza:default\\": \\"#000\\",
+      \\"stanza:description\\": \\"text color of greeting\\"
+    },
+    {
+      \\"stanza:key\\": \\"--greeting-align\\",
+      \\"stanza:type\\": \\"single-choice\\",
+      \\"stanza:choice\\": [
+        \\"left\\",
+        \\"center\\",
+        \\"right\\"
+      ],
+      \\"stanza:default\\": \\"center\\",
+      \\"stanza:description\\": \\"text align of greeting\\"
+    }
+  ],
   \\"stanza:usage\\": \\"<togostanza-hello></togostanza-hello>\\",
   \\"stanza:type\\": \\"TYPE\\",
   \\"stanza:context\\": \\"CONTEXT\\",
@@ -88,6 +108,17 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
   \\"stanza:contributor\\": [],
   \\"stanza:created\\": \\"2020-10-05\\",
   \\"stanza:updated\\": \\"2020-10-05\\"
+}
+",
+      "stanza.scss": "// Load the repository-wide global style here. The actual file is located at ../common.scss for details.
+@use '@/common.scss';
+
+// The following is just an example. Feel free to modify it.
+// --greeting-color and --greeting-align are style variables, which are defined in metadata.json.
+p {
+  font-size: 24px;
+  color: var(--greeting-color);
+  text-align: var(--greeting-align);
 }
 ",
       "templates": Object {
@@ -106,6 +137,7 @@ Array [
   "   create package.json
    create README.md
    create .gitignore
+   create common.scss
    create .github/workflows/publish.yml
 Skipping install command: npm install --cache-min 86400
 
@@ -177,6 +209,18 @@ jobs:
 ",
     "README.md": "# some-repo
 ",
+    "common.scss": "/*
+
+You can set up a global style here that is commonly used in each stanza.
+
+Example:
+
+h1 {
+  font-size: 24px;
+}
+
+*/
+",
     "lib": Object {},
     "package.json": "{
   \\"name\\": \\"some-repo\\",
@@ -203,6 +247,7 @@ Array [
   "   create package.json
    create README.md
    create .gitignore
+   create common.scss
    create .github/workflows/publish.yml
 Skipping install command: yarn install
 
@@ -274,6 +319,18 @@ jobs:
 ",
     "README.md": "# some-repo
 ",
+    "common.scss": "/*
+
+You can set up a global style here that is commonly used in each stanza.
+
+Example:
+
+h1 {
+  font-size: 24px;
+}
+
+*/
+",
     "lib": Object {},
     "package.json": "{
   \\"name\\": \\"some-repo\\",
@@ -300,6 +357,7 @@ Array [
   "   create package.json
    create README.md
    create .gitignore
+   create common.scss
    create .github/workflows/publish.yml
 Skipping install command: npm install --cache-min 86400
 
@@ -370,6 +428,18 @@ jobs:
 /node_modules/
 ",
     "README.md": "# some-repo
+",
+    "common.scss": "/*
+
+You can set up a global style here that is commonly used in each stanza.
+
+Example:
+
+h1 {
+  font-size: 24px;
+}
+
+*/
 ",
     "lib": Object {},
     "package.json": "{
