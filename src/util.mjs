@@ -40,8 +40,29 @@ export function lookupInstalledPath(repositoryDir) {
 export function ensureTogoStanzaIsLocallyInstalled(repositoryDir) {
   if (process.env.NODE_ENV === 'test') { return; }
 
+  let packageJSON;
+
+  try {
+    packageJSON = JSON.parse(readFileSync(path.join(repositoryDir, 'package.json')));
+  } catch (e) {
+    if (e.code === 'ENOENT') {
+      console.error('package.json is missing. Make sure you are in the stanza repository directory.');
+      process.exit(1);
+    } else if (e instanceof SyntaxError) {
+      console.error(`Failed to parse package.json: ${e.message}`);
+      process.exit(1);
+    } else {
+      throw e;
+    }
+  }
+
+  if (!packageJSON.dependencies || !packageJSON.dependencies.togostanza) {
+    console.error('togostanza is not specified as a dependency in package.json. Make sure you are in the stanza repository directory.');
+    process.exit(1);
+  }
+
   if (!lookupInstalledPath(repositoryDir)) {
-    console.error('togostanza must be locally installed.');
+    console.error('togostanza is not installed locally. Try `npm install` or `yarn install`.');
     process.exit(1);
   }
 }
