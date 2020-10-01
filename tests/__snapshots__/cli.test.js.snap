@@ -25,6 +25,8 @@ Array [
   "hello.html",
   "hello.js",
   "hello.js.map",
+  "hello/",
+  "hello/metadata.json",
   "index.html",
 ]
 `;

@@ -4,6 +4,7 @@ import { promisify } from 'util';
 import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
+import copy from 'rollup-plugin-copy';
 import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import outdent from 'outdent';
@@ -55,7 +56,16 @@ export default class BuildStanzas extends BroccoliPlugin {
 
         nodeResolve(),
         commonjs(),
-        json()
+        json(),
+
+        copy({
+          targets: stanzas.map((stanza) => {
+            return {
+              src:  stanza.filepath('metadata.json'),
+              dest: path.join(this.outputPath, stanza.id)
+            };
+          })
+        })
       ],
 
       external(id) {
