@@ -29,6 +29,8 @@ export default class BuildStanzas extends BroccoliPlugin {
   }
 
   async buildStanzas(stanzas) {
+    if (stanzas.length === 0) { return; }
+
     const bundle = await rollup({
       input: stanzas.map(({id}) => `${id}.js`),
 
