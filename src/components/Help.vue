@@ -26,7 +26,7 @@ th, td {
 
         <div class="tab-content mt-3">
           <div class="tab-pane active px-lg-5" id="overview" role="tabpanel">
-            <table class="table table-borderless border">
+            <table class="table table-borderless border mb-1">
               <tbody>
                 <tr>
                   <th>Context</th>
@@ -96,6 +96,10 @@ th, td {
                 </tr>
               </tbody>
             </table>
+
+            <div class="text-right">
+              <a :href="`./${metadata['@id']}/metadata.json`">Download JSON</a>
+            </div>
 
             <div v-html="readmeHtml" class="mt-4"></div>
           </div>
