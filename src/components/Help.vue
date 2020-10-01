@@ -101,7 +101,7 @@ th, td {
               <a :href="`./${metadata['@id']}/metadata.json`">Download JSON</a>
             </div>
 
-            <div v-html="readmeHtml" class="mt-4"></div>
+            <div v-html="readme" class="mt-4"></div>
           </div>
 
           <div class="tab-pane" id="customize" role="tabpanel">
@@ -168,7 +168,6 @@ th, td {
 import { defineComponent, ref, computed } from 'vue';
 
 import 'bootstrap/js/dist/tab.js';
-import * as commonmark from 'commonmark';
 
 import FormField from './FormField.vue';
 import Layout from './Layout.vue';
@@ -235,7 +234,7 @@ export default defineComponent({
 
     return {
       metadata,
-      readmeHtml: renderMarkdown(readme),
+      readme,
       paramFields,
       aboutLinkPlacement,
       params,
@@ -266,14 +265,5 @@ function useInput(initValue, hasDefault = true) {
     isDefault,
     resetToDefault
   };
-}
-
-function renderMarkdown(md) {
-  if (!md) { return ''; }
-
-  const parser   = new commonmark.Parser();
-  const renderer = new commonmark.HtmlRenderer();
-
-  return renderer.render(parser.parse(md));
 }
 </script>

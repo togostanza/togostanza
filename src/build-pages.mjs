@@ -1,5 +1,6 @@
 import path from 'path';
 
+import commonmark from 'commonmark';
 import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
@@ -93,7 +94,19 @@ export default class BuildPages extends BroccoliPlugin {
       const metadata = await stanza.metadata;
       const readme   = await stanza.readme;
 
-      this.output.writeFileSync(`${stanza.id}.html`, template({metadata, readme}));
+      this.output.writeFileSync(`${stanza.id}.html`, template({
+        metadata,
+        readme: renderMarkdown(readme)
+      }));
     }));
   }
+}
+
+function renderMarkdown(md) {
+  if (!md) { return ''; }
+
+  const parser   = new commonmark.Parser();
+  const renderer = new commonmark.HtmlRenderer();
+
+  return renderer.render(parser.parse(md));
 }

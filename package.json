@@ -24,7 +24,7 @@
     "broccoli-plugin": "^4.0.3",
     "chalk": "^4.1.0",
     "commander": "^6.1.0",
-    "commonmark": "^0.29.2",
+    "commonmark": "^0.29.1",
     "console-ui": "^3.1.1",
     "express": "^4.17.1",
     "fecha": "^4.2.0",
