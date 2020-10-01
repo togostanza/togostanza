@@ -4,9 +4,11 @@ import MergeTrees from 'broccoli-merge-trees';
 import UI from 'console-ui';
 import broccoli from 'broccoli';
 import commander from 'commander';
+import resolve from 'resolve';
 
 import PreviewServer from '../preview-server.mjs';
 import { composeTree, runWatcher } from './-build-internal.mjs';
+import { ensureTogoStanzaIsLocallyInstalled } from '../util.mjs';
 
 const command = new commander.Command()
   .storeOptionsAsProperties(false)
@@ -23,6 +25,8 @@ export default command;
 
 async function serve(port) {
   const repositoryDir = path.resolve('.');
+
+  ensureTogoStanzaIsLocallyInstalled(repositoryDir);
 
   const ui   = new UI();
   const tree = composeTree(repositoryDir, {environment: 'development'});

@@ -20,3 +20,28 @@ export function handlebarsTemplate(filename, opts = {}) {
 export function resolvePackage(name) {
   return resolve.sync(name, {basedir: packagePath});
 }
+
+export function lookupInstalledPath(repositoryDir) {
+  let packageJsonPath;
+
+  try {
+    packageJsonPath = resolve.sync('togostanza/package.json', {basedir: repositoryDir});
+  } catch (e) {
+    if (e.code === 'MODULE_NOT_FOUND') {
+      return null;
+    } else {
+      throw e;
+    }
+  }
+
+  return path.resolve(packageJsonPath, '..');
+}
+
+export function ensureTogoStanzaIsLocallyInstalled(repositoryDir) {
+  if (process.env.NODE_ENV === 'test') { return; }
+
+  if (!lookupInstalledPath(repositoryDir)) {
+    console.error('togostanza must be locally installed.');
+    process.exit(1);
+  }
+}

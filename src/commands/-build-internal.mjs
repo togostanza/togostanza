@@ -7,11 +7,11 @@ import broccoli from 'broccoli';
 import debounce from 'lodash.debounce';
 import messages from 'broccoli/dist/messages.js';
 import picomatch from 'picomatch';
-import resolve from 'resolve';
 import sane from 'sane';
 
 import BuildPages from '../build-pages.mjs';
 import BuildStanzas from '../build-stanzas.mjs';
+import { lookupInstalledPath } from '../util.mjs';
 
 export async function runWatcher(repositoryDir, builder, {onReady, onBuildSuccess, onBuildFailure} = {}) {
   const watchMatcher = picomatch([
@@ -52,7 +52,7 @@ export async function runWatcher(repositoryDir, builder, {onReady, onBuildSucces
     }
   });
 
-  watchPackageFiles(repositoryDir, builder);
+  watchPackageFilesInDevelopment(repositoryDir, builder);
 
   if (onReady) {
     onReady(watcher);
@@ -65,21 +65,13 @@ export async function runWatcher(repositoryDir, builder, {onReady, onBuildSucces
   }
 }
 
-function watchPackageFiles(repositoryDir, builder) {
-  let packageJsonPath;
+function watchPackageFilesInDevelopment(repositoryDir, builder) {
+  const installedPath = lookupInstalledPath(repositoryDir);
 
-  try {
-    packageJsonPath = resolve.sync('togostanza/package.json', {basedir: repositoryDir});
-  } catch (e) {
-    if (e.code === 'MODULE_NOT_FOUND') {
-      return;
-    } else {
-      throw e;
-    }
-  }
+  // togostanza is not installed. return here to prevent error duplication
+  if (!installedPath) { return; }
 
-  const installedPath   = path.resolve(packageJsonPath, '..');
-
+  // not in development (not npm link-ed)
   if (!fs.lstatSync(installedPath).isSymbolicLink()) { return; }
 
   const watcher = sane(fs.realpathSync(installedPath), {glob: ['**/*']});

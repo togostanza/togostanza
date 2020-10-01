@@ -6,7 +6,7 @@ import fecha from 'fecha';
 import yeoman from 'yeoman-environment';
 
 import StanzaGenerator from '../../generators/stanza/index.mjs';
-import { packagePath } from '../../util.mjs';
+import { ensureTogoStanzaIsLocallyInstalled, packagePath } from '../../util.mjs';
 
 const command = new commander.Command()
   .storeOptionsAsProperties(false)
@@ -30,6 +30,10 @@ const command = new commander.Command()
 export default command;
 
 async function generateStanza(opts) {
+  const repositoryDir = path.resolve('.');
+
+  ensureTogoStanzaIsLocallyInstalled(repositoryDir);
+
   const env = yeoman.createEnv();
 
   env.registerStub(StanzaGenerator, 'togostanza:stanza', path.join(packagePath, 'src', 'generators', 'stanza', 'index.mjs'));
