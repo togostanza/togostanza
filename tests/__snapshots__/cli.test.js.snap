@@ -97,7 +97,6 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
       \\"stanza:description\\": \\"text align of greeting\\"
     }
   ],
-  \\"stanza:usage\\": \\"<togostanza-hello></togostanza-hello>\\",
   \\"stanza:type\\": \\"TYPE\\",
   \\"stanza:context\\": \\"CONTEXT\\",
   \\"stanza:display\\": \\"DISPLAY\\",

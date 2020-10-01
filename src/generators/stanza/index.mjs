@@ -159,7 +159,6 @@ function metadataJSON({id, label, definition, type, context, display, provider, 
         'stanza:description': 'text align of greeting'
       },
     ],
-    'stanza:usage': `<togostanza-${id}></togostanza-${id}>`,
     'stanza:type': type,
     'stanza:context': context,
     'stanza:display': display,
