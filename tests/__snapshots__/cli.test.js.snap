@@ -52,7 +52,7 @@ Object {
 
 Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
 ",
-      "index.js": "export default function hello(stanza, params) {
+      "index.js": "export default async function hello(stanza, params) {
   const sayTo = params['say-to'] || 'world';
 
   stanza.render({

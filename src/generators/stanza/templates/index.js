@@ -1,4 +1,4 @@
-export default function <%= camelCase(id) %>(stanza, params) {
+export default async function <%= camelCase(id) %>(stanza, params) {
   const sayTo = params['say-to'] || 'world';
 
   stanza.render({
