@@ -114,7 +114,9 @@ to launch a development server. You will see the message as follows:
 Serving at http://localhost:8080
 ```
 
-Open the URL on your browser. The overview of hello stanza will appear. On the right pane, you will see the stanza working and saying "hello, world!".
+Open the URL on your browser. The overview of hello stanza will appear. On the right pane, you will see the HTML snippet and the preview. You can use this snippet to embed the stanza on any page you want. The preview shows the stanza working.
+
+In "Customize" tab, you can customize the behavior of the stanza. The preview and the snippet (on the right pane) will update  corresponding to the values of the fields (on the left pane).
 
 ## Commit and push to GitHub
 
