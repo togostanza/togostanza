@@ -141,3 +141,113 @@ Due to technical restrictions, this first deployment will fail even if the actio
 After choosing "gh-pages branch" as "Source", press "Rerun-jobs" button to publish correctly.
 
 You will see the [https://togostanza.github.io/example-stanza-repo](https://togostanza.github.io/example-stanza-repo). Note that this URL is corresponding to [https://github.com/togostanza/example-stanza-repo](https://github.com/togostanza/example-stanza-repo).
+
+## See how it works
+
+Let's move on the internal of the stanza.
+
+### Stanza directory layout
+
+Doing `togostanza generate stanza` has generated the following.
+
+```
+stanzas/hello
+├── assets/
+├── index.js
+├── metadata.json
+├── README.md
+├── stanza.scss
+└── templates/
+    └── stanza.html.hbs
+```
+
+### Metadata
+
+`metadata.json` describes the stanza itself. This contains the basic information (appears in "Overview" tab) and customizable items (appears in "Customize" tab).
+
+```json
+{
+  "@context": {
+    "stanza": "http://togostanza.org/resource/stanza#"
+  },
+  "@id": "hello",
+  "stanza:label": "Hello",
+  "stanza:definition": "My description.",
+  "stanza:type": "Stanza",
+  "stanza:context": "Environment",
+  "stanza:display": "Text",
+  "stanza:provider": "",
+  "stanza:license": "MIT",
+  "stanza:author": "Stanza Togo",
+  "stanza:address": "togostanza@example.com",
+  "stanza:contributor": [],
+  "stanza:created": "2020-10-08",
+  "stanza:updated": "2020-10-08",
+  "stanza:parameter": [
+    {
+      "stanza:key": "say-to",
+      "stanza:example": "world",
+      "stanza:description": "who to say hello to",
+      "stanza:required": false
+    }
+  ],
+  "stanza:about-link-placement": "bottom-right",
+  "stanza:style": [
+    {
+      "stanza:key": "--greeting-color",
+      "stanza:type": "color",
+      "stanza:default": "#000",
+      "stanza:description": "text color of greeting"
+    },
+    {
+      "stanza:key": "--greeting-align",
+      "stanza:type": "single-choice",
+      "stanza:choice": [
+        "left",
+        "center",
+        "right"
+      ],
+      "stanza:default": "center",
+      "stanza:description": "text align of greeting"
+    }
+  ]
+}
+```
+
+The stanza page that you have seen was generated using this information.
+
+## Stanza function
+
+Look into `stanzas/hello/index.js`.
+
+```jsx
+export default async function hello(stanza, params) {
+  stanza.render({
+    template: 'stanza.html.hbs',
+    parameters: {
+      greeting: `Hello, ${params['say-to']}!`
+    }
+  });
+}
+```
+
+This defines the behavior of the stanza. When the stanza is embedded, this function is called.
+
+This function defines how the stanza works. The parameters passed to the stanza are accessible via `params` (the second argument of the function).
+
+Calling `stanza.render()` renders the stanza, using `templates/stanza.html.hbs` template with `parameters`.
+
+In this example, we generate the greeting message interpolating `params['say-to']` and use the `greeting` in the view template, `stanza.html.hbs`.
+
+### View template
+
+Look into the template:
+
+```
+<!-- stanzas/hello/templates/stanza.html.hbs -->
+<p>{{greeting}}</p>
+```
+
+Templates are written in [Handlebars](http://handlebarsjs.com/). With `{{...}}` notation, we can obtain values of `parameters` object passed to `stanza.render()` method.
+
+In this example, this stanza outputs `greeting` wrapping `<p>` and `</p>`.
