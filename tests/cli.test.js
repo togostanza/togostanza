@@ -130,6 +130,12 @@ describe('build', () => {
 
       process.chdir('some-repo');
 
+      fixturify.writeSync('.', {
+        assets: {
+          foo: 'FOO'
+        }
+      });
+
       const generateStanza = togostanza(['generate', 'stanza', 'hello',
         '--label',      'LABEL',
         '--definition', 'DEFINITION',
@@ -145,6 +151,12 @@ describe('build', () => {
 
       expect(generateStanza.output).toMatchSnapshot();
       expect(generateStanza.status).toBe(0);
+
+      fixturify.writeSync('stanzas/hello', {
+        assets: {
+          bar: 'BAR'
+        }
+      });
 
       const build = togostanza(['build'], {timeout: 30_000});
 

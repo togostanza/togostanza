@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
-import copy from 'rollup-plugin-copy';
+import fs from 'fs-extra';
 import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import outdent from 'outdent';
@@ -26,7 +26,11 @@ export default class BuildStanzas extends BroccoliPlugin {
   async build() {
     const stanzas = new StanzaRepository(this.repositoryDir).allStanzas;
 
-    await this.buildStanzas(stanzas);
+    await Promise.all([
+      this.buildStanzas(stanzas),
+      this.copyMetadata(stanzas),
+      this.copyAssets(stanzas)
+    ]);
   }
 
   async buildStanzas(stanzas) {
@@ -57,15 +61,6 @@ export default class BuildStanzas extends BroccoliPlugin {
         nodeResolve(),
         commonjs(),
         json(),
-
-        copy({
-          targets: stanzas.map((stanza) => {
-            return {
-              src:  stanza.filepath('metadata.json'),
-              dest: path.join(this.outputPath, stanza.id)
-            };
-          })
-        })
       ],
 
       external(id) {
@@ -90,6 +85,37 @@ export default class BuildStanzas extends BroccoliPlugin {
         return facadeModuleId.replace(/^\x00virtual:/, '');
       },
     });
+  }
+
+  async copyMetadata(stanzas) {
+    return await Promise.all(
+      stanzas.map((stanza) => fs.copy(
+        stanza.filepath('metadata.json'),
+        path.join(this.outputPath, stanza.id, 'metadata.json')
+      ))
+    );
+  }
+
+  async copyAssets(stanzas) {
+    function ignoreMissing(e) {
+      if (e.code === 'ENOENT') {
+        // do nothing
+      } else {
+        throw e;
+      }
+    }
+
+    return await Promise.all([
+      fs.copy(
+        path.join(this.repositoryDir, 'assets'),
+        path.join(this.outputPath, 'assets')
+      ).catch(ignoreMissing),
+
+      ...stanzas.map((stanza) => fs.copy(
+        stanza.filepath('assets'),
+        path.join(this.outputPath, stanza.id, 'assets')
+      ).catch(ignoreMissing))
+    ]);
   }
 }
 
