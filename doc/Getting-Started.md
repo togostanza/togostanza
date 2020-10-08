@@ -116,9 +116,9 @@ Serving at http://localhost:8080
 
 Open the URL on your browser.
 
-## Commit and push; send the stanza to GitHub
+## Commit and push to GitHub
 
-Okay, It seems to be working fine. Let's commit this new stanza to your local git repository and push to GitHub.
+Okay, it seems to be working fine. Let's commit this new stanza to your local git repository and push to GitHub.
 
 ```bash
 $ git add .
