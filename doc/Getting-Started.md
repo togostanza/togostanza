@@ -105,7 +105,7 @@ After all questions are answered, `togostanza` will generate the stanza as follo
 Here we can preview the stanza. Enter
 
 ```
-$ npx togostanza s
+$ npx togostanza serve
 ```
 
 to launch a development server. You will see the message as follows:
