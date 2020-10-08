@@ -8,6 +8,7 @@ Array [
    create stanzas/hello/README.md
    create stanzas/hello/index.js
    create stanzas/hello/stanza.scss
+   create stanzas/hello/assets/.keep
    create stanzas/hello/templates/stanza.html.hbs
 ",
 ]
@@ -43,6 +44,7 @@ Array [
    create stanzas/hello/README.md
    create stanzas/hello/index.js
    create stanzas/hello/stanza.scss
+   create stanzas/hello/assets/.keep
    create stanzas/hello/templates/stanza.html.hbs
 ",
 ]
@@ -56,6 +58,9 @@ Object {
 
 Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
 ",
+      "assets": Object {
+        ".keep": "",
+      },
       "index.js": "export default async function hello(stanza, params) {
   const sayTo = params['say-to'] || 'world';
 
@@ -67,7 +72,6 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
   });
 }
 ",
-      "lib": Object {},
       "metadata.json": "{
   \\"@context\\": {
     \\"stanza\\": \\"http://togostanza.org/resource/stanza#\\"
@@ -143,6 +147,8 @@ Array [
    create README.md
    create .gitignore
    create common.scss
+   create assets/.keep
+   create lib/.keep
    create .github/workflows/publish.yml
 Skipping install command: npm install --cache-min 86400
 
@@ -214,6 +220,9 @@ jobs:
 ",
     "README.md": "# some-repo
 ",
+    "assets": Object {
+      ".keep": "",
+    },
     "common.scss": "/*
 
 You can set up a global style here that is commonly used in each stanza.
@@ -226,7 +235,9 @@ h1 {
 
 */
 ",
-    "lib": Object {},
+    "lib": Object {
+      ".keep": "",
+    },
     "package.json": "{
   \\"name\\": \\"some-repo\\",
   \\"version\\": \\"0.0.1\\",
@@ -253,6 +264,8 @@ Array [
    create README.md
    create .gitignore
    create common.scss
+   create assets/.keep
+   create lib/.keep
    create .github/workflows/publish.yml
 Skipping install command: yarn install
 
@@ -324,6 +337,9 @@ jobs:
 ",
     "README.md": "# some-repo
 ",
+    "assets": Object {
+      ".keep": "",
+    },
     "common.scss": "/*
 
 You can set up a global style here that is commonly used in each stanza.
@@ -336,7 +352,9 @@ h1 {
 
 */
 ",
-    "lib": Object {},
+    "lib": Object {
+      ".keep": "",
+    },
     "package.json": "{
   \\"name\\": \\"some-repo\\",
   \\"version\\": \\"0.0.1\\",
@@ -363,6 +381,8 @@ Array [
    create README.md
    create .gitignore
    create common.scss
+   create assets/.keep
+   create lib/.keep
    create .github/workflows/publish.yml
 Skipping install command: npm install --cache-min 86400
 
@@ -434,6 +454,9 @@ jobs:
 ",
     "README.md": "# some-repo
 ",
+    "assets": Object {
+      ".keep": "",
+    },
     "common.scss": "/*
 
 You can set up a global style here that is commonly used in each stanza.
@@ -446,7 +469,9 @@ h1 {
 
 */
 ",
-    "lib": Object {},
+    "lib": Object {
+      ".keep": "",
+    },
     "package.json": "{
   \\"name\\": \\"some-repo\\",
   \\"version\\": \\"0.0.1\\",

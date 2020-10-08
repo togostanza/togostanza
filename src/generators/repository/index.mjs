@@ -155,14 +155,22 @@ export default class RepositoryGenerator extends Generator {
     this._gitPrepare({skipGit, gitUrl, dest});
     this.writeDestinationJSON('package.json', packageJSON(this.params));
 
-    this.renderTemplate('**/*', '.', Object.assign({}, this.params, {commands}), null, {
+    const templateParams = {...this.params, commands};
+
+    const copyOptions = {
       processDestinationPath: (fullPath) => {
         const relativePath = fullPath.slice(dest.length + 1);
         const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
 
         return this.destinationPath(dotted);
+      },
+
+      globOptions: {
+        dot: true
       }
-    });
+    };
+
+    this.renderTemplate('**/*', '.', templateParams, null, copyOptions);
   }
 
   install() {
@@ -179,8 +187,6 @@ export default class RepositoryGenerator extends Generator {
 
   async end() {
     const {skipGit, name} = this.params;
-
-    await fs.mkdirs('lib');
 
     this._gitCommit({skipGit, name, dest: this.destinationPath()});
 

@@ -97,6 +97,10 @@ export default class BuildStanzas extends BroccoliPlugin {
   }
 
   async copyAssets(stanzas) {
+    function filter(src, dest) {
+      return path.basename(src) !== '.keep';
+    }
+
     function ignoreMissing(e) {
       if (e.code === 'ENOENT') {
         // do nothing
@@ -108,12 +112,14 @@ export default class BuildStanzas extends BroccoliPlugin {
     return await Promise.all([
       fs.copy(
         path.join(this.repositoryDir, 'assets'),
-        path.join(this.outputPath, 'assets')
+        path.join(this.outputPath, 'assets'),
+        {filter}
       ).catch(ignoreMissing),
 
       ...stanzas.map((stanza) => fs.copy(
         stanza.filepath('assets'),
-        path.join(this.outputPath, stanza.id, 'assets')
+        path.join(this.outputPath, stanza.id, 'assets'),
+        {filter}
       ).catch(ignoreMissing))
     ]);
   }

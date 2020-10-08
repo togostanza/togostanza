@@ -104,18 +104,22 @@ export default class StanzaGenerator extends Generator {
   writing() {
     this.writeDestinationJSON(this._stanzaDestinationPath('metadata.json'), metadataJSON(this.params));
 
-    this.renderTemplate('**/*', '.', {...this.params, camelCase}, null, {
+    const templateParams = {...this.params, camelCase};
+
+    const copyOptions = {
       processDestinationPath: (fullPath) => {
         const relativePath = fullPath.slice(this.destinationRoot().length + 1);
         const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
 
         return this.destinationPath(this._stanzaDestinationPath(dotted));
-      }
-    });
-  }
+      },
 
-  async end() {
-    await fs.mkdirs(this._stanzaDestinationPath('lib'));
+      globOptions: {
+        dot: true
+      }
+    }
+
+    this.renderTemplate('**/*', '.', templateParams, null, copyOptions);
   }
 
   _stanzaDestinationPath(...paths) {
