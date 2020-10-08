@@ -114,7 +114,7 @@ to launch a development server. You will see the message as follows:
 Serving at http://localhost:8080
 ```
 
-Open the URL on your browser.
+Open the URL on your browser. The overview of hello stanza will appear. On the right pane, you will see the stanza working and saying "hello, world!".
 
 ## Commit and push to GitHub
 
