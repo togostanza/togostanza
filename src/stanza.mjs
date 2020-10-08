@@ -2,7 +2,6 @@ import HandlebarsRuntime from 'handlebars/runtime.js';
 
 export default class Stanza {
   constructor(host, metadata, templates, url) {
-    this.host     = host;
     this.root     = host.shadowRoot;
     this.metadata = metadata;
     this.url      = url;
