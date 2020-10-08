@@ -26,7 +26,8 @@ Then you will be asked a few questions. Enter the GitHub repository URL for the 
 
 ```
 $ npx togostanza/togostanza init
-? Git repository URL (leave blank if you don't need to push to a remote Git repository): http://github.com/togostanza/example-stanza-repo? stanza repository name (used as a directory name): example-stanza-repo
+? Git repository URL (leave blank if you don't need to push to a remote Git repository): http://github.com/togostanza/example-stanza-repo
+? stanza repository name (used as a directory name): example-stanza-repo
 ```
 
 For subsequent questions, you can use the default values (just hit the Enter key). You may, of course, change the values depending on your preference.
