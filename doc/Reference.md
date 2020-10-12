@@ -130,7 +130,7 @@ stanza.render({
   template: 'stanza.html.hbs',
   parameters: {
     users: ['Alice', 'Bob']
-	}
+  }
 });
 ```
 
@@ -170,10 +170,10 @@ try {
     template: 'adjacent-prefectures.rq.hbs',
     parameters: {
       of: '東京都'
-		}
-	});
+    }
+  });
 
-	console.log(results);
+  console.log(results);
 } catch (e) {
   console.error(e);
 }
