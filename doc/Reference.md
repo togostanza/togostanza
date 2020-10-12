@@ -83,12 +83,12 @@ Also, the togostanza generate stanza command generates files and directory struc
 
 | File/directory               | Purpose                                                                                  |
 |------------------------------|------------------------------------------------------------------------------------------|
-| `stanzas/<id>/README.md`     | Description of the stanza. It appears in the Overview tab of the stanza page.            |
-| `stanzas/<id>/index.js`      | Entry point for the stanza. Implement the logic in this file.                            |
-| `stanzas/<id>/metadata.json` | Definitions of basic stanza metadata and parameters, styles, etc.                        |
-| `stanzas/<id>/style.scss`    | Stanza-specific style definitions.                                                       |
-| `stanzas/<id>/assets/`       | Stanza-specific static assets, such as images.                                           |
-| `stanzas/<id>/templates/`    | Templates used by the stanza. HTML templates for rendering, SPARQL query templates, etc. |
+| `stanzas/{id}/README.md`     | Description of the stanza. It appears in the Overview tab of the stanza page.            |
+| `stanzas/{id}/index.js`      | Entry point for the stanza. Implement the logic in this file.                            |
+| `stanzas/{id}/metadata.json` | Definitions of basic stanza metadata and parameters, styles, etc.                        |
+| `stanzas/{id}/style.scss`    | Stanza-specific style definitions.                                                       |
+| `stanzas/{id}/assets/`       | Stanza-specific static assets, such as images.                                           |
+| `stanzas/{id}/templates/`    | Templates used by the stanza. HTML templates for rendering, SPARQL query templates, etc. |
 
 ## Stanza function
 
