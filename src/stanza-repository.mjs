@@ -42,13 +42,14 @@ export default class StanzaRepository {
           });
 
           return Promise.all(paths.map(async (templatePath) => {
-            const name = path.basename(templatePath, '.hbs');
+            const basename = path.basename(templatePath);
+            const isHTML   = /\.html(?:\.hbs)?$/.test(basename);
 
             return {
-              name,
+              name: basename,
 
               spec: Handlebars.precompile(await fs.readFile(templatePath, 'utf8'), {
-                noEscape: path.extname(name) !== '.html'
+                noEscape: !isHTML
               })
             };
           }));

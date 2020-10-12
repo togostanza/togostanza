@@ -49,8 +49,14 @@ export default class Stanza {
     return this.root.querySelectorAll(selector);
   }
 
-  render({template, parameters, selector}) {
-    const html = this.templates[template](parameters);
+  render({template: templateName, parameters, selector}) {
+    const template = this.templates[templateName];
+
+    if (!template) {
+      throw new Error(`template "${templateName}" is missing, available templates: ${Object.keys(this.templates).join(', ')}`);
+    }
+
+    const html = template(parameters);
 
     this.select(selector || 'main').innerHTML = html;
   }

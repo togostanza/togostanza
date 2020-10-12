@@ -65,7 +65,7 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
   const sayTo = params['say-to'] || 'world';
 
   stanza.render({
-    template: 'stanza.html',
+    template: 'stanza.html.hbs',
     parameters: {
       greeting: \`Hello, \${sayTo}!\`
     }
