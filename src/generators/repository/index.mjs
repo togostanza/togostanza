@@ -224,7 +224,7 @@ function packageJSON({name, license, gitUrl}) {
       togostanza: 'github:togostanza/togostanza'
     },
     engines: {
-      node: '>=12'
+      node: '>=14'
     },
     private: true
   };

@@ -203,7 +203,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: '12'
+          node-version: '14'
 
       - run: npm ci
       - run: npx togostanza build
@@ -259,7 +259,7 @@ h1 {
     \\"togostanza\\": \\"github:togostanza/togostanza\\"
   },
   \\"engines\\": {
-    \\"node\\": \\">=12\\"
+    \\"node\\": \\">=14\\"
   },
   \\"private\\": true
 }
@@ -332,7 +332,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: '12'
+          node-version: '14'
 
       - run: yarn install --frozen-lockfile
       - run: yarn run togostanza build
@@ -388,7 +388,7 @@ h1 {
     \\"togostanza\\": \\"github:togostanza/togostanza\\"
   },
   \\"engines\\": {
-    \\"node\\": \\">=12\\"
+    \\"node\\": \\">=14\\"
   },
   \\"private\\": true
 }
@@ -461,7 +461,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: '12'
+          node-version: '14'
 
       - run: npm ci
       - run: npx togostanza build
@@ -517,7 +517,7 @@ h1 {
     \\"togostanza\\": \\"github:togostanza/togostanza\\"
   },
   \\"engines\\": {
-    \\"node\\": \\">=12\\"
+    \\"node\\": \\">=14\\"
   },
   \\"private\\": true
 }
