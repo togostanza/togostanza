@@ -275,4 +275,41 @@ export default async function hello(stanza, params) {
 }
 ```
 
-Here, the reseponse from [ipify.org](http://ipify.org) is stored in `data`. The greeting message is constructed from `data`. Finally the stanza displays something like "Hello, you're accessing from 192.0.2.0".
+Here, the response from [ipify.org](http://ipify.org) is stored in `data`. The greeting message is constructed from `data`. Finally the stanza displays something like "Hello, you're accessing from 192.0.2.0".
+
+## Handling errors on HTTP requests
+
+HTTP endpoints may return 4xx or 5xx errors, or network error can happen during the request.
+This section explains how to handle such cases.
+
+`fetch()` will only throws exceptions on network errors. HTTP responses with erroneous status codes (such as 4xx or 5xx) does not throw exceptions. You need to handle these errors by checking the value of `res.ok` (boolean). If you need more detailed status codes, use `res.code`.
+
+Example:
+
+```javascript
+// stanzas/hello/index.js
+export default async function hello(stanza, params) {
+  try {
+    const res = await fetch('https://example.com/may-cause-errors');
+
+    console.log(res.ok); // true or false
+    console.log(res.status); // 200, ...
+
+    switch (res.status) {
+      case "200":
+        console.log("OK");
+        break;
+      case "404":
+        console.warn("Not found");
+        break;
+      case "500":
+        console.warn("Internal server error");
+        break;
+      default:
+        console.warn("other HTTP errors");
+    }
+  } catch (e) {
+    console.error(e); // network error
+  }
+
+```
