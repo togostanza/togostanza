@@ -64,11 +64,33 @@ Upgrade the stanza repository to use the newer version of togostanza.
 
 Display help for command.
 
-# Stanza Structure
+# Folder layout
 
-(TODO: show directory structure here)
+The `togostanza init` command generates the files and directory structure for a new stanza repository.
 
-## Stanza Function
+| File/directory    | Purpose                                                                                             |
+|-------------------|-----------------------------------------------------------------------------------------------------|
+| README.md         | Description of the repository. This is for informational purposes only (mainly for view on GitHub). |
+| package.json      | Basic metadata and dependency packages for the repository, managed by the `npm` command.            |
+| package-lock.json | The versions of the dependencies that the `npm` command resolved. Do not edit it manually.          |
+| common.scss       | Repository-wide style definitions. It is imported from each stanza's style.scss.                    |
+| stanzas/          | The directory where the stanzas are located. See below.                                             |
+| assets/           | Static assets, such as images.                                                                      |
+| lib/              | Common JavaScript files imported from each stanza.                                                  |
+| node_modules/     | The installation location of the dependent packages. Do not edit it manually.                       |
+
+Also, the togostanza generate stanza command generates files and directory structure for new sanza in the stanzas directory.
+
+| File/directory             | Purpose                                                                       |
+|----------------------------|-------------------------------------------------------------------------------|
+| stanzas/<id>/README.md     | Description of the stanza. It appears in the Overview tab of the stanza page. |
+| stanzas/<id>/index.js      |                                                                               |
+| stanzas/<id>/metadata.json |                                                                               |
+| stanzas/<id>/style.scss    |                                                                               |
+| stanzas/<id>/assets/       |                                                                               |
+| stanzas/<id>/templates/    |                                                                               |
+
+## Stanza function
 
 The stanza function is defined in the stanza script (`stanzas/<stanza-id>/index.js`) and is called when a stanza is to be rendered.
 
@@ -107,7 +129,7 @@ When a stanza is embedded like this, the attributes of the element are passed as
 - deploy
 - lib
 
-# Stanza Object
+# Stanza object
 
 The stanza object is an object which wraps the DOM element of the stanza and provides several properties and methods.
 
@@ -212,7 +234,7 @@ stanza.root.querySelector('main').textContent = 'Look at me!';
 console.log(getComputedStyle(stanza.root.host).getPropertyValue('--text-color'));
 ```
 
-# Utility Functions
+# Utility functions
 
 ## grouping(objs, ...keys)
 
