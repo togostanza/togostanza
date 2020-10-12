@@ -251,3 +251,28 @@ Look into the template:
 Templates are written in [Handlebars](http://handlebarsjs.com/). With `{{...}}` notation, we can obtain values of `parameters` object passed to `stanza.render()` method.
 
 In this example, this stanza outputs `greeting` wrapping `<p>` and `</p>`.
+
+## Fetching data via RESTful APIs
+
+Let's look at an example of issuing an HTTP GET request and display the data.
+
+As an example, let's create a stanza that uses [ipify.org](http://ipify.org/) to display the IP address of the source of the access. In order to issue an HTTP request, we use the `fetch()` API [Fetch API - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API).
+
+```javascript
+// stanzas/hello/index.js
+export default async function hello(stanza, params) {
+	const res = await fetch('https://api.ipify.org?format=json');
+  const data = await res.json();
+
+  console.log(data); // {"ip": "..."}
+
+  stanza.render({
+    template: 'stanza.html.hbs',
+    parameters: {
+      greeting: `Hello, you're accessing from ${data.ip}!`
+    }
+  });
+}
+```
+
+Here, the reseponse from [ipify.org](http://ipify.org) is stored in `data`. The greeting message is constructed from `data`. Finally the stanza displays something like "Hello, you're accessing from 192.0.2.0".
