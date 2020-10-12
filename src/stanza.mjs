@@ -1,5 +1,7 @@
 import HandlebarsRuntime from 'handlebars/runtime.js';
 
+import { grouping, unwrapValueFromBinding } from '../utils.mjs';
+
 export default class Stanza {
   constructor(host, metadata, templates, url) {
     this.root     = host.shadowRoot;
@@ -28,7 +30,6 @@ export default class Stanza {
 
     // TODO migrate
     this.grouping               = grouping;
-    this.groupBy                = groupBy;
     this.unwrapValueFromBinding = unwrapValueFromBinding;
   }
 
@@ -81,70 +82,4 @@ export default class Stanza {
     document.head.appendChild(el);
     this.root.appendChild(el.cloneNode());
   }
-}
-
-function grouping(rows, ...keys) {
-  const normalizedKeys = keys.map((key) => {
-    if (key instanceof Array) {
-      return {key, alias: key.join('_')};
-    } else if (key instanceof Object) {
-      return key;
-    } else {
-      return {key, alias: key};
-    }
-  });
-
-  return (function _grouping(rows, keys) {
-    const [currentKey, ...remainKeys] = keys;
-
-    function fetch(row, key) {
-      return key instanceof Array ? key.map((k) => row[k]) : row[currentKey.key];
-    }
-
-    if (keys.length === 1) {
-      return rows.map((row) => fetch(row, currentKey.key));
-    }
-
-    return groupBy(rows, (row) => {
-      return fetch(row, currentKey.key);
-    }).map(([currentValue, remainValues]) => {
-      const nextKey = remainKeys[0];
-
-      return {
-        [currentKey.alias]: currentValue,
-        [nextKey.alias]:    _grouping(remainValues, remainKeys)
-      };
-    });
-  })(rows, normalizedKeys);
-}
-
-function groupBy(array, func) {
-  const ret = [];
-
-  array.forEach((item) => {
-    const key   = func(item);
-    const entry = ret.find(e => e[0] === key);
-
-    if (entry) {
-      entry[1].push(item);
-    } else {
-      ret.push([key, [item]]);
-    }
-  });
-
-  return ret;
-}
-
-function unwrapValueFromBinding(queryResult) {
-  const bindings = queryResult.results.bindings;
-
-  return bindings.map((binding) => {
-    const ret = {};
-
-    Object.keys(binding).forEach((key) => {
-      ret[key] = binding[key].value;
-    });
-
-    return ret;
-  });
 }
