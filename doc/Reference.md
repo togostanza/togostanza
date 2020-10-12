@@ -68,27 +68,27 @@ Display help for command.
 
 The `togostanza init` command generates the files and directory structure for a new stanza repository.
 
-| File/directory    | Purpose                                                                                             |
-|-------------------|-----------------------------------------------------------------------------------------------------|
-| README.md         | Description of the repository. This is for informational purposes only (mainly for view on GitHub). |
-| package.json      | Basic metadata and dependency packages for the repository, managed by the `npm` command.            |
-| package-lock.json | The versions of the dependencies that the `npm` command resolved. Do not edit it manually.          |
-| common.scss       | Repository-wide style definitions. It is imported from each stanza's style.scss.                    |
-| stanzas/          | The directory where the stanzas are located. See below.                                             |
-| assets/           | Static assets, such as images.                                                                      |
-| lib/              | Common JavaScript files imported from each stanza.                                                  |
-| node_modules/     | The installation location of the dependent packages. Do not edit it manually.                       |
+| File/directory      | Purpose                                                                                             |
+|---------------------|-----------------------------------------------------------------------------------------------------|
+| `README.md`         | Description of the repository. This is for informational purposes only (mainly for view on GitHub). |
+| `package.json`      | Basic metadata and dependency packages for the repository, managed by the `npm` command.            |
+| `package-lock.json` | The versions of the dependencies that the `npm` command resolved. Do not edit it manually.          |
+| `common.scss`       | Repository-wide style definitions. It is imported from each stanza's style.scss.                    |
+| `stanzas/`          | The directory where the stanzas are located. See below.                                             |
+| `assets/`           | Static assets, such as images.                                                                      |
+| `lib/`              | Common JavaScript files imported from each stanza.                                                  |
+| `node_modules/`     | The installation location of the dependent packages. Do not edit it manually.                       |
 
 Also, the togostanza generate stanza command generates files and directory structure for new sanza in the stanzas directory.
 
-| File/directory             | Purpose                                                                       |
-|----------------------------|-------------------------------------------------------------------------------|
-| stanzas/<id>/README.md     | Description of the stanza. It appears in the Overview tab of the stanza page. |
-| stanzas/<id>/index.js      |                                                                               |
-| stanzas/<id>/metadata.json |                                                                               |
-| stanzas/<id>/style.scss    |                                                                               |
-| stanzas/<id>/assets/       |                                                                               |
-| stanzas/<id>/templates/    |                                                                               |
+| File/directory               | Purpose                                                                                  |
+|------------------------------|------------------------------------------------------------------------------------------|
+| `stanzas/<id>/README.md`     | Description of the stanza. It appears in the Overview tab of the stanza page.            |
+| `stanzas/<id>/index.js`      | Entry point for the stanza. Implement the logic in this file.                            |
+| `stanzas/<id>/metadata.json` | Definitions of basic stanza metadata and parameters, styles, etc.                        |
+| `stanzas/<id>/style.scss`    | Stanza-specific style definitions.                                                       |
+| `stanzas/<id>/assets/`       | Stanza-specific static assets, such as images.                                           |
+| `stanzas/<id>/templates/`    | Templates used by the stanza. HTML templates for rendering, SPARQL query templates, etc. |
 
 ## Stanza function
 
