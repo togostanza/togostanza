@@ -261,7 +261,7 @@ As an example, let's create a stanza that uses [ipify.org](http://ipify.org/) to
 ```javascript
 // stanzas/hello/index.js
 export default async function hello(stanza, params) {
-	const res = await fetch('https://api.ipify.org?format=json');
+  const res  = await fetch('https://api.ipify.org?format=json');
   const data = await res.json();
 
   console.log(data); // {"ip": "..."}
