@@ -135,6 +135,16 @@ function metadataJSON({id, label, definition, type, context, display, provider, 
     '@id': id,
     'stanza:label': label,
     'stanza:definition': definition,
+    'stanza:type': type,
+    'stanza:context': context,
+    'stanza:display': display,
+    'stanza:provider': provider,
+    'stanza:license': license,
+    'stanza:author': author,
+    'stanza:address': address,
+    'stanza:contributor': [],
+    'stanza:created': timestamp,
+    'stanza:updated': timestamp,
     'stanza:parameter': [
       {
         'stanza:key': 'say-to',
@@ -162,16 +172,6 @@ function metadataJSON({id, label, definition, type, context, display, provider, 
         'stanza:default': 'center',
         'stanza:description': 'text align of greeting'
       },
-    ],
-    'stanza:type': type,
-    'stanza:context': context,
-    'stanza:display': display,
-    'stanza:provider': provider,
-    'stanza:license': license,
-    'stanza:author': author,
-    'stanza:address': address,
-    'stanza:contributor': [],
-    'stanza:created': timestamp,
-    'stanza:updated': timestamp
+    ]
   };
 }

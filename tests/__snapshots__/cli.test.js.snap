@@ -77,6 +77,16 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
   \\"@id\\": \\"hello\\",
   \\"stanza:label\\": \\"LABEL\\",
   \\"stanza:definition\\": \\"DEFINITION\\",
+  \\"stanza:type\\": \\"TYPE\\",
+  \\"stanza:context\\": \\"CONTEXT\\",
+  \\"stanza:display\\": \\"DISPLAY\\",
+  \\"stanza:provider\\": \\"PROVIDER\\",
+  \\"stanza:license\\": \\"LICENSE\\",
+  \\"stanza:author\\": \\"AUTHOR\\",
+  \\"stanza:address\\": \\"ADDRESS\\",
+  \\"stanza:contributor\\": [],
+  \\"stanza:created\\": \\"2020-10-05\\",
+  \\"stanza:updated\\": \\"2020-10-05\\",
   \\"stanza:parameter\\": [
     {
       \\"stanza:key\\": \\"say-to\\",
@@ -104,17 +114,7 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
       \\"stanza:default\\": \\"center\\",
       \\"stanza:description\\": \\"text align of greeting\\"
     }
-  ],
-  \\"stanza:type\\": \\"TYPE\\",
-  \\"stanza:context\\": \\"CONTEXT\\",
-  \\"stanza:display\\": \\"DISPLAY\\",
-  \\"stanza:provider\\": \\"PROVIDER\\",
-  \\"stanza:license\\": \\"LICENSE\\",
-  \\"stanza:author\\": \\"AUTHOR\\",
-  \\"stanza:address\\": \\"ADDRESS\\",
-  \\"stanza:contributor\\": [],
-  \\"stanza:created\\": \\"2020-10-05\\",
-  \\"stanza:updated\\": \\"2020-10-05\\"
+  ]
 }
 ",
       "style.scss": "// Load the repository-wide global style here. The actual file is located at ../common.scss for details.
