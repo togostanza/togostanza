@@ -3,7 +3,12 @@
 
 // The following is just an example. Feel free to modify it.
 // --greeting-color and --greeting-align are style variables, which are defined in metadata.json.
-p {
+main {
+  padding: 1rem 2rem;
+}
+
+p.greeting {
+  margin: 0;
   font-size: 24px;
   color: var(--greeting-color);
   text-align: var(--greeting-align);

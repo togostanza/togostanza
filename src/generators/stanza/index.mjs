@@ -148,7 +148,7 @@ function metadataJSON({id, label, definition, type, context, display, provider, 
       {
         'stanza:key': '--greeting-color',
         'stanza:type': 'color',
-        'stanza:default': '#000',
+        'stanza:default': '#eb7900',
         'stanza:description': 'text color of greeting'
       },
       {

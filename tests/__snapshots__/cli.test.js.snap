@@ -7,7 +7,7 @@ Array [
   "   create stanzas/hello/metadata.json
    create stanzas/hello/README.md
    create stanzas/hello/index.js
-   create stanzas/hello/stanza.scss
+   create stanzas/hello/style.scss
    create stanzas/hello/assets/.keep
    create stanzas/hello/templates/stanza.html.hbs
 ",
@@ -43,7 +43,7 @@ Array [
   "   create stanzas/hello/metadata.json
    create stanzas/hello/README.md
    create stanzas/hello/index.js
-   create stanzas/hello/stanza.scss
+   create stanzas/hello/style.scss
    create stanzas/hello/assets/.keep
    create stanzas/hello/templates/stanza.html.hbs
 ",
@@ -90,7 +90,7 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
     {
       \\"stanza:key\\": \\"--greeting-color\\",
       \\"stanza:type\\": \\"color\\",
-      \\"stanza:default\\": \\"#000\\",
+      \\"stanza:default\\": \\"#eb7900\\",
       \\"stanza:description\\": \\"text color of greeting\\"
     },
     {
@@ -117,19 +117,24 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
   \\"stanza:updated\\": \\"2020-10-05\\"
 }
 ",
-      "stanza.scss": "// Load the repository-wide global style here. The actual file is located at ../common.scss for details.
+      "style.scss": "// Load the repository-wide global style here. The actual file is located at ../common.scss for details.
 @use '@/common.scss';
 
 // The following is just an example. Feel free to modify it.
 // --greeting-color and --greeting-align are style variables, which are defined in metadata.json.
-p {
+main {
+  padding: 1rem 2rem;
+}
+
+p.greeting {
+  margin: 0;
   font-size: 24px;
   color: var(--greeting-color);
   text-align: var(--greeting-align);
 }
 ",
       "templates": Object {
-        "stanza.html.hbs": "<p>{{greeting}}</p>
+        "stanza.html.hbs": "<p class=\\"greeting\\">{{greeting}}</p>
 ",
       },
     },

@@ -96,7 +96,7 @@ After all questions are answered, `togostanza` will generate the stanza as follo
    create stanzas/hello/metadata.json
    create stanzas/hello/README.md
    create stanzas/hello/index.js
-   create stanzas/hello/stanza.scss
+   create stanzas/hello/style.scss
    create stanzas/hello/templates/stanza.html.hbs
 ```
 
