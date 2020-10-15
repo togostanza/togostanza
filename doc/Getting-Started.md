@@ -20,12 +20,12 @@ Run the following:
 $ npx togostanza init
 ```
 
-NOTE: You need to do `npx togostanza/togostanza init` before we release the first version of togostanza to npmjs.org.
+NOTE: You need to do `npx togostanza init` before we release the first version of togostanza to npmjs.org.
 
 Then you will be asked a few questions. Enter the GitHub repository URL for the first question:
 
 ```
-$ npx togostanza/togostanza init
+$ npx togostanza init
 ? Git repository URL (leave blank if you don't need to push to a remote Git repository): http://github.com/togostanza/example-stanza-repo
 ? stanza repository name (used as a directory name): example-stanza-repo
 ```

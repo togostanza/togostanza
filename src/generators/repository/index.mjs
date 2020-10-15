@@ -1,9 +1,12 @@
+import path from 'path';
+
 import Generator from 'yeoman-generator';
 import outdent from 'outdent';
 import fs from 'fs-extra';
 import pick from 'lodash.pick';
 
 import MemoryStorage from '../memory-storage.mjs';
+import { packagePath } from '../../util.mjs';
 import { required } from '../validators.mjs';
 
 const packageManagers = {
@@ -214,14 +217,17 @@ export default class RepositoryGenerator extends Generator {
   }
 };
 
+const {version} = JSON.parse(fs.readFileSync(path.join(packagePath, 'package.json')));
+
 function packageJSON({name, license, gitUrl}) {
+
   return {
     name,
     version: '0.0.1',
     license,
     repository: getHttpsRepositoryUrlIfPossible(gitUrl) || '',
     dependencies: {
-      togostanza: 'github:togostanza/togostanza'
+      togostanza: `^${version}`
     },
     engines: {
       node: '>=14'
