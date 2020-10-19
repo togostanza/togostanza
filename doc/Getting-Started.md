@@ -20,8 +20,6 @@ Run the following:
 $ npx togostanza init
 ```
 
-NOTE: You need to do `npx togostanza init` before we release the first version of togostanza to npmjs.org.
-
 Then you will be asked a few questions. Enter the GitHub repository URL for the first question:
 
 ```
