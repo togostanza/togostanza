@@ -140,6 +140,44 @@ After choosing "gh-pages branch" as "Source", press "Rerun-jobs" button to publi
 
 You will see the [https://togostanza.github.io/example-stanza-repo](https://togostanza.github.io/example-stanza-repo). Note that this URL is corresponding to [https://github.com/togostanza/example-stanza-repo](https://github.com/togostanza/example-stanza-repo).
 
+
+## Embedding stanza
+
+Now your repository is hosted by GitHub pages and publicly accessible.
+A great way to try it out is to use online IDE services like [JSFiddle](https://jsfiddle.net/) or [Codepen](https://codepen.io//).
+
+Open the stanza page on GitHub pages. Then copy and paste the HTML snippet shown on the stanza page into the HTML field of these services.
+
+The snippet will be like this (the subdomain part of the URL, represented by OWNER, should be different):
+
+```html
+<script type="module" src="https://OWNER.github.io/example-stanza-repo/hello.js" async></script>
+
+<togostanza-hello
+  say-to="world"
+></togostanza-hello>
+```
+
+If you customize some parameters on the customize tab on the stanza page, a different snippet will be generated.
+For example, If you change the color to blue, and change it to say hello to "stanza users", you will get the following HTML snippet:
+
+```html
+<script type="module" src="https://OWNER.github.io/example-stanza-repo/hello.js" async></script>
+
+<style>
+  togostanza-hello {
+    --greeting-color: #0000ff;
+  }
+</style>
+
+<togostanza-hello
+  say-to="stanza users"
+></togostanza-hello>
+```
+
+You can put this snippet to the online IDE service and see it in action.
+
+
 ## See how it works
 
 Let's move on the internal of the stanza.
