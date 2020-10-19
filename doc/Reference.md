@@ -64,7 +64,7 @@ Upgrade the stanza repository to use the newer version of togostanza.
 
 Display help for command.
 
-# Folder layout
+# Structure of Stanza
 
 The `togostanza init` command generates the files and directory structure for a new stanza repository.
 
@@ -89,6 +89,25 @@ Also, the togostanza generate stanza command generates files and directory struc
 | `stanzas/{id}/style.scss`    | Stanza-specific style definitions.                                                       |
 | `stanzas/{id}/assets/`       | Stanza-specific static assets, such as images.                                           |
 | `stanzas/{id}/templates/`    | Templates used by the stanza. HTML templates for rendering, SPARQL query templates, etc. |
+
+## Stanza metadata
+
+`metadata.json` is a file that represents stanza metadata in [JSON-LD](https://json-ld.org/) format. Define general information such as stanza identifiers, display names, and author information, as well as parameters and style variables to customize the behavior and appearance of the stanza.
+
+| Key                           | Purpose |
+| ---                           | ------- |
+| `@id`                         |         |
+| `stanza:label`                |         |
+| `stanza:defintion`            |         |
+| `stanza:type`                 |         |
+| `stanza:context`              |         |
+| `stanza:display`              |         |
+| `stanza:provider`             |         |
+| `stanza:parameter`            |         |
+| `stanza:about-link-placement` |         |
+| `stanza:style`                |         |
+
+## Stanza metadata
 
 ## Stanza function
 
@@ -120,14 +139,15 @@ Example of the use of this stanza:
 
 When a stanza is embedded like this, the attributes of the element are passed as parameters to the stanza function.
 
-- metadata.json
-    - parameters, styles
-    - togostanza-about-link-placement
-- styling
-- npm package
-- assets
-- deploy
-- lib
+## Styling
+
+## Static assets
+
+## Shared libraries
+
+## npm package definition
+
+## Deployment configuration
 
 # Stanza object
 
