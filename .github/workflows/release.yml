@@ -1,0 +1,45 @@
+name: Publish npm package
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '!*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org
+
+      - run: echo "CAN_NPM_PUBLISH=$(npx can-npm-publish && echo true)" >> $GITHUB_ENV
+
+      - uses: actions/github-script@v3
+        if: env.CAN_NPM_PUBLISH == 'true'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          script: |
+            const {version} = require(`${process.env.GITHUB_WORKSPACE}/package.json`);
+
+            await github.git.createRef({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              ref:   `refs/tags/v${version}`,
+              sha:   context.sha,
+            });
+
+      - run: npm publish --tag beta
+        if: env.CAN_NPM_PUBLISH == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
