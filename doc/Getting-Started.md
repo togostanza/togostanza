@@ -309,5 +309,5 @@ export default async function hello(stanza, params) {
   } catch (e) {
     console.error(e); // network error
   }
-
+}
 ```
