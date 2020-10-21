@@ -103,9 +103,21 @@ Also, the togostanza generate stanza command generates files and directory struc
 | `stanza:context`              | TODO                                                                                                                                         |
 | `stanza:display`              | Display format of this stanza, such as a table or tree.                                                                                      |
 | `stanza:provider`             | Name of the organization or individual providing the stanza.                                                                                 |
+| `stanza:license`              | License for this stanza.                                                                                                                     |
+| `stanza:author`               | Name of the stanza author.                                                                                                                   |
+| `stanza:address`              | Email address of the stanza author.                                                                                                          |
+| `stanza:contributor`          | List of names who have contributed to this stanza.                                                                                           |
+| `stanza:created`              | Date the stanza was created.                                                                                                                 |
+| `stanza:updated`              | Date the stanza was updated.                                                                                                                 |
 | `stanza:parameter`            | Parameter definitions that the stanza receives from the outside. See below.                                                                  |
 | `stanza:about-link-placement` | Display position of the icon link that opens the stanza overview page.                                                                       |
 | `stanza:style`                | Definition of CSS variables to customize the appearance of the stanza. See below.                                                            |
+
+### Stanza parameter
+
+| Path                            | Purpose |
+| `stanzas:parameter[n]stanza:key |         |
+
 
 ## Stanza function
 
