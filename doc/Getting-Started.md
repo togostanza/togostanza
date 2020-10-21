@@ -177,6 +177,10 @@ For example, If you change the color to blue, and change it to say hello to "sta
 
 You can put this snippet to the online IDE service and see it in action.
 
+Stanzas receive the parameters via HTML attribute values. In this example, `say-to` is what it is. If you change this value, the stanza will be updated.
+
+Here, `--greeting-color` is a CSS variable. We use CSS variables to allow styling of stanzas from outside (the pages embedding the stanza). In this way, stanzas can provide customizable points of styling as parameters via these variables. See [Using CSS custom properties (variables)](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) for more information about CSS variables.
+
 
 ## See how it works
 
