@@ -113,11 +113,27 @@ Also, the togostanza generate stanza command generates files and directory struc
 | `stanza:about-link-placement` | Display position of the icon link that opens the stanza overview page.                                                                       |
 | `stanza:style`                | Definition of CSS variables to customize the appearance of the stanza. See below.                                                            |
 
-### Stanza parameter
+### Parameters
 
-| Path                            | Purpose |
-| `stanzas:parameter[n]stanza:key |         |
+The parameters are a property of the `stanza:parameter` key in `metadata.json`, which is an array of objects. Each object has the following properties:
 
+| Key                  | Purpose                                                                                               |
+|----------------------|-------------------------------------------------------------------------------------------------------|
+| `stanza:key`         | Key name of the parameter.                                                                            |
+| `stanza:example`     | The value to be set as the initial value in the input field of the stanza page.                       |
+| `stanza:description` | Brief description of this parameter. It will appear below the input field.                            |
+| `stanza:required`    | Whether this parameter is mandatory or not. If true, the field name will be prefixed with a red sign. |
+
+### Style varibles
+
+Stanzas can declare their own parameterized style variables, allowing stanza users to customize their appearance when they are embedded. The `stanza:style` property is also an array and each element has the following properties:
+
+| Key                  | Purpose                                                                                                                                                                                                                                 |
+|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `stanza:key`         | Name of the CSS variable.                                                                                                                                                                                                               |
+| `stanza:type`        | Type of input field for setting this variable on the stanza page. You can specify any value that can be specified in the type attribute of the input element. In addition, a special value `single-choice` can be specified. See below. |
+| `stanza:choice`      | List of choices used when `stanza:type` is `single-choice`. The value is an array of strings.                                                                                                                                           |
+| `stanza:description` | Brief description of this variable. It will appear below the input field.                                                                                                                                                                                                                                        |
 
 ## Stanza function
 
