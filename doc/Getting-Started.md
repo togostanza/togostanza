@@ -255,6 +255,8 @@ stanzas/hello
 ```
 
 The stanza page that you have seen was generated using this information.
+This file contains information about the stanza itself, as well as variables for styling and parameters.
+See [Reference](./Reference.md#stanza-metadata) for details.
 
 ## Stanza function
 
