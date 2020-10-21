@@ -73,20 +73,20 @@ The `togostanza init` command generates the files and directory structure for a 
 | `README.md`         | Description of the repository. This is for informational purposes only (mainly for view on GitHub). |
 | `package.json`      | Basic metadata and dependency packages for the repository, managed by the `npm` command.            |
 | `package-lock.json` | The versions of the dependencies that the `npm` command resolved. Do not edit it manually.          |
-| `common.scss`       | Repository-wide style definitions. It is imported from each stanza's style.scss.                    |
+| `common.scss`       | Repository-wide style definitions. It is imported from each stanza's `style.scss`.                  |
 | `stanzas/`          | The directory where the stanzas are located. See below.                                             |
 | `assets/`           | Static assets, such as images.                                                                      |
 | `lib/`              | Common JavaScript files imported from each stanza.                                                  |
 | `node_modules/`     | The installation location of the dependent packages. Do not edit it manually.                       |
 
-Also, the togostanza generate stanza command generates files and directory structure for new sanza in the stanzas directory.
+Also, the togostanza generate stanza command generates files and directory structure for new sanza in the `stanzas` directory.
 
 | File/directory               | Purpose                                                                                  |
 |------------------------------|------------------------------------------------------------------------------------------|
 | `stanzas/{id}/README.md`     | Description of the stanza. It appears in the Overview tab of the stanza page.            |
 | `stanzas/{id}/index.js`      | Entry point for the stanza. Implement the logic in this file.                            |
 | `stanzas/{id}/metadata.json` | Definitions of basic stanza metadata and parameters, styles, etc.                        |
-| `stanzas/{id}/style.scss`    | Stanza-specific style definitions.                                                       |
+| `stanzas/{id}/style.scss`    | Stanza-specific style definitions that are automatically loaded and applied.             |
 | `stanzas/{id}/assets/`       | Stanza-specific static assets, such as images.                                           |
 | `stanzas/{id}/templates/`    | Templates used by the stanza. HTML templates for rendering, SPARQL query templates, etc. |
 
@@ -94,20 +94,18 @@ Also, the togostanza generate stanza command generates files and directory struc
 
 `metadata.json` is a file that represents stanza metadata in [JSON-LD](https://json-ld.org/) format. Define general information such as stanza identifiers, display names, and author information, as well as parameters and style variables to customize the behavior and appearance of the stanza.
 
-| Key                           | Purpose |
-| ---                           | ------- |
-| `@id`                         |         |
-| `stanza:label`                |         |
-| `stanza:defintion`            |         |
-| `stanza:type`                 |         |
-| `stanza:context`              |         |
-| `stanza:display`              |         |
-| `stanza:provider`             |         |
-| `stanza:parameter`            |         |
-| `stanza:about-link-placement` |         |
-| `stanza:style`                |         |
-
-## Stanza metadata
+| Key                           | Purpose                                                                                                                                      |
+|-------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| `@id`                         | Identifier of the stanza. Used as the name of the stanza element (`<togostanza-{{id}}>`) and the name of the generated JavaScript file, etc. |
+| `stanza:label`                | Human-readable stanza name. Used for the list of stanzas and help pages in the repository.                                                   |
+| `stanza:defintion`            | Brief description of the stanza. Used for the list of stanzas and stanza pages in the repository.                                            |
+| `stanza:type`                 | Type of the stanza, e.g. Stanza, MetaStanza, NanoStanza.                                                                                     |
+| `stanza:context`              | TODO                                                                                                                                         |
+| `stanza:display`              | Display format of this stanza, such as a table or tree.                                                                                      |
+| `stanza:provider`             | Name of the organization or individual providing the stanza.                                                                                 |
+| `stanza:parameter`            | Parameter definitions that the stanza receives from the outside. See below.                                                                  |
+| `stanza:about-link-placement` | Display position of the icon link that opens the stanza overview page.                                                                       |
+| `stanza:style`                | Definition of CSS variables to customize the appearance of the stanza. See below.                                                            |
 
 ## Stanza function
 
