@@ -1,4 +1,4 @@
-# togostanza
+<img src="http://togostanza.org/img/logotype.svg" alt="TogoStanza" width="320" />
 
 `togostanza` is a command to build TogoStanza stanzas of JavaScript backended version. It includes:
 
