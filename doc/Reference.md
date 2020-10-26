@@ -165,6 +165,92 @@ Example of the use of this stanza:
 
 When a stanza is embedded like this, the attributes of the element are passed as parameters to the stanza function.
 
+### Templating
+
+The files in `stanzas/{id}/templates/` will be interpreted as Handlebars templates. This makes it easy to generate different outputs depending on the parameters.
+
+For example, here is a invocation of `stanza.render()` and the corresponding template:
+
+``` js
+stanza.render({
+  template: 'stanza.html.hbs',
+  parameters: {
+    greeting: `Hello, ${params['say-to']}!`
+  }
+});
+```
+
+``` hbs
+{{! stanzas/hello/templates/stanza.html.hbs }}
+
+Hello, {{greeting}}!
+```
+
+`{{...}}` is an expression of Handlebars, here outputting the value of the `greeting` parameter. `stanza.render()` function treats the object passed to the `parameters` option as the context of the template. Note that `{{! ... }}` is a comment.
+
+Nested objects can be accessed using the dot-notation just like normal JavaScript.
+
+``` js
+stanza.render({
+  template: 'stanza.html.hbs',
+  parameters: {
+    user: {
+      name: 'ursm'
+    }
+  }
+});
+```
+
+``` hbs
+{{! stanzas/hello/templates/stanza.html.hbs }}
+
+Hello, {{user.name}}!
+```
+
+You can also use helpers such as `#if` and `#each` to perform conditional branches and loops.
+
+``` js
+stanza.render({
+  template: 'stanza.html.hbs',
+  parameters: {
+    fields: [
+      {
+        label: 'First name',
+        required: true
+      },
+      {
+        label: 'Middle name',
+        required: false
+      },
+      {
+        label: 'Last name',
+        required: true
+      }
+    }
+  }
+});
+```
+
+``` hbs
+{{! stanzas/hello/templates/stanza.html.hbs }}
+
+{{#each fields as |field|}}
+  <label>
+    <div>
+      {{field.label}}
+
+      {{#if field.required}}
+        <span class="required">(required)</span>
+      {{/if}}
+    </div>
+
+    <input type="text" />
+  </label>
+{{/each}}
+```
+
+See [Handlebars Language Guide](https://handlebarsjs.com/guide/) for comprehensive information about Handlebars templates.
+
 ### Styling
 
 Style definitions in `stanzas/{id}/style.scss` are applied automatically when rendering the stanza.
@@ -173,7 +259,7 @@ This file is written in [SCSS](https://sass-lang.com/), a kind of meta language 
 
 Stanza CSS is evaluated in the Shadow DOM context, so its behavior may differ in some ways from that of a typical web page. For example, stanzas don't have a body element, so styling for the body element is simply ignored (you can use the `:host` pseudo-class instead for this purpose). For more information about the Shadow DOM, see [Shadow DOM v1: Self-Contained Web Components  |  Web Fundamentals](https://developers.google.com/web/fundamentals/web-components/shadowdom).
 
-Each stanza:style item you define in metadata.json can be used in the stanza's stylesheet as a CSS variable.
+Each `stanza:style` item you define in metadata.json can be used in the stanza's stylesheet as a CSS variable.
 
 ``` json
 {
