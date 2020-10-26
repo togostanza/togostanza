@@ -1,6 +1,6 @@
 # Reference
 
-# `togostanza` command
+## `togostanza` command
 
 ```
 togostanza serve|s [options]  serve the repository locally
@@ -11,19 +11,19 @@ togostanza upgrade            upgrade stanza repository
 togostanza help [command]     display help for command
 ```
 
-## togostanza serve (togostanza s)
+### togostanza serve (togostanza s)
 
 Starts server for stanza development.
 
 - `-p, -port <port>` Port to listen on (default: `8080`)
 
-## togostanza build (togostanza b)
+### togostanza build (togostanza b)
 
 Build stanzas for deployment.
 
 - `-o, --output-path <dir>` Output directory (default: `./dist`)
 
-## togostanza generate stanza (togostanza g stanza)
+### togostanza generate stanza (togostanza g stanza)
 
 Generate a new stanza.
 
@@ -40,7 +40,7 @@ This command prompts you to enter the parameters interactively, but you can supp
 - `--address <address>`
 - `--timestamp <date>`
 
-## togostanza init
+### togostanza init
 
 Create a new stanza repository.
 
@@ -56,15 +56,15 @@ In addition, the following flags are available:
 - `--skip-install` Skip the initial package installation. This is primarily for testing purposes.
 - `--skip-git` Skip Git configuration.
 
-## togostanza upgrade
+### togostanza upgrade
 
 Upgrade the stanza repository to use the newer version of togostanza.
 
-## togostanza help
+### togostanza help
 
 Display help for command.
 
-# Structure of Stanza
+## Structure of Stanza
 
 The `togostanza init` command generates the files and directory structure for a new stanza repository.
 
@@ -90,7 +90,7 @@ Also, the togostanza generate stanza command generates files and directory struc
 | `stanzas/{id}/assets/`       | Stanza-specific static assets, such as images.                                           |
 | `stanzas/{id}/templates/`    | Templates used by the stanza. HTML templates for rendering, SPARQL query templates, etc. |
 
-## Stanza metadata
+### Stanza metadata
 
 `metadata.json` is a file that represents stanza metadata in [JSON-LD](https://json-ld.org/) format. Define general information such as stanza identifiers, display names, and author information, as well as parameters and style variables to customize the behavior and appearance of the stanza.
 
@@ -113,7 +113,7 @@ Also, the togostanza generate stanza command generates files and directory struc
 | `stanza:about-link-placement` | Display position of the icon link that opens the stanza overview page.                                                                       |
 | `stanza:style`                | Definition of CSS variables to customize the appearance of the stanza. See below.                                                            |
 
-### Parameters
+#### Parameters
 
 The parameters are a property of the `stanza:parameter` key in `metadata.json`, which is an array of objects. Each object has the following properties:
 
@@ -124,7 +124,7 @@ The parameters are a property of the `stanza:parameter` key in `metadata.json`, 
 | `stanza:description` | Brief description of this parameter. It will appear below the input field.                            |
 | `stanza:required`    | Whether this parameter is mandatory or not. If true, the field name will be prefixed with a red sign. |
 
-### Style varibles
+#### Style varibles
 
 Stanzas can declare their own parameterized style variables, allowing stanza users to customize their appearance when they are embedded. The `stanza:style` property is also an array and each element has the following properties:
 
@@ -135,7 +135,7 @@ Stanzas can declare their own parameterized style variables, allowing stanza use
 | `stanza:choice`      | List of choices used when `stanza:type` is `single-choice`. The value is an array of strings.                                                                                                                                           |
 | `stanza:description` | Brief description of this variable. It will appear below the input field.                                                                                                                                                                                                                                        |
 
-## Stanza function
+### Stanza function
 
 The stanza function is defined in the stanza script (`stanzas/<stanza-id>/index.js`) and is called when a stanza is to be rendered.
 
@@ -165,7 +165,7 @@ Example of the use of this stanza:
 
 When a stanza is embedded like this, the attributes of the element are passed as parameters to the stanza function.
 
-## Styling
+### Styling
 
 Style definitions in `stanzas/{id}/style.scss` are applied automatically when rendering the stanza.
 
@@ -190,18 +190,18 @@ p.greeting {
 }
 ```
 
-## Static assets
+### Static assets
 
 Assets are static files, such as images. Files in the `assets/` or `stanzas/{id}/assets/` directories will be copied into the output, keeping the directory structure.
 
 <img src="http://stanza-repo.example.com/assets/foo.png">
 <img src="http://stanza-repo.example.com/{id}/assets/bar.png">
 
-## Shared libraries
+### Shared libraries
 
 Code shared from multiple stanzas can be placed in the `lib/` directory.
 
-### Using named exports
+#### Using named exports
 
 ``` js
 // lib/calc.js
@@ -221,7 +221,7 @@ export function subtract(x, y) {
 import { add, subtract } from '@/lib/calc.js';
 ```
 
-### Using default exports
+#### Using default exports
 
 ``` js
 // lib/multiply.js
@@ -237,11 +237,11 @@ export function multiply(x, y) {
 import multiply from '@/lib/multiply.js';
 ```
 
-# Stanza object
+## Stanza object
 
 The stanza object is an object which wraps the DOM element of the stanza and provides several properties and methods.
 
-## stanza.render(options)
+### stanza.render(options)
 
 Renders contents from the given template. `options` is an object that has the following properties:
 
@@ -251,7 +251,7 @@ Renders contents from the given template. `options` is an object that has the fo
 
 The template is written in [Handlebars](https://handlebarsjs.com/).
 
-### Example: Render a simple template
+#### Example: Render a simple template
 
 ```js
 // stanzas/hello/index.js
@@ -276,7 +276,7 @@ stanza.render({
 </ul>
 ```
 
-## stanza.query(options)
+### stanza.query(options)
 
 Issues SPARQL query. `options` is an object that has the following properties:
 
@@ -289,7 +289,7 @@ The template is written in [Handlebars](https://handlebarsjs.com/).
 
 This method returns a promise. Use `await` to wait until the query completed. You can handle errors with the `try...catch` statement.
 
-### Example: Get the adjacent prefectures from DBpedia endpoint
+#### Example: Get the adjacent prefectures from DBpedia endpoint
 
 ```js
 // stanzas/hello/index.js
@@ -320,7 +320,7 @@ WHERE {
 }
 ```
 
-## stanza.importWebFontCSS(url)
+### stanza.importWebFontCSS(url)
 
 Stylesheets defining web fonts are ignored in the Shadow DOM. To work around this, we provide a helper method to insert the CSS of the specified URL outside of the Shadow DOM.
 
@@ -334,35 +334,35 @@ export default function(stanza, params) {
 }
 ```
 
-## stanza.root
+### stanza.root
 
 Shadow root of the stanza. See [Using shadow DOM - Web Components | MDN](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) for details.
 
-### Example: Get all anchors contained in the stanza's shadow root
+#### Example: Get all anchors contained in the stanza's shadow root
 
 ```js
 console.log(stanza.root.querySelectorAll('a'));
 ```
 
-### Example: Update stanza output manually without using stanza.render()
+#### Example: Update stanza output manually without using stanza.render()
 
 ```js
 stanza.root.querySelector('main').textContent = 'Look at me!';
 ```
 
-### Example: Get a value of stanza's CSS custom property
+#### Example: Get a value of stanza's CSS custom property
 
 ```js
 console.log(getComputedStyle(stanza.root.host).getPropertyValue('--text-color'));
 ```
 
-# Utility functions
+## Utility functions
 
-## grouping(objs, ...keys)
+### grouping(objs, ...keys)
 
 Groups an array of objects by specified keys.
 
-### Example: Group objects values of `x` then `y`
+#### Example: Group objects values of `x` then `y`
 
 ```js
 import { grouping } from 'togostanza/utils';
@@ -381,7 +381,7 @@ console.log(grouping(objs, 'x', 'y'));
 //   ]
 ```
 
-### Example: Use a composite key
+#### Example: Use a composite key
 
 ```js
 import { grouping } from 'togostanza/utils';
@@ -404,7 +404,7 @@ console.log(grouping(objs, ['x', 'y'], 'z'));
 //   ]
 ```
 
-### Example: Give an alias
+#### Example: Give an alias
 
 ```js
 import { grouping } from 'togostanza/utils';
@@ -423,11 +423,11 @@ console.log(grouping(objs, {key: 'x', alias: 'z'}, 'y'));
 //   ]
 ```
 
-## unwrapValueFromBinding(result)
+### unwrapValueFromBinding(result)
 
 Unwraps an [SPARQL JSON Results Object](https://www.w3.org/TR/sparql11-results-json/#json-result-object), returns simple Array of key-value objects.
 
-### Example
+#### Example
 
 ```js
 import { unwrapValueFromBinding } from 'togostanza/utils';
@@ -463,12 +463,12 @@ console.log(unwrapValueFromBinding(result));
 //   ]
 ```
 
-# Deprecated APIs
+## Deprecated APIs
 
-## stanza.select(selector)
+### stanza.select(selector)
 
 Deprecated. Use `stanza.root.querySelector(selector)` instead.
 
-## stanza.selectAll(selector)
+### stanza.selectAll(selector)
 
 Deprecated. Use `stanza.root.querySelectorAll(selector)` instead.
