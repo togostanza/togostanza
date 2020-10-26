@@ -122,7 +122,7 @@ The parameters are a property of the `stanza:parameter` key in `metadata.json`, 
 | `stanza:description` | Brief description of this parameter. It will appear below the input field.                            |
 | `stanza:required`    | Whether this parameter is mandatory or not. If true, the field name will be prefixed with a red sign. |
 
-#### Style varibles
+#### Style variables
 
 Stanzas can declare their own parameterized style variables, allowing stanza users to customize their appearance when they are embedded. The `stanza:style` property is also an array and each element has the following properties:
 
