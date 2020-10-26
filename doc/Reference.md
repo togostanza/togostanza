@@ -79,7 +79,7 @@ The `togostanza init` command generates the files and directory structure for a 
 | `lib/`              | Common JavaScript files imported from each stanza.                                                  |
 | `node_modules/`     | The installation location of the dependent packages. Do not edit it manually.                       |
 
-Also, the togostanza generate stanza command generates files and directory structure for new sanza in the `stanzas` directory.
+Also, the togostanza generate stanza command generates files and directory structure for new stanza in the `stanzas` directory.
 
 | File/directory               | Purpose                                                                                  |
 |------------------------------|------------------------------------------------------------------------------------------|
