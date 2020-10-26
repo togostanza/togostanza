@@ -235,17 +235,17 @@ stanza.render({
 {{! stanzas/hello/templates/stanza.html.hbs }}
 
 {{#each fields as |field|}}
-  <label>
-    <div>
+  <div>
+    <label>
       {{field.label}}
 
       {{#if field.required}}
         <span class="required">(required)</span>
       {{/if}}
-    </div>
+    </label>
 
     <input type="text" />
-  </label>
+  </div>
 {{/each}}
 ```
 
