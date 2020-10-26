@@ -228,7 +228,7 @@ import { add, subtract } from '@/lib/calc.js';
 ``` js
 // lib/multiply.js
 
-export function multiply(x, y) {
+export default function(x, y) {
   return x * y;
 }
 ```
