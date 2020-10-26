@@ -194,8 +194,10 @@ p.greeting {
 
 Assets are static files, such as images. Files in the `assets/` or `stanzas/{id}/assets/` directories will be copied into the output, keeping the directory structure.
 
+``` html
 <img src="http://stanza-repo.example.com/assets/foo.png">
 <img src="http://stanza-repo.example.com/{id}/assets/bar.png">
+```
 
 ### Shared libraries
 
