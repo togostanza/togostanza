@@ -523,7 +523,8 @@ Unwraps an [SPARQL JSON Results Object](https://www.w3.org/TR/sparql11-results-j
 import { unwrapValueFromBinding } from 'togostanza/utils';
 
 const result = {
-  "head": {"vars": ["s", "p", "o"]
+  "head": {
+    "vars": ["s", "p", "o"]
   },
   "results": {
     "bindings": [{
