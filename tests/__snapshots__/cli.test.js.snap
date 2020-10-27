@@ -78,7 +78,6 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
   \\"stanza:label\\": \\"LABEL\\",
   \\"stanza:definition\\": \\"DEFINITION\\",
   \\"stanza:type\\": \\"TYPE\\",
-  \\"stanza:context\\": \\"CONTEXT\\",
   \\"stanza:display\\": \\"DISPLAY\\",
   \\"stanza:provider\\": \\"PROVIDER\\",
   \\"stanza:license\\": \\"LICENSE\\",

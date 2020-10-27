@@ -32,7 +32,6 @@ This command prompts you to enter the parameters interactively, but you can supp
 - `--label <label>`
 - `--definition <definition>`
 - `--type <type>`
-- `--context <context>`
 - `--display <display>`
 - `--provider <provider>`
 - `--license <license>`
@@ -100,7 +99,6 @@ Also, the togostanza generate stanza command generates files and directory struc
 | `stanza:label`                | Human-readable stanza name. Used for the list of stanzas and help pages in the repository.                                                   |
 | `stanza:defintion`            | Brief description of the stanza. Used for the list of stanzas and stanza pages in the repository.                                            |
 | `stanza:type`                 | Type of the stanza, e.g. Stanza, MetaStanza, NanoStanza.                                                                                     |
-| `stanza:context`              | TODO                                                                                                                                         |
 | `stanza:display`              | Display format of this stanza, such as a table or tree.                                                                                      |
 | `stanza:provider`             | Name of the organization or individual providing the stanza.                                                                                 |
 | `stanza:license`              | License for this stanza.                                                                                                                     |

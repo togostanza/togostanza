@@ -29,11 +29,6 @@ th, td {
             <table class="table table-borderless border mb-1">
               <tbody>
                 <tr>
-                  <th>Context</th>
-                  <td>{{metadata['stanza:context'] || '-'}}</td>
-                </tr>
-
-                <tr>
                   <th>Display</th>
                   <td>{{metadata['stanza:display'] || '-'}}</td>
                 </tr>

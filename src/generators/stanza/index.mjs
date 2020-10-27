@@ -12,7 +12,7 @@ import { required } from '../validators.mjs';
 
 export default class StanzaGenerator extends Generator {
   async prompting() {
-    const args    = pick(this.options, ['id', 'label', 'definition', 'type', 'context', 'display', 'provider', 'license', 'author', 'address', 'timestamp']);
+    const args    = pick(this.options, ['id', 'label', 'definition', 'type', 'display', 'provider', 'license', 'author', 'address', 'timestamp']);
     const storage = new MemoryStorage(args);
 
     await this.prompt([
@@ -42,22 +42,6 @@ export default class StanzaGenerator extends Generator {
       {
         name: 'type',
         when: ({type}) => type === null,
-        askAnswered: true
-      },
-      {
-        name: 'context',
-        type: 'list',
-        choices: [
-          'Environment',
-          'Gene',
-          'Organism',
-          'Phenotype',
-          {name: 'Other (free form)', value: null}
-        ]
-      },
-      {
-        name: 'context',
-        when: ({context}) => context === null,
         askAnswered: true
       },
       {
@@ -127,7 +111,7 @@ export default class StanzaGenerator extends Generator {
   }
 };
 
-function metadataJSON({id, label, definition, type, context, display, provider, license, author, address, timestamp}) {
+function metadataJSON({id, label, definition, type, display, provider, license, author, address, timestamp}) {
   return {
     '@context': {
       stanza: 'http://togostanza.org/resource/stanza#'
@@ -136,7 +120,6 @@ function metadataJSON({id, label, definition, type, context, display, provider, 
     'stanza:label': label,
     'stanza:definition': definition,
     'stanza:type': type,
-    'stanza:context': context,
     'stanza:display': display,
     'stanza:provider': provider,
     'stanza:license': license,
