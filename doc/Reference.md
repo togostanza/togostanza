@@ -188,6 +188,8 @@ Hello, {{greeting}}!
 
 `{{...}}` is an expression of Handlebars, here outputting the value of the `greeting` parameter. `stanza.render()` function treats the object passed to the `parameters` option as the context of the template. Note that `{{! ... }}` is a comment.
 
+If your template file has a `.html.hbs` or `.html` extension, the output of the `{{...}}` will be automatically HTML escaped. You can disable escaping with three curly brackets (`{{{...}}}`).
+
 Nested objects can be accessed using the dot-notation just like normal JavaScript.
 
 ``` js
