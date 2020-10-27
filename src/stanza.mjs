@@ -18,6 +18,7 @@ export default class Stanza {
     bbox.style.position = 'relative';
 
     const main = document.createElement('main');
+    main.style.overflow = 'auto';
     bbox.appendChild(main);
 
     this.aboutLink = document.createElement('togostanza-about-link');
