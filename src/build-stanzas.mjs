@@ -5,7 +5,7 @@ import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import fs from 'fs-extra';
-import json from '@rollup/plugin-json';
+import json from 'rollup-plugin-json5';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import outdent from 'outdent';
 import sass from 'sass';

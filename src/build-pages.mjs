@@ -1,11 +1,11 @@
 import path from 'path';
 
-import commonmark from 'commonmark';
 import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
+import commonmark from 'commonmark';
 import handlebars from 'rollup-plugin-handlebars-plus';
-import json from '@rollup/plugin-json';
+import json from 'rollup-plugin-json5';
 import replace from '@rollup/plugin-replace';
 import resolve from '@rollup/plugin-node-resolve';
 import styles from 'rollup-plugin-styles';
