@@ -140,6 +140,8 @@ After choosing "gh-pages branch" as "Source", press "Rerun-jobs" button to publi
 
 You will see the [https://togostanza.github.io/example-stanza-repo](https://togostanza.github.io/example-stanza-repo). Note that this URL is corresponding to [https://github.com/togostanza/example-stanza-repo](https://github.com/togostanza/example-stanza-repo).
 
+NOTE: If you forked a stanza repository, the action will not run on the forked repository. You need to enable GitHub Actions in the Actions tab of the forked repository. See https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows for details.
+
 
 ## Embedding stanza
 
