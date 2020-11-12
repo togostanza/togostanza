@@ -180,7 +180,7 @@ function togostanza(args, opts = {}) {
   // (not required in Node.js 14)
   const ps = spawnSync(process.argv0, ['--no-warnings', bin, ...args], {
     encoding: 'utf8',
-    timeout: 3000,
+    timeout: 30_000,
     env: {
       ...process.env,
       FORCE_COLOR: '0'
