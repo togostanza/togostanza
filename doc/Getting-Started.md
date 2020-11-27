@@ -112,9 +112,13 @@ to launch a development server. You will see the message as follows:
 Serving at http://localhost:8080
 ```
 
-Open the URL on your browser. The overview of hello stanza will appear. On the right pane, you will see the HTML snippet and the preview. You can use this snippet to embed the stanza on any page you want. The preview shows the stanza working.
+Open the URL on your browser and choose "Hello" stanza.
 
-In "Customize" tab, you can customize the behavior of the stanza. The preview and the snippet (on the right pane) will update  corresponding to the values of the fields (on the left pane).
+The overview of hello stanza will appear. You can change this by editing `metastanza.json` and `README.md`. It is recommended to write a document that gives a good overview about this stanza.
+
+On the right pane, you will see the HTML snippet and the preview. You can use this snippet to embed the stanza on any page you want. The preview shows the stanza working.
+
+In "Customize" tab, you can customize the behavior of the stanza. The preview and the snippet (on the right pane) will update corresponding to the values of the fields (on the left pane).
 
 ## Commit and push to GitHub
 
