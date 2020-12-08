@@ -20,8 +20,8 @@ th, td {
     <div class="row">
       <div class="col-lg-6">
         <nav class="nav nav-tabs" role="tablist">
-          <a class="nav-link active" href="#overview" data-toggle="tab" role="tab">Overview</a>
-          <a class="nav-link" href="#customize" data-toggle="tab" role="tab">Customize</a>
+          <a class="nav-link active" href="#overview" data-bs-toggle="tab" role="tab">Overview</a>
+          <a class="nav-link" href="#customize" data-bs-toggle="tab" role="tab">Customize</a>
         </nav>
 
         <div class="tab-content mt-3">
@@ -101,10 +101,10 @@ th, td {
 
           <div class="tab-pane" id="customize" role="tabpanel">
             <section>
-              <h2>Parameters</h2>
+              <h2 class="my-3">Parameters</h2>
 
-              <div class="row mt-3">
-                <div v-for="{param, input} in paramFields" :key="param['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
+              <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3">
+                <div v-for="{param, input} in paramFields" :key="param['stanza:key']" class="col">
                   <FormField
                     :input="input"
                     :label="param['stanza:key']"
@@ -113,7 +113,7 @@ th, td {
                   ></FormField>
                 </div>
 
-                <div class="col-sm-6 col-lg-12 col-xl-6 mb-3">
+                <div class="col">
                   <FormField
                     :input="aboutLinkPlacement"
                     :label="'togostanza-about-link-placement'"
@@ -125,13 +125,13 @@ th, td {
               </div>
             </section>
 
-            <hr>
+            <hr class="mt-4 mb-3">
 
             <section>
-              <h2>Styles</h2>
+              <h2 class="my-3">Styles</h2>
 
-              <div class="row mt-3">
-                <div v-for="{style, input} in styleFields" :key="style['stanza:key']" class="col-sm-6 col-lg-12 col-xl-6 mb-3">
+              <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3">
+                <div v-for="{style, input} in styleFields" :key="style['stanza:key']" class="col">
                   <FormField
                     :input="input"
                     :label="style['stanza:key']"

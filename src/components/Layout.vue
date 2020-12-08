@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <a href="./" class="navbar-brand">{{repositoryName || 'TogoStanza'}}</a>
 
-      <div class="navbar-nav">
+      <div class="navbar-nav me-auto">
         <a v-if="repositoryUrl" :href="repositoryUrl" target="_blank" rel="noopener noreferrer" class="nav-link">
           <span v-html="repoIcon.toSVG({height: 20})"></span>
           Source code

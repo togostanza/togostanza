@@ -11,11 +11,9 @@
       </select>
     </template>
 
-    <input v-else :type="type" :value="input.ref.value" @input="input.setValue($event.target.value)" class="form-control">
+    <input v-else :type="type" :value="input.ref.value" @input="input.setValue($event.target.value)" class="form-control" :class="{'form-control-color': type === 'color'}">
 
-    <div v-if="input.hasDefault" class="input-group-append">
-      <button @click="input.resetToDefault()" :disabled="input.isDefault.value" type="button" class="btn btn-light border">Reset</button>
-    </div>
+    <button v-if="input.hasDefault" @click="input.resetToDefault()" :disabled="input.isDefault.value" type="button" class="btn btn-light border">Reset</button>
   </div>
 
   <small class="form-text text-muted">

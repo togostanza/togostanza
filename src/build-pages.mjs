@@ -1,9 +1,9 @@
 import path from 'path';
 
+import * as commonmark from 'commonmark';
 import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
-import commonmark from 'commonmark';
 import handlebars from 'rollup-plugin-handlebars-plus';
 import json from 'rollup-plugin-json5';
 import replace from '@rollup/plugin-replace';
@@ -64,7 +64,12 @@ export default class BuildPages extends BroccoliPlugin {
         commonjs(),
         vue(),
         json(),
-        handlebars(),
+
+        handlebars({
+          handlebars: {
+            id: resolvePackage('handlebars/runtime')
+          }
+        }),
 
         styles({
           sass: {
