@@ -69,8 +69,12 @@ export default class BuildStanzas extends BroccoliPlugin {
 
       onwarn(warn) {
         // suppress circular dependency warnings
-        // ref https://github.com/d3/d3-selection/issues/229
+        // https://github.com/d3/d3-selection/issues/229
         if (warn.code === 'CIRCULAR_DEPENDENCY') { return; }
+
+        // suppress 'this' keyword is equivalent to 'undefined' warnings
+        // https://github.com/rollup/rollup/issues/1518
+        if (warn.code === 'THIS_IS_UNDEFINED') { return; }
 
         defaultOnWarn(warn);
       }
