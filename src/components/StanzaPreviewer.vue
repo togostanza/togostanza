@@ -1,6 +1,6 @@
 <template>
   <div class="bg-dark">
-    <div class="text-right p-2">
+    <div class="text-end p-2">
       <CopyButton :value="combinedSnippet" class="btn btn-sm btn-light"></CopyButton>
     </div>
 

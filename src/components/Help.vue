@@ -92,7 +92,7 @@ th, td {
               </tbody>
             </table>
 
-            <div class="text-right">
+            <div class="text-end">
               <a :href="`./${metadata['@id']}/metadata.json`">Download JSON</a>
             </div>
 
