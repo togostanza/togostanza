@@ -8,8 +8,6 @@ import { composeTree, runWatcher } from './-build-internal.mjs';
 import { ensureTogoStanzaIsLocallyInstalled } from '../util.mjs';
 
 const command = new commander.Command()
-  .storeOptionsAsProperties(false)
-  .passCommandToAction(false)
   .command('build')
   .alias('b')
   .description('build stanzas for deployment')

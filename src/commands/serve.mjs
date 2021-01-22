@@ -11,8 +11,6 @@ import { composeTree, runWatcher } from './-build-internal.mjs';
 import { ensureTogoStanzaIsLocallyInstalled } from '../util.mjs';
 
 const command = new commander.Command()
-  .storeOptionsAsProperties(false)
-  .passCommandToAction(false)
   .command('serve')
   .alias('s')
   .description('serve the repository locally')

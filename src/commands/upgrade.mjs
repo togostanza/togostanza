@@ -9,8 +9,6 @@ import Runner from 'jscodeshift/src/Runner.js';
 import { packagePath } from '../util.mjs';
 
 const command = new commander.Command()
-  .storeOptionsAsProperties(false)
-  .passCommandToAction(false)
   .command('upgrade')
   .description('upgrade stanza repository')
   .action(async (opts) => {

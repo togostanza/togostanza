@@ -8,8 +8,6 @@ import RepositoryGenerator from '../generators/repository/index.mjs';
 import { packagePath } from '../util.mjs';
 
 const command = new commander.Command()
-  .storeOptionsAsProperties(false)
-  .passCommandToAction(false)
   .command('init')
   .description('create a new stanza repository')
   .option('--git-url <url>',              'Git repository URL')
