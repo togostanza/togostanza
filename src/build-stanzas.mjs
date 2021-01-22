@@ -21,6 +21,7 @@ export default class BuildStanzas extends BroccoliPlugin {
     super([repositoryDir], options);
 
     this.repositoryDir = repositoryDir;
+    this.environment   = options.environment;
   }
 
   async build() {
@@ -35,6 +36,9 @@ export default class BuildStanzas extends BroccoliPlugin {
 
   async buildStanzas(stanzas) {
     if (stanzas.length === 0) { return; }
+
+    const buildConfig         = await readBuildConfig(this.repositoryDir, this.environment);
+    const customRollupPlugins = buildConfig?.rollup?.plugins || [];
 
     const bundle = await rollup({
       input: stanzas.map(({id}) => `${id}.js`),
@@ -61,6 +65,8 @@ export default class BuildStanzas extends BroccoliPlugin {
         nodeResolve(),
         commonjs(),
         json(),
+
+        ...customRollupPlugins
       ],
 
       external(id) {
@@ -178,4 +184,18 @@ function aliasEntries(stanza) {
     {find: `-stanza/${stanza.id}/main`,     replacement: stanza.filepath('index.js')},
     {find: `-stanza/${stanza.id}/metadata`, replacement: stanza.filepath('metadata.json')}
   ];
+}
+
+async function readBuildConfig(repositoryDir, environment) {
+  try {
+    const {default: initConfig} = await import(path.join(repositoryDir, 'togostanza-build.mjs'));
+
+    return initConfig(environment);
+  } catch (e) {
+    if (e.code === 'ERR_MODULE_NOT_FOUND') {
+      return null;
+    } else {
+      throw e;
+    }
+  }
 }

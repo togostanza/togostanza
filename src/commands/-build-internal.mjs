@@ -93,7 +93,7 @@ function watchPackageFilesInDevelopment(repositoryDir, builder) {
 }
 
 export function composeTree(repositoryDir, {environment}) {
-  const stanzas = new BuildStanzas(repositoryDir);
+  const stanzas = new BuildStanzas(repositoryDir, {environment});
   const pages   = new BuildPages(repositoryDir, {environment});
 
   return new MergeTrees([
