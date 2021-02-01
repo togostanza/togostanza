@@ -19,7 +19,8 @@ export default class StanzaGenerator extends Generator {
       {
         name:     'id',
         message:  'stanza id (<togostanza-ID>):',
-        validate: required
+        validate: required,
+        filter: (input) => kebabCase(input)
       },
       {
         name:     'label',
