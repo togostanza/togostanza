@@ -141,6 +141,111 @@ p.greeting {
 }
 `;
 
+exports[`generate stanza with camelCaseId 1`] = `
+Array [
+  null,
+  "",
+  "   create stanzas/hello-world/metadata.json
+   create stanzas/hello-world/README.md
+   create stanzas/hello-world/index.js
+   create stanzas/hello-world/style.scss
+   create stanzas/hello-world/assets/.keep
+   create stanzas/hello-world/templates/stanza.html.hbs
+",
+]
+`;
+
+exports[`generate stanza with camelCaseId 2`] = `
+Object {
+  "stanzas": Object {
+    "hello-world": Object {
+      "README.md": "# LABEL
+
+Stanza description goes here. Edit \`stanzas/hello-world/README.md\` to update.
+",
+      "assets": Object {
+        ".keep": "",
+      },
+      "index.js": "export default async function helloWorld(stanza, params) {
+  stanza.render({
+    template: 'stanza.html.hbs',
+    parameters: {
+      greeting: \`Hello, \${params['say-to']}!\`
+    }
+  });
+}
+",
+      "metadata.json": "{
+  \\"@context\\": {
+    \\"stanza\\": \\"http://togostanza.org/resource/stanza#\\"
+  },
+  \\"@id\\": \\"hello-world\\",
+  \\"stanza:label\\": \\"LABEL\\",
+  \\"stanza:definition\\": \\"DEFINITION\\",
+  \\"stanza:type\\": \\"TYPE\\",
+  \\"stanza:display\\": \\"DISPLAY\\",
+  \\"stanza:provider\\": \\"PROVIDER\\",
+  \\"stanza:license\\": \\"LICENSE\\",
+  \\"stanza:author\\": \\"AUTHOR\\",
+  \\"stanza:address\\": \\"ADDRESS\\",
+  \\"stanza:contributor\\": [],
+  \\"stanza:created\\": \\"2020-10-05\\",
+  \\"stanza:updated\\": \\"2020-10-05\\",
+  \\"stanza:parameter\\": [
+    {
+      \\"stanza:key\\": \\"say-to\\",
+      \\"stanza:example\\": \\"world\\",
+      \\"stanza:description\\": \\"who to say hello to\\",
+      \\"stanza:required\\": false
+    }
+  ],
+  \\"stanza:about-link-placement\\": \\"bottom-right\\",
+  \\"stanza:style\\": [
+    {
+      \\"stanza:key\\": \\"--greeting-color\\",
+      \\"stanza:type\\": \\"color\\",
+      \\"stanza:default\\": \\"#eb7900\\",
+      \\"stanza:description\\": \\"text color of greeting\\"
+    },
+    {
+      \\"stanza:key\\": \\"--greeting-align\\",
+      \\"stanza:type\\": \\"single-choice\\",
+      \\"stanza:choice\\": [
+        \\"left\\",
+        \\"center\\",
+        \\"right\\"
+      ],
+      \\"stanza:default\\": \\"center\\",
+      \\"stanza:description\\": \\"text align of greeting\\"
+    }
+  ]
+}
+",
+      "style.scss": "// Load the repository-wide global style here. The actual file is located at ../common.scss for details.
+@use '@/common.scss';
+
+// The following is just an example. Feel free to modify it.
+// --greeting-color and --greeting-align are style variables, which are defined in metadata.json.
+main {
+  padding: 1rem 2rem;
+}
+
+p.greeting {
+  margin: 0;
+  font-size: 24px;
+  color: var(--greeting-color);
+  text-align: var(--greeting-align);
+}
+",
+      "templates": Object {
+        "stanza.html.hbs": "<p class=\\"greeting\\">{{greeting}}</p>
+",
+      },
+    },
+  },
+}
+`;
+
 exports[`init non-interactive ({"packageManager": "npm"}) 1`] = `
 Array [
   null,
