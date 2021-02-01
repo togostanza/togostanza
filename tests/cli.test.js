@@ -75,6 +75,27 @@ describe('generate stanza', () => {
       expect(fixturify.readSync('.')).toMatchSnapshot();
     });
   });
+
+  test('with camelCaseId', () => {
+    withinTmpdir(() => {
+      const {output, status} = togostanza(['generate', 'stanza', 'helloWorld',
+        '--label',      'LABEL',
+        '--definition', 'DEFINITION',
+        '--type',       'TYPE',
+        '--display',    'DISPLAY',
+        '--provider',   'PROVIDER',
+        '--license',    'LICENSE',
+        '--author',     'AUTHOR',
+        '--address',    'ADDRESS',
+        '--timestamp',  '2020-10-05'
+      ]);
+
+      expect(output).toMatchSnapshot();
+      expect(status).toBe(0);
+
+      expect(fixturify.readSync('.')).toMatchSnapshot();
+    });
+  });
 });
 
 describe('upgrade', () => {

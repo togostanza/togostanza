@@ -5,6 +5,7 @@ import camelCase from 'lodash.camelcase';
 import lowerCase from 'lodash.lowercase';
 import pick from 'lodash.pick';
 import upperFirst from 'lodash.upperfirst';
+import kebabCase from 'lodash.kebabcase';
 
 import MemoryStorage from '../memory-storage.mjs';
 import { required } from '../validators.mjs';
@@ -81,7 +82,7 @@ export default class StanzaGenerator extends Generator {
       }
     ], storage);
 
-    this.params = storage.data;
+    this.params = {...storage.data, id: kebabCase(storage.data.id)};
   }
 
   writing() {
