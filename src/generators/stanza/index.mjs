@@ -2,7 +2,6 @@ import path from 'path';
 
 import Generator from 'yeoman-generator';
 import camelCase from 'lodash.camelcase';
-import fs from 'fs-extra';
 import lowerCase from 'lodash.lowercase';
 import pick from 'lodash.pick';
 import upperFirst from 'lodash.upperfirst';
