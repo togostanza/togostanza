@@ -390,3 +390,60 @@ export default async function hello(stanza, params) {
   }
 }
 ```
+
+
+## TypeScript Support
+
+TogoStanza supports TypeScript out of the box.
+To get started, just add tsconfig.json at the root of your repository and change stanza's extension from js to ts.
+
+
+tsconfig.json Example:
+```json
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "declaration": false,
+    "removeComments": true,
+    "noLib": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "pretty": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitUseStrict": false,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
+  },
+  "compileOnSave": false
+}
+```
+
+TypeScript Example:
+```typescript
+// stanzas/hello/index.ts
+import {StanzaInstance} from 'togostanza';
+
+export default async function hello(stanza:StanzaInstance, params:StanzaParameters) {
+  stanza.render<TemplateParameters>({
+    template: 'stanza.html.hbs',
+    parameters: {
+      greeting: params['say-foo']
+    }
+  });
+}
+
+interface StanzaParameters{
+  'say-foo': string;
+}
+
+interface TemplateParameters{
+  greeting: string;
+}
+```

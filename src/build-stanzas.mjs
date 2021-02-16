@@ -12,6 +12,7 @@ import sass from 'sass';
 import virtual from '@rollup/plugin-virtual';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 import { rollup } from 'rollup';
+import typescript from '@rollup/plugin-typescript';
 
 import StanzaRepository from './stanza-repository.mjs';
 import { handlebarsTemplate, packagePath } from './util.mjs';
@@ -63,7 +64,8 @@ export default class BuildStanzas extends BroccoliPlugin {
         }),
 
         nodeResolve(),
-        commonjs(),
+        typescript({ module: 'CommonJS' }),
+        commonjs({ extensions: ['.js', '.ts'] }),
         json(),
 
         ...customRollupPlugins
