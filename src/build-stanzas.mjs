@@ -40,6 +40,7 @@ export default class BuildStanzas extends BroccoliPlugin {
 
     const buildConfig         = await readBuildConfig(this.repositoryDir, this.environment);
     const customRollupPlugins = buildConfig?.rollup?.plugins || [];
+    const hasTsConfig         = fs.existsSync(`${this.repositoryDir}/tsconfig.json`);
 
     const bundle = await rollup({
       input: stanzas.map(({id}) => `${id}.js`),
@@ -64,7 +65,7 @@ export default class BuildStanzas extends BroccoliPlugin {
         }),
 
         nodeResolve(),
-        typescript({ module: 'CommonJS' }),
+        hasTsConfig ? typescript({ module: 'CommonJS' }) : null,
         commonjs({ extensions: ['.js', '.ts'] }),
         json(),
 
