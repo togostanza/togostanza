@@ -1,10 +1,11 @@
 import debounce from 'lodash.debounce';
 import outdent from 'outdent';
 
-import AboutLinkElement from './about-link.mjs';
+import AboutLinkElement from './elements/togostanza-about-link.mjs';
+import ContainerElement from './elements/togostanza-container.mjs';
 import Stanza from './stanza.mjs';
 
-export async function defineStanzaElement(main, {metadata, templates, css, url}) {
+export async function defineStanzaElement({stanzaModule, metadata, templates, css, url}) {
   const id        = metadata['@id'];
   const paramKeys = metadata['stanza:parameter'].map(param => param['stanza:key']);
 
@@ -20,7 +21,9 @@ export async function defineStanzaElement(main, {metadata, templates, css, url})
         this.render();
       }, 50);
 
-      ensureAboutLinkElementDefined();
+      ensureBuiltinElementsDefined();
+
+      this.foo = "bar";
 
       this.attachShadow({mode: 'open'});
 
@@ -33,6 +36,11 @@ export async function defineStanzaElement(main, {metadata, templates, css, url})
       const shadowStyle = document.createElement('style');
       shadowStyle.append(css || '');
       this.shadowRoot.append(shadowStyle);
+
+      // if (stanzaModule.handleEvent) {
+      //   // XXX
+      //   this.addEventListener("hover", stanzaModule.handleEvent);
+      // }
     }
 
     connectedCallback() {
@@ -52,7 +60,7 @@ export async function defineStanzaElement(main, {metadata, templates, css, url})
         Array.from(this.attributes).map(({name, value}) => [name, value])
       );
 
-      main(this.stanza, params);
+      stanzaModule.default(this.stanza, params);
     }
   }
 
@@ -69,9 +77,10 @@ function cssVariableDefaults(defs) {
   `;
 }
 
-function ensureAboutLinkElementDefined() {
-  const aboutLinkName = 'togostanza-about-link';
-  if (!customElements.get(aboutLinkName)) {
-    customElements.define(aboutLinkName, AboutLinkElement);
+function ensureBuiltinElementsDefined() {
+  for (const el of [AboutLinkElement, ContainerElement]) {
+    if (!customElements.get(el.customElementName)) {
+      customElements.define(el.customElementName, el);
+    }
   }
 }

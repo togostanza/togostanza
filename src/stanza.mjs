@@ -4,6 +4,7 @@ import { grouping, unwrapValueFromBinding } from '../utils.mjs';
 
 export default class Stanza {
   constructor(host, metadata, templates, url) {
+    this.host     = host;
     this.root     = host.shadowRoot;
     this.metadata = metadata;
     this.url      = url;

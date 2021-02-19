@@ -4,7 +4,7 @@ export default class AboutLinkElement extends HTMLElement {
   constructor() {
     super(...arguments);
 
-    this.attachShadow({mode: 'open'});
+    this.attachShadow({ mode: 'open' });
 
     const style = document.createElement('style');
 
@@ -34,10 +34,10 @@ export default class AboutLinkElement extends HTMLElement {
 
     this.anchor = document.createElement('a');
 
-    this.anchor.innerHTML = info.toSVG({width: 16});
-    this.anchor.title     = 'About this stanza';
-    this.anchor.target    = '_blank';
-    this.anchor.rel       = 'noopener noreferrer';
+    this.anchor.innerHTML = info.toSVG({ width: 16 });
+    this.anchor.title = 'About this stanza';
+    this.anchor.target = '_blank';
+    this.anchor.rel = 'noopener noreferrer';
 
     this.shadowRoot.appendChild(this.anchor);
   }
@@ -45,20 +45,20 @@ export default class AboutLinkElement extends HTMLElement {
   connectedCallback() {
     switch (this.getAttribute('placement') || 'bottom-right') {
       case 'top-left':
-        this.style.top  = '0';
+        this.style.top = '0';
         this.style.left = '0';
         break;
       case 'top-right':
-        this.style.top   = '0';
+        this.style.top = '0';
         this.style.right = '0';
         break;
       case 'bottom-right':
         this.style.bottom = '0';
-        this.style.right  = '0';
+        this.style.right = '0';
         break;
       case 'bottom-left':
         this.style.bottom = '0';
-        this.style.left   = '0';
+        this.style.left = '0';
         break;
       default:
         this.style.display = 'none';
@@ -67,3 +67,5 @@ export default class AboutLinkElement extends HTMLElement {
     this.anchor.href = this.getAttribute('href');
   }
 }
+
+AboutLinkElement.customElementName = 'togostanza-about-link';
