@@ -23,11 +23,11 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
 
       ensureBuiltinElementsDefined();
 
-      this.foo = "bar";
 
       this.attachShadow({mode: 'open'});
 
       this.stanza = new Stanza(this, metadata, templates, url);
+      this.stanzaModule = stanzaModule;
 
       const hostStyle = document.createElement('style');
       hostStyle.append(cssVariableDefaults(metadata['stanza:style']) || '');
