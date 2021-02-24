@@ -37,12 +37,17 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
     }
 
     connectedCallback() {
+      this.renderDebounced();
       this.renderDebounced.flush();
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
       if (name === 'togostanza-about-link-placement') {
         this.stanza.setAboutLinkPlacement(newValue);
+        return;
+      }
+      if (stanzaModule.attributeChangedCallback) {
+        stanzaModule.attributeChangedCallback(this.stanza, name, oldValue, newValue);
       } else {
         this.renderDebounced();
       }
