@@ -62,7 +62,13 @@ export default class BuildPages extends BroccoliPlugin {
 
         resolve(),
         commonjs(),
-        vue(),
+        vue({
+          compilerOptions: {
+            isCustomElement(tagName) {
+              return tagName.startsWith('togostanza-');
+            }
+          }
+        }),
         json(),
 
         handlebars({
