@@ -11,6 +11,12 @@
       </select>
     </template>
 
+    <template v-else-if="type === 'boolean'">
+      <select :value="input.ref.value" @change="input.setValue($event.target.value)" class="form-select">
+        <option v-for="choice in ['true', 'false']" :value="choice" :key="choice">{{choice}}</option>
+      </select>
+    </template>
+
     <input v-else :type="type" :value="input.ref.value" @input="input.setValue($event.target.value)" class="form-control" :class="{'form-control-color': type === 'color'}">
 
     <button v-if="input.hasDefault" @click="input.resetToDefault()" :disabled="input.isDefault.value" type="button" class="btn btn-light border">Reset</button>

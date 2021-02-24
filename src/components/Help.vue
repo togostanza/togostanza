@@ -108,6 +108,8 @@ th, td {
                   <FormField
                     :input="input"
                     :label="param['stanza:key']"
+                    :type="param['stanza:type']"
+                    :choices="param['stanza:choice']"
                     :required="param['stanza:required']"
                     :help-text="param['stanza:description']"
                   ></FormField>
