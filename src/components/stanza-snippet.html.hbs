@@ -1,7 +1,13 @@
 {{#if params}}
 <{{tagName}}
   {{#each params as |param|}}
+  {{#if (eq param.type "boolean")}}
+  {{#if (eq param.value "true")}}
+  {{param.name}}
+  {{/if}}
+  {{else}}
   {{param.name}}="{{param.value}}"
+  {{/if}}
   {{/each}}
 ></{{tagName}}>
 {{else}}
