@@ -6,10 +6,12 @@ export default class ContainerElement extends HTMLElement {
       ).filter((el) => el.tagName.startsWith("TOGOSTANZA-") && "stanza" in el);
 
       for (const srcEl of stanzaElements) {
-        for (const eventName of srcEl.stanza.metadata.eventNames || []) {
+        const outgoingEventNames = srcEl.stanza.metadata["stanza:outgoingEvents"]?.map(e => e['stanza:key']) || [];
+        for (const eventName of outgoingEventNames) {
           srcEl.addEventListener(eventName, (event) => {
             for (const destEl of stanzaElements) {
-              if (srcEl !== destEl) {
+              const incomingEventNames = srcEl.stanza.metadata["stanza:incomingEvents"]?.map(e => e['stanza:key']) || [];
+              if (incomingEventNames.includes(eventName)) {
                 destEl.stanza.handleEvent(event);
               }
             }
