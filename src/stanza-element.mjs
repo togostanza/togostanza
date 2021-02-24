@@ -36,11 +36,6 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
       const shadowStyle = document.createElement('style');
       shadowStyle.append(css || '');
       this.shadowRoot.append(shadowStyle);
-
-      // if (stanzaModule.handleEvent) {
-      //   // XXX
-      //   this.addEventListener("hover", stanzaModule.handleEvent);
-      // }
     }
 
     connectedCallback() {
