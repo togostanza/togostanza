@@ -9,7 +9,9 @@
 
   <div class="overflow-auto p-3 bg-light">
     <div v-html="styleSnippet"></div>
-    <div v-html="stanzaSnippet"></div>
+    <togostanza-container>
+      <div v-html="stanzaSnippet"></div>
+    </togostanza-container>
   </div>
 </template>
 

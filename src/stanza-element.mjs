@@ -1,10 +1,11 @@
 import debounce from 'lodash.debounce';
 import outdent from 'outdent';
 
-import AboutLinkElement from './about-link.mjs';
+import AboutLinkElement from './elements/togostanza-about-link.mjs';
+import ContainerElement from './elements/togostanza-container.mjs';
 import Stanza from './stanza.mjs';
 
-export async function defineStanzaElement(main, {metadata, templates, css, url}) {
+export async function defineStanzaElement({stanzaModule, metadata, templates, css, url}) {
   const id        = metadata['@id'];
   const paramKeys = metadata['stanza:parameter'].map(param => param['stanza:key']);
 
@@ -20,11 +21,11 @@ export async function defineStanzaElement(main, {metadata, templates, css, url})
         this.render();
       }, 50);
 
-      ensureAboutLinkElementDefined();
+      ensureBuiltinElementsDefined();
 
       this.attachShadow({mode: 'open'});
 
-      this.stanza = new Stanza(this, metadata, templates, url);
+      this.stanza = new Stanza(this, metadata, templates, url, stanzaModule.handleEvent);
 
       const hostStyle = document.createElement('style');
       hostStyle.append(cssVariableDefaults(metadata['stanza:style']) || '');
@@ -36,12 +37,17 @@ export async function defineStanzaElement(main, {metadata, templates, css, url})
     }
 
     connectedCallback() {
+      this.renderDebounced();
       this.renderDebounced.flush();
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
       if (name === 'togostanza-about-link-placement') {
         this.stanza.setAboutLinkPlacement(newValue);
+        return;
+      }
+      if (stanzaModule.attributeChangedCallback) {
+        stanzaModule.attributeChangedCallback(this.stanza, name, oldValue, newValue);
       } else {
         this.renderDebounced();
       }
@@ -52,7 +58,7 @@ export async function defineStanzaElement(main, {metadata, templates, css, url})
         Array.from(this.attributes).map(({name, value}) => [name, value])
       );
 
-      main(this.stanza, params);
+      stanzaModule.default(this.stanza, params);
     }
   }
 
@@ -69,9 +75,10 @@ function cssVariableDefaults(defs) {
   `;
 }
 
-function ensureAboutLinkElementDefined() {
-  const aboutLinkName = 'togostanza-about-link';
-  if (!customElements.get(aboutLinkName)) {
-    customElements.define(aboutLinkName, AboutLinkElement);
+function ensureBuiltinElementsDefined() {
+  for (const el of [AboutLinkElement, ContainerElement]) {
+    if (!customElements.get(el.customElementName)) {
+      customElements.define(el.customElementName, el);
+    }
   }
 }

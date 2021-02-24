@@ -67,3 +67,5 @@ export default class AboutLinkElement extends HTMLElement {
     this.anchor.href = this.getAttribute('href');
   }
 }
+
+AboutLinkElement.customElementName = 'togostanza-about-link';
