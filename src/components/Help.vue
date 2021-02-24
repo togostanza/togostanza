@@ -194,6 +194,7 @@ export default defineComponent({
         ...paramFields.map(({param, input}) => {
           return {
             name: param['stanza:key'],
+            type: param['stanza:type'],
             input
           };
         }),
@@ -203,9 +204,10 @@ export default defineComponent({
         }
       ].filter(({input}) => (
         !input.isDefault.value
-      )).map(({name, input}) => {
+      )).map(({name, input, type}) => {
         return {
           name,
+          type,
           value: input.ref.value
         };
       });
