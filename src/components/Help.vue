@@ -107,7 +107,7 @@ th, td {
                 <div v-for="{param, input} in paramFields" :key="param['stanza:key']" class="col">
                   <FormField
                     :input="input"
-                    :label="param['stanza:key']"
+                    :name="param['stanza:key']"
                     :type="param['stanza:type']"
                     :choices="param['stanza:choice']"
                     :required="param['stanza:required']"
@@ -118,8 +118,8 @@ th, td {
                 <div class="col">
                   <FormField
                     :input="aboutLinkPlacement"
-                    :label="'togostanza-about-link-placement'"
-                    :type="'single-choice'"
+                    name="togostanza-about-link-placement"
+                    type="single-choice"
                     :choices="['top-left', 'top-right', 'bottom-left', 'bottom-right', 'none']"
                     :help-text="'Placement of the information icon which links to this page.'"
                   ></FormField>
@@ -136,7 +136,7 @@ th, td {
                 <div v-for="{style, input} in styleFields" :key="style['stanza:key']" class="col">
                   <FormField
                     :input="input"
-                    :label="style['stanza:key']"
+                    :name="style['stanza:key']"
                     :type="style['stanza:type']"
                     :choices="style['stanza:choice']"
                     :help-text="style['stanza:description']"
@@ -244,17 +244,16 @@ export default defineComponent({
 });
 
 function useInput(initValue, hasDefault = true) {
-  const _ref      = ref(initValue);
-  const isDefault = computed(() => hasDefault && (_ref.value === initValue));
+  const _ref      = ref(initValue?.toString());
+  const isDefault = computed(() => hasDefault && (_ref.value === initValue?.toString()));
 
   function setValue(newVal) {
-    _ref.value = newVal;
+    _ref.value = newVal?.toString();
   }
 
   function resetToDefault() {
     if (!hasDefault) { return; }
-
-    _ref.value = initValue
+    this.setValue(initValue);
   }
 
   return {
