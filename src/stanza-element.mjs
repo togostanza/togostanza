@@ -47,18 +47,47 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
         return;
       }
       if (stanzaModule.attributeChangedCallback) {
-        stanzaModule.attributeChangedCallback(this.stanza, name, oldValue, newValue);
+        stanzaModule.attributeChangedCallback(this.stanza, this.params(), name, oldValue, newValue);
       } else {
         this.renderDebounced();
       }
     }
 
-    render() {
-      const params = Object.fromEntries(
-        Array.from(this.attributes).map(({name, value}) => [name, value])
-      );
+    params() {
+      return Object.fromEntries(
+        metadata['stanza:parameter'].map((param) => {
+          const key = param['stanza:key'];
+          const type = param['stanza:type'];
 
-      stanzaModule.default(this.stanza, params);
+          if (type === "boolean") {
+            return [key, this.attributes.hasOwnProperty(key)];
+          }
+
+          const valueStr = this.attributes[key]?.value;
+          let value;
+          switch (type) {
+            case "number":
+              value = Number(valueStr);
+              break;
+            case "date":
+            case "datetime":
+              value = Date.parse(valueStr);
+              break;
+            case "json":
+              value = JSON.parse(valueStr);
+              break;
+            default:
+              value = valueStr;
+          }
+          console.log("PARAMS", key, valueStr, type, value);
+
+          return [key, value];
+        })
+      );
+    }
+
+    render() {
+      stanzaModule.default(this.stanza, this.params());
     }
   }
 

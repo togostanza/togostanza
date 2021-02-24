@@ -5,19 +5,19 @@
   </label>
 
   <div class="input-group">
-    <template v-if="type === 'single-choice'">
+    <template v-if="formType === 'single-choice'">
       <select :value="input.ref.value" @change="input.setValue($event.target.value)" class="form-select">
         <option v-for="choice in choices" :value="choice" :key="choice">{{choice}}</option>
       </select>
     </template>
 
-    <template v-else-if="type === 'boolean'">
+    <template v-else-if="formType === 'boolean'">
       <select :value="input.ref.value" @change="input.setValue($event.target.value)" class="form-select">
         <option v-for="choice in ['true', 'false']" :value="choice" :key="choice">{{choice}}</option>
       </select>
     </template>
 
-    <input v-else :type="type" :value="input.ref.value" @input="input.setValue($event.target.value)" class="form-control" :class="{'form-control-color': type === 'color'}">
+    <input v-else :type="formType" :value="input.ref.value" @input="input.setValue($event.target.value)" class="form-control" :class="{'form-control-color': formType === 'color'}">
 
     <button v-if="input.hasDefault" @click="input.resetToDefault()" :disabled="input.isDefault.value" type="button" class="btn btn-light border">Reset</button>
   </div>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 export default defineComponent({
   props: [
@@ -41,7 +41,12 @@ export default defineComponent({
   ],
 
   setup(props) {
-    return props;
+
+    const formType = computed(() => {
+      return props.type === "datetime" ? "datetime-local" : props.type;
+    });
+
+    return {...props, formType};
   }
 });
 </script>
