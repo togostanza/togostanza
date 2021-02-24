@@ -79,7 +79,6 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
             default:
               value = valueStr;
           }
-          console.log("PARAMS", key, valueStr, type, value);
 
           return [key, value];
         })
