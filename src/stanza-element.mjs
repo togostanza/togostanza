@@ -25,7 +25,10 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
 
       this.attachShadow({mode: 'open'});
 
-      this.stanza = new Stanza(this, metadata, templates, url, stanzaModule.handleEvent);
+      const handleEvent = (event) => {
+        stanzaModule.handleEvent?.(this.stanza, this.params, event);
+      };
+      this.stanza = new Stanza(this, metadata, templates, url, handleEvent);
 
       const hostStyle = document.createElement('style');
       hostStyle.append(cssVariableDefaults(metadata['stanza:style']) || '');
@@ -47,13 +50,13 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
         return;
       }
       if (stanzaModule.handleAttributeChange) {
-        stanzaModule.handleAttributeChange(this.stanza, this.params(), name, oldValue, newValue);
+        stanzaModule.handleAttributeChange(this.stanza, this.params, name, oldValue, newValue);
       } else {
         this.renderDebounced();
       }
     }
 
-    params() {
+    get params() {
       return Object.fromEntries(
         metadata['stanza:parameter'].map((param) => {
           const key = param['stanza:key'];
@@ -86,7 +89,7 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
     }
 
     render() {
-      stanzaModule.default(this.stanza, this.params());
+      stanzaModule.default(this.stanza, this.params);
     }
   }
 

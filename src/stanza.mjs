@@ -3,7 +3,7 @@ import HandlebarsRuntime from 'handlebars/runtime.js';
 import { grouping, unwrapValueFromBinding } from '../utils.mjs';
 
 export default class Stanza {
-  constructor(host, metadata, templates, url, handleEvent = () => {}) {
+  constructor(host, metadata, templates, url, handleEvent) {
     this.host        = host;
     this.root        = host.shadowRoot;
     this.metadata    = metadata;
