@@ -46,8 +46,8 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
         this.stanza.setAboutLinkPlacement(newValue);
         return;
       }
-      if (stanzaModule.attributeChangedCallback) {
-        stanzaModule.attributeChangedCallback(this.stanza, this.params(), name, oldValue, newValue);
+      if (stanzaModule.handleAttributeChange) {
+        stanzaModule.handleAttributeChange(this.stanza, this.params(), name, oldValue, newValue);
       } else {
         this.renderDebounced();
       }
