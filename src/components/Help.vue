@@ -183,7 +183,7 @@ export default defineComponent({
     const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
       return {
         param,
-        input: useInput(param['stanza:example'], param['stanza:type'], false)
+        input: useInput(param['stanza:example'], false)
       };
     });
 
@@ -216,7 +216,7 @@ export default defineComponent({
     const styleFields = (metadata['stanza:style'] || []).map((style) => {
       return {
         style,
-        input: useInput(style['stanza:default'], style['stanza:type'])
+        input: useInput(style['stanza:default'])
       };
     });
 
@@ -243,7 +243,7 @@ export default defineComponent({
   }
 });
 
-function useInput(initValue, type, hasDefault = true) {
+function useInput(initValue, hasDefault = true) {
   const _ref      = ref(initValue);
   const isDefault = computed(() => hasDefault && (_ref.value === initValue));
 
