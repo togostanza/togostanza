@@ -13,7 +13,7 @@
 
     <template v-else-if="formType === 'boolean'">
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" :checked="input.ref.value === 'true'" @change="input.setValue($event.target.checked)" :id="name">
+        <input class="form-check-input" type="checkbox" :checked="input.ref.value" @change="input.setValue($event.target.checked)" :id="name">
         <label class="form-check-label" :for="name">
           {{helpText}}
         </label>

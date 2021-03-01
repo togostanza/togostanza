@@ -28,8 +28,11 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
       const handleEvent = (event) => {
         stanzaModule.handleEvent?.(this.stanza, this.params, event);
       };
-      this.stanza = new Stanza(this, metadata, templates, url, handleEvent);
 
+      this.stanza = new Stanza(this, metadata, templates, url, handleEvent);
+    }
+
+    connectedCallback() {
       const hostStyle = document.createElement('style');
       hostStyle.append(cssVariableDefaults(metadata['stanza:style']) || '');
       this.append(hostStyle);
@@ -37,9 +40,7 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
       const shadowStyle = document.createElement('style');
       shadowStyle.append(css || '');
       this.shadowRoot.append(shadowStyle);
-    }
 
-    connectedCallback() {
       this.renderDebounced();
       this.renderDebounced.flush();
     }

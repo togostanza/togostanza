@@ -9,8 +9,9 @@
 
   <div class="overflow-auto p-3 bg-light">
     <div v-html="styleSnippet"></div>
+
     <togostanza-container>
-      <div v-html="stanzaSnippet"></div>
+      <component :is="tagName" v-bind="props"></component>
     </togostanza-container>
   </div>
 </template>
@@ -34,12 +35,21 @@ export default defineComponent({
     const id      = props.metadata['@id'];
     const tagName = `togostanza-${id}`;
 
+    const stanzaProps = computed(() => {
+      return props.params.reduce((acc, param) => {
+        return param.value === false ? acc : {
+          ...acc,
+          [param.name]: param.value
+        }
+      }, {});
+    });
+
     const stanzaSnippet = computed(() => {
       return stanzaSnippetTemplate({
         tagName,
         params: props.params
       });
-    })
+    });
 
     const styleSnippet = computed(() => {
       return styleSnippetTemplate({
@@ -60,7 +70,8 @@ export default defineComponent({
     });
 
     return {
-      stanzaSnippet,
+      tagName,
+      props: stanzaProps,
       styleSnippet,
       combinedSnippet
     };

@@ -1,6 +1,8 @@
 import { info } from '@primer/octicons';
 
 export default class AboutLinkElement extends HTMLElement {
+  static observedAttributes = ['placement'];
+
   constructor() {
     super(...arguments);
 
@@ -43,28 +45,72 @@ export default class AboutLinkElement extends HTMLElement {
   }
 
   connectedCallback() {
-    switch (this.getAttribute('placement') || 'bottom-right') {
+    this.anchor.href = this.getAttribute('href');
+
+    this.setPlacement(this.getAttribute('placement'));
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'placement') {
+      this.setPlacement(newValue);
+    }
+  }
+
+  setPlacement(placement) {
+    switch (placement || 'bottom-right') {
       case 'top-left':
-        this.style.top  = '0';
-        this.style.left = '0';
+        Object.assign(this.style, {
+          display: 'initial',
+          top:     '0',
+          right:   null,
+          bottom:  null,
+          left:    '0',
+        });
+
         break;
       case 'top-right':
-        this.style.top   = '0';
-        this.style.right = '0';
+        Object.assign(this.style, {
+          display: 'initial',
+          top:     '0',
+          right:   '0',
+          bottom:  null,
+          left:    null,
+        });
+
         break;
       case 'bottom-right':
-        this.style.bottom = '0';
-        this.style.right  = '0';
+        Object.assign(this.style, {
+          display: 'initial',
+          top:     null,
+          right:   '0',
+          bottom:  '0',
+          left:    null,
+        });
+
         break;
       case 'bottom-left':
-        this.style.bottom = '0';
-        this.style.left   = '0';
+        Object.assign(this.style, {
+          display: 'initial',
+          top:     null,
+          right:   null,
+          bottom:  '0',
+          left:    '0',
+        });
+
+        break;
+      case 'none':
+        Object.assign(this.style, {
+          display: 'none',
+          top:     null,
+          right:   null,
+          bottom:  null,
+          left:    null,
+        });
+
         break;
       default:
-        this.style.display = 'none';
+        throw new Error(`illegal placement: ${placement}`);
     }
-
-    this.anchor.href = this.getAttribute('href');
   }
 }
 
