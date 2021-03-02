@@ -244,11 +244,11 @@ export default defineComponent({
 });
 
 function useInput(initValue, hasDefault = true) {
-  const _ref      = ref(initValue);
-  const isDefault = computed(() => hasDefault && (_ref.value === initValue));
+  const _ref      = ref(initValue?.toString());
+  const isDefault = computed(() => hasDefault && (_ref.value === initValue?.toString()));
 
   function setValue(newVal) {
-    _ref.value = newVal;
+    _ref.value = newVal?.toString();
   }
 
   function resetToDefault() {

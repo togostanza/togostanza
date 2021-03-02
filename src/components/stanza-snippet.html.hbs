@@ -2,7 +2,7 @@
 <{{tagName}}
   {{#each params as |param|}}
   {{#if (eq param.type "boolean")}}
-  {{#if (eq param.value true)}}
+  {{#if (eq param.value "true")}}
   {{param.name}}
   {{/if}}
   {{else}}

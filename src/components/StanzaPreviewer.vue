@@ -37,7 +37,7 @@ export default defineComponent({
 
     const stanzaProps = computed(() => {
       return props.params.reduce((acc, param) => {
-        return param.value === false ? acc : {
+        return (param.type === "boolean" && param.value === "false") ? acc : {
           ...acc,
           [param.name]: param.value
         }
