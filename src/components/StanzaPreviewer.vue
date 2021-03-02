@@ -11,7 +11,9 @@
     <div v-html="styleSnippet"></div>
 
     <togostanza-container>
-      <component :is="tagName" v-bind="props"></component>
+      <div v-html="stanzaSnippet"></div>
+      <!-- <component :is="tagName" v-bind="props"></component> -->
+      <!-- temporary disable this because some stanzas don't seem to work as expected with the "component" approach -->
     </togostanza-container>
   </div>
 </template>
@@ -73,6 +75,7 @@ export default defineComponent({
       tagName,
       props: stanzaProps,
       styleSnippet,
+      stanzaSnippet,
       combinedSnippet
     };
   }
