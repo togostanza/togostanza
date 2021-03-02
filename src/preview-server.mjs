@@ -5,6 +5,7 @@ import { promises as fs } from 'fs';
 import BroccoliPlugin from 'broccoli-plugin';
 import express from 'express';
 import mime from 'mime';
+import cors from 'cors';
 
 import { packagePath } from './util.mjs';
 
@@ -31,6 +32,8 @@ export default class Serve extends BroccoliPlugin {
 function createServer(distPath) {
   const app     = express();
   const channel = new EventEmitter();
+
+  app.use(cors());
 
   app.get('/-reloader', (_req, res) => {
     res.type('text').write(''); // fetch() is not resolved without sending headers
