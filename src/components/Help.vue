@@ -208,7 +208,7 @@ export default defineComponent({
         return {
           name,
           type,
-          value: input.valueParsed.value
+          value: input.valueStr.value
         };
       });
     });
