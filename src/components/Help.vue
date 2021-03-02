@@ -183,11 +183,11 @@ export default defineComponent({
     const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
       return {
         param,
-        input: useInput(param['stanza:example'], false)
+        input: useInput(param['stanza:example'], param['stanza:type'], false)
       };
     });
 
-    const aboutLinkPlacement = useInput(metadata['stanza:about-link-placement'] || 'bottom-right');
+    const aboutLinkPlacement = useInput(metadata['stanza:about-link-placement'] || 'bottom-right', 'string');
 
     const params = computed(() => {
       return [
@@ -208,7 +208,7 @@ export default defineComponent({
         return {
           name,
           type,
-          value: input.ref.value
+          value: input.valueParsed.value
         };
       });
     });
@@ -216,7 +216,7 @@ export default defineComponent({
     const styleFields = (metadata['stanza:style'] || []).map((style) => {
       return {
         style,
-        input: useInput(style['stanza:default'])
+        input: useInput(style['stanza:default'], style['stanza:type'])
       };
     });
 
@@ -226,7 +226,7 @@ export default defineComponent({
       )).map(({style, input}) => {
         return {
           name:  style['stanza:key'],
-          value: input.ref.value
+          value: input.valueStr.value
         };
       });
     });
@@ -243,25 +243,58 @@ export default defineComponent({
   }
 });
 
-function useInput(initValue, hasDefault = true) {
-  const _ref      = ref(initValue?.toString());
-  const isDefault = computed(() => hasDefault && (_ref.value === initValue?.toString()));
+function useInput(initValue, type, hasDefault = true) {
+  const initValueStr = stringify(initValue, type);
+  const valueStr     = ref(initValueStr);
+  const valueParsed  = computed(() => parse(valueStr.value, type));
+  const isDefault    = computed(() => hasDefault && (valueStr.value === initValueStr));
 
-  function setValue(newVal) {
-    _ref.value = newVal?.toString();
+  function setValueStr(newValStr) {
+    valueStr.value = newValStr;
   }
 
   function resetToDefault() {
     if (!hasDefault) { return; }
-    this.setValue(initValue);
+
+    this.setValueStr(initValueStr);
   }
 
   return {
-    ref: _ref,
-    setValue,
+    valueStr,
+    valueParsed,
+    setValueStr,
     hasDefault,
     isDefault,
     resetToDefault
   };
+}
+
+function stringify(value, type) {
+  if (value === null || value === undefined) { return null; }
+
+  switch (type) {
+    case 'boolean':
+    case 'number':
+    case 'json':
+      return JSON.stringify(value);
+    default: // value is a string (event if type is not a string. e.g. date)
+      return value;
+  }
+}
+
+function parse(valueStr, type) {
+  if (valueStr === null || valueStr === undefined) { return null; }
+
+  switch (type) {
+    case 'boolean':
+    case 'number':
+    case 'json':
+      return JSON.parse(valueStr);
+    case 'date':
+    case 'datetime':
+      return Date.parse(valueStr);
+    default:
+      return valueStr;
+  }
 }
 </script>
