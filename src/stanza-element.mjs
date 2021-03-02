@@ -63,7 +63,7 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
           const key = param['stanza:key'];
           const type = param['stanza:type'];
 
-          if (type === "boolean") {
+          if (type === 'boolean') {
             return [key, this.attributes.hasOwnProperty(key)];
           }
 
@@ -71,14 +71,14 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
           let value;
           if (valueStr) {
             switch (type) {
-              case "number":
+              case 'number':
                 value = Number(valueStr);
                 break;
-              case "date":
-              case "datetime":
+              case 'date':
+              case 'datetime':
                 value = Date.parse(valueStr);
                 break;
-              case "json":
+              case 'json':
                 value = JSON.parse(valueStr);
                 break;
               default:
