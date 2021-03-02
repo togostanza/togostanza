@@ -1,7 +1,11 @@
 <template>
-  <label class="form-label">
-    <span v-if="required" class="text-danger">*</span>
-    {{name}}
+  <label class="form-label d-flex">
+    <span class="me-auto">
+      <span v-if="required" class="text-danger">*</span>
+      {{name}}
+    </span>
+
+    <small class="text-muted">{{type || 'string'}}</small>
   </label>
 
   <div class="input-group">
