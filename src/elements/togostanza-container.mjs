@@ -43,7 +43,26 @@ function connectStanzasWithAttributes(container, stanzaElements) {
   }
 }
 
+async function connectDataSource(container) {
+  for (const sourceElement of container.querySelectorAll('togostanza-data-source')) {
+    const url             = sourceElement.getAttribute('url');
+    const receiver        = sourceElement.getAttribute('receiver');
+    const targetAttribute = sourceElement.getAttribute('target-attribute');
+
+    const receiverElements = container.querySelectorAll(receiver);
+
+    const blob = await fetch(url).then(res => res.blob());
+    const objectUrl = URL.createObjectURL(blob);
+
+    container.dataSourceUrls.push(objectUrl);
+
+    setEach(receiverElements, targetAttribute, objectUrl);
+  }
+}
+
 export default class ContainerElement extends HTMLElement {
+  dataSourceUrls = [];
+
   connectedCallback() {
     const stanzaElements = Array.from(
       this.querySelectorAll('*')
@@ -51,8 +70,15 @@ export default class ContainerElement extends HTMLElement {
 
     setTimeout(() => { // wait until stanzas ready
       connectStanzasWithAttributes(this, stanzaElements);
-      connectStanzasWithHandler(stanzaElements)
+      connectStanzasWithHandler(stanzaElements);
+      connectDataSource(this);
     }, 0);
+  }
+
+  disconnectedCallback() {
+    for (const url of this.dataSourceUrls) {
+      URL.revokeObjectURL(url);
+    }
   }
 }
 
