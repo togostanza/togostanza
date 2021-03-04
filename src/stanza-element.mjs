@@ -10,10 +10,6 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
   const paramKeys = metadata['stanza:parameter'].map(param => param['stanza:key']);
 
   class StanzaElement extends HTMLElement {
-    static get observedAttributes() {
-      return [...paramKeys, 'togostanza-about-link-placement'];
-    }
-
     constructor() {
       super(...arguments);
 
@@ -95,6 +91,8 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
       stanzaModule.default(this.stanza, this.params);
     }
   }
+
+  StanzaElement.observedAttributes = [...paramKeys, 'togostanza-about-link-placement'];
 
   customElements.define(`togostanza-${id}`, StanzaElement);
 }

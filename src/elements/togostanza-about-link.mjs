@@ -1,8 +1,6 @@
 import { info } from '@primer/octicons';
 
 export default class AboutLinkElement extends HTMLElement {
-  static observedAttributes = ['placement'];
-
   constructor() {
     super(...arguments);
 
@@ -115,3 +113,4 @@ export default class AboutLinkElement extends HTMLElement {
 }
 
 AboutLinkElement.customElementName = 'togostanza-about-link';
+AboutLinkElement.observedAttributes = ['placement'];
