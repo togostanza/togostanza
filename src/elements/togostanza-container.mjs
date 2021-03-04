@@ -27,7 +27,8 @@ function connectStanzasWithAttributes(container, stanzaElements) {
       if (!outgoingEventNames(srcEl.stanza).includes(on)) { continue; }
 
       srcEl.addEventListener(on, (event) => {
-        const value = get(event.detail, valuePath);
+        const value = valuePath ? get(event.detail, valuePath) : event.detail;
+
         if (value === true) {
           setEach(receiverElements, targetAttribute, '');
         } else if (value === false || value === undefined) {
