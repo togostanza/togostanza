@@ -29,7 +29,7 @@ function connectStanzasWithAttributes(container, stanzaElements) {
       srcEl.addEventListener(on, (event) => {
         const value = get(event.detail, valuePath);
         if (value === true) {
-          setEach(receiverElements, targetAttribute, targetAttribute);
+          setEach(receiverElements, targetAttribute, '');
         } else if (value === false || value === undefined) {
           removeEach(receiverElements, targetAttribute);
         } else if (value instanceof String) {
