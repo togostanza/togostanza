@@ -1,5 +1,29 @@
 import get from 'lodash.get';
 
+export default class ContainerElement extends HTMLElement {
+  dataSourceUrls = [];
+
+  connectedCallback() {
+    setTimeout(() => { // wait until stanzas ready
+      const stanzaElements = Array.from(
+        this.querySelectorAll('*')
+      ).filter((el) => el.tagName.startsWith('TOGOSTANZA-') && 'stanza' in el);
+
+      connectStanzasWithAttributes(this, stanzaElements);
+      connectStanzasWithHandler(stanzaElements);
+      connectDataSource(this);
+    }, 0);
+  }
+
+  disconnectedCallback() {
+    for (const url of this.dataSourceUrls) {
+      URL.revokeObjectURL(url);
+    }
+  }
+}
+
+ContainerElement.customElementName = 'togostanza-container';
+
 function connectStanzasWithHandler(stanzaElements) {
   for (const srcEl of stanzaElements) {
     for (const eventName of outgoingEventNames(srcEl.stanza)) {
@@ -59,30 +83,6 @@ async function connectDataSource(container) {
     setEach(receiverElements, targetAttribute, objectUrl);
   }
 }
-
-export default class ContainerElement extends HTMLElement {
-  dataSourceUrls = [];
-
-  connectedCallback() {
-    setTimeout(() => { // wait until stanzas ready
-      const stanzaElements = Array.from(
-        this.querySelectorAll('*')
-      ).filter((el) => el.tagName.startsWith('TOGOSTANZA-') && 'stanza' in el);
-
-      connectStanzasWithAttributes(this, stanzaElements);
-      connectStanzasWithHandler(stanzaElements);
-      connectDataSource(this);
-    }, 0);
-  }
-
-  disconnectedCallback() {
-    for (const url of this.dataSourceUrls) {
-      URL.revokeObjectURL(url);
-    }
-  }
-}
-
-ContainerElement.customElementName = 'togostanza-container';
 
 function setEach(elements, key, value) {
   for (const el of elements) {
