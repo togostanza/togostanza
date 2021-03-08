@@ -89,6 +89,7 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
   \\"stanza:parameter\\": [
     {
       \\"stanza:key\\": \\"say-to\\",
+      \\"stanza:type\\": \\"string\\",
       \\"stanza:example\\": \\"world\\",
       \\"stanza:description\\": \\"who to say hello to\\",
       \\"stanza:required\\": false
@@ -113,7 +114,9 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
       \\"stanza:default\\": \\"center\\",
       \\"stanza:description\\": \\"text align of greeting\\"
     }
-  ]
+  ],
+  \\"stanza:incomingEvent\\": [],
+  \\"stanza:outgoingEvent\\": []
 }
 ",
       "style.scss": "// Load the repository-wide global style here. The actual file is located at ../common.scss for details.
@@ -194,6 +197,7 @@ Stanza description goes here. Edit \`stanzas/hello-world/README.md\` to update.
   \\"stanza:parameter\\": [
     {
       \\"stanza:key\\": \\"say-to\\",
+      \\"stanza:type\\": \\"string\\",
       \\"stanza:example\\": \\"world\\",
       \\"stanza:description\\": \\"who to say hello to\\",
       \\"stanza:required\\": false
@@ -218,7 +222,9 @@ Stanza description goes here. Edit \`stanzas/hello-world/README.md\` to update.
       \\"stanza:default\\": \\"center\\",
       \\"stanza:description\\": \\"text align of greeting\\"
     }
-  ]
+  ],
+  \\"stanza:incomingEvent\\": [],
+  \\"stanza:outgoingEvent\\": []
 }
 ",
       "style.scss": "// Load the repository-wide global style here. The actual file is located at ../common.scss for details.
