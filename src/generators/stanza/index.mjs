@@ -157,6 +157,8 @@ function metadataJSON({id, label, definition, type, display, provider, license, 
         'stanza:default': 'center',
         'stanza:description': 'text align of greeting'
       },
-    ]
+    ],
+    'stanza:incomingEvent': [],
+    'stanza:outgoingEvent': []
   };
 }
