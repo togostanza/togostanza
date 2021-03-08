@@ -64,11 +64,11 @@ export default class ContainerElement extends HTMLElement {
   dataSourceUrls = [];
 
   connectedCallback() {
-    const stanzaElements = Array.from(
-      this.querySelectorAll('*')
-    ).filter((el) => el.tagName.startsWith('TOGOSTANZA-') && 'stanza' in el);
-
     setTimeout(() => { // wait until stanzas ready
+      const stanzaElements = Array.from(
+        this.querySelectorAll('*')
+      ).filter((el) => el.tagName.startsWith('TOGOSTANZA-') && 'stanza' in el);
+
       connectStanzasWithAttributes(this, stanzaElements);
       connectStanzasWithHandler(stanzaElements);
       connectDataSource(this);
