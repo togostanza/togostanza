@@ -29,7 +29,7 @@ function connectStanzasWithHandler(stanzaElements) {
     for (const eventName of outgoingEventNames(srcEl.stanza)) {
       srcEl.addEventListener(eventName, (event) => {
         for (const destEl of stanzaElements) {
-          if (incomingEventNames(srcEl.stanza).includes(eventName)) {
+          if (incomingEventNames(destEl.stanza).includes(eventName)) {
             destEl.stanza.handleEvent(event);
           }
         }
