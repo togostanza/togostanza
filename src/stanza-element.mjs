@@ -64,22 +64,26 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
           }
 
           const valueStr = this.attributes[key]?.value;
+
+          if (valueStr === null || valueStr === undefined) {
+            return [key, valueStr];
+          }
+
           let value;
-          if (valueStr) {
-            switch (type) {
-              case 'number':
-                value = Number(valueStr);
-                break;
-              case 'date':
-              case 'datetime':
-                value = Date.parse(valueStr);
-                break;
-              case 'json':
-                value = JSON.parse(valueStr);
-                break;
-              default:
-                value = valueStr;
-            }
+
+          switch (type) {
+            case 'number':
+              value = Number(valueStr);
+              break;
+            case 'date':
+            case 'datetime':
+              value = Date.parse(valueStr);
+              break;
+            case 'json':
+              value = JSON.parse(valueStr);
+              break;
+            default:
+              value = valueStr;
           }
 
           return [key, value];
