@@ -132,6 +132,7 @@ function metadataJSON({id, label, definition, type, display, provider, license, 
     'stanza:parameter': [
       {
         'stanza:key': 'say-to',
+        'stanza:type': 'string',
         'stanza:example': 'world',
         'stanza:description': 'who to say hello to',
         'stanza:required': false
