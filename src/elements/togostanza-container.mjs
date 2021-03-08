@@ -57,7 +57,7 @@ function connectStanzasWithAttributes(container, stanzaElements) {
           setEach(receiverElements, targetAttribute, '');
         } else if (value === false || value === undefined) {
           removeEach(receiverElements, targetAttribute);
-        } else if (value instanceof String) {
+        } else if (value.constructor === String) { // a bit weird, but a unified way to determine string literals and objects
           setEach(receiverElements, targetAttribute, value);
         } else {
           setEach(receiverElements, targetAttribute, JSON.stringify(value));
