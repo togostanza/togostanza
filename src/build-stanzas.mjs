@@ -9,6 +9,7 @@ import json from 'rollup-plugin-json5';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import outdent from 'outdent';
 import sass from 'sass';
+import url from '@rollup/plugin-url';
 import virtual from '@rollup/plugin-virtual';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 import { rollup } from 'rollup';
@@ -65,6 +66,10 @@ export default class BuildStanzas extends BroccoliPlugin {
         nodeResolve(),
         commonjs(),
         json(),
+
+        url({
+          limit: Infinity
+        }),
 
         ...customRollupPlugins
       ],
