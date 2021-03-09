@@ -16,22 +16,56 @@ export default class ContainerElement extends HTMLElement {
   }
 
   disconnectedCallback() {
-    for (const url of Object.values(this.dataSourceUrls)) {
-      URL.revokeObjectURL(url);
+    for (const entry of Object.values(this.dataSourceUrls)) {
+      URL.revokeObjectURL(entry.value);
+    }
+  }
+
+  async dataSourceUrlChanged(oldUrl, newUrl, receiver, targetAttribute) {
+    this.disposeDataSourceUrl(oldUrl);
+
+    const receiverElements = this.querySelectorAll(receiver);
+
+    if (newUrl) {
+      const objectUrl = await this.getOrCreateObjectUrl(newUrl);
+
+      setEach(receiverElements, targetAttribute, objectUrl);
+    } else {
+      removeEach(receiverElements, targetAttribute);
     }
   }
 
   async getOrCreateObjectUrl(url) {
-    const cached = this.dataSourceUrls[url];
+    const entry = this.dataSourceUrls[url];
 
-    if (cached) { return cached; }
+    if (entry) {
+      entry.count++;
+      return entry.value;
+    }
 
-    const blob = await fetch(url).then(res => res.blob());
+    const blob      = await fetch(url).then(res => res.blob());
     const objectUrl = URL.createObjectURL(blob);
 
-    this.dataSourceUrls[url] = objectUrl;
+    this.dataSourceUrls[url] = {
+      value: objectUrl,
+      count: 1
+    };
 
     return objectUrl;
+  }
+
+  disposeDataSourceUrl(url) {
+    const entry = this.dataSourceUrls[url];
+
+    if (!entry) { return; }
+
+    entry.count--;
+
+    if (entry.count === 0) {
+      URL.revokeObjectURL(entry.value);
+
+      delete this.dataSourceUrls[url];
+    }
   }
 }
 
@@ -80,16 +114,15 @@ function connectStanzasWithAttributes(container, stanzaElements) {
   }
 }
 
-async function connectDataSource(container) {
-  for (const sourceElement of container.querySelectorAll('togostanza-data-source')) {
-    const url             = sourceElement.getAttribute('url');
-    const receiver        = sourceElement.getAttribute('receiver');
-    const targetAttribute = sourceElement.getAttribute('target-attribute');
+function connectDataSource(container) {
+  for (const dataSource of container.querySelectorAll('togostanza-data-source')) {
+    dataSource.containerElement = container;
 
-    const receiverElements = container.querySelectorAll(receiver);
-    const objectUrl        = await container.getOrCreateObjectUrl(url);
+    const url             = dataSource.getAttribute('url');
+    const receiver        = dataSource.getAttribute('receiver');
+    const targetAttribute = dataSource.getAttribute('target-attribute');
 
-    setEach(receiverElements, targetAttribute, objectUrl);
+    container.dataSourceUrlChanged(null, url, receiver, targetAttribute);
   }
 }
 

@@ -3,6 +3,7 @@ import outdent from 'outdent';
 
 import AboutLinkElement from './elements/togostanza-about-link.mjs';
 import ContainerElement from './elements/togostanza-container.mjs';
+import DataSourceElement from './elements/togostanza-data-source.mjs';
 import Stanza from './stanza.mjs';
 
 export async function defineStanzaElement({stanzaModule, metadata, templates, css, url}) {
@@ -112,9 +113,11 @@ function cssVariableDefaults(defs) {
 }
 
 function ensureBuiltinElementsDefined() {
-  for (const el of [AboutLinkElement, ContainerElement]) {
-    if (!customElements.get(el.customElementName)) {
-      customElements.define(el.customElementName, el);
+  for (const el of [AboutLinkElement, ContainerElement, DataSourceElement]) {
+    const name = el.customElementName;
+
+    if (!customElements.get(name)) {
+      customElements.define(name, el);
     }
   }
 }
