@@ -1,7 +1,7 @@
 import get from 'lodash.get';
 
 export default class ContainerElement extends HTMLElement {
-  dataSourceUrls = [];
+  dataSourceUrls = {};
 
   connectedCallback() {
     setTimeout(() => { // wait until stanzas ready
@@ -16,9 +16,22 @@ export default class ContainerElement extends HTMLElement {
   }
 
   disconnectedCallback() {
-    for (const url of this.dataSourceUrls) {
+    for (const url of Object.values(this.dataSourceUrls)) {
       URL.revokeObjectURL(url);
     }
+  }
+
+  async getOrCreateObjectUrl(url) {
+    const cached = this.dataSourceUrls[url];
+
+    if (cached) { return cached; }
+
+    const blob = await fetch(url).then(res => res.blob());
+    const objectUrl = URL.createObjectURL(blob);
+
+    this.dataSourceUrls[url] = objectUrl;
+
+    return objectUrl;
   }
 }
 
@@ -74,11 +87,7 @@ async function connectDataSource(container) {
     const targetAttribute = sourceElement.getAttribute('target-attribute');
 
     const receiverElements = container.querySelectorAll(receiver);
-
-    const blob = await fetch(url).then(res => res.blob());
-    const objectUrl = URL.createObjectURL(blob);
-
-    container.dataSourceUrls.push(objectUrl);
+    const objectUrl        = await container.getOrCreateObjectUrl(url);
 
     setEach(receiverElements, targetAttribute, objectUrl);
   }
