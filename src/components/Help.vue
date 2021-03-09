@@ -22,6 +22,7 @@ th, td {
         <nav class="nav nav-tabs" role="tablist">
           <a class="nav-link active" href="#overview" data-bs-toggle="tab" role="tab">Overview</a>
           <a class="nav-link" href="#customize" data-bs-toggle="tab" role="tab">Customize</a>
+          <a class="nav-link" href="#event" data-bs-toggle="tab" role="tab">Event</a>
         </nav>
 
         <div class="tab-content mt-3">
@@ -144,10 +145,38 @@ th, td {
                 </div>
               </div>
 
-              <p v-if="styleFields.length === 0" class="font-italic">
+              <p v-if="styleFields.length === 0" class="fst-italic">
                 No styles defined.
               </p>
             </section>
+          </div>
+
+          <div class="tab-pane active px-lg-5" id="event" role="tabpanel">
+            <h2 class="my-3">Outgoing Events</h2>
+
+            <div class="row row-cols-2">
+              <div v-for="{name, description} in outgoingEvents" :key="name" class="col">
+                <div>{{name}}</div>
+                <div class="text-muted">{{description}}</div>
+              </div>
+            </div>
+
+            <p v-if="outgoingEvents.length === 0" class="fst-italic">
+              No events defined.
+            </p>
+
+            <h2 class="my-3">Incoming Events</h2>
+
+            <div class="row row-cols-2">
+              <div v-for="{name, description} in incomingEvents" :key="name" class="col">
+                <div>{{name}}</div>
+                <div class="text-muted">{{description}}</div>
+              </div>
+            </div>
+
+            <p v-if="incomingEvents.length === 0" class="fst-italic">
+              No events defined.
+            </p>
           </div>
         </div>
       </div>
@@ -231,6 +260,20 @@ export default defineComponent({
       });
     });
 
+    const outgoingEvents = (metadata['stanza:outgoingEvent'] || []).map((event) => {
+      return {
+        name:        event['stanza:key'],
+        description: event['stanza:description']
+      };
+    });
+
+    const incomingEvents = (metadata['stanza:incomingEvent'] || []).map((event) => {
+      return {
+        name:        event['stanza:key'],
+        description: event['stanza:description']
+      };
+    });
+
     return {
       metadata,
       readme,
@@ -238,7 +281,9 @@ export default defineComponent({
       aboutLinkPlacement,
       params,
       styleFields,
-      styleVars
+      styleVars,
+      outgoingEvents,
+      incomingEvents
     };
   }
 });
