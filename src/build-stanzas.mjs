@@ -38,6 +38,38 @@ export default class BuildStanzas extends BroccoliPlugin {
   async buildStanzas(stanzas) {
     if (stanzas.length === 0) { return; }
 
+    for (const stanza of stanzas) {
+      try {
+        const sourcePath = stanza.filepath('style.scss');
+        const destPath   = path.join(this.outputPath, `${stanza.id}.css`);
+
+        if (!fs.existsSync(sourcePath)) {
+          fs.writeFileSync(destPath, '');
+          continue;
+        }
+
+        const {repositoryDir} = this;
+
+        const css = sass.renderSync({
+          file: sourcePath,
+
+          importer(url) {
+            return {
+              file: url.replace(/^@/, repositoryDir)
+            };
+          },
+
+          includePaths: [
+            path.join(repositoryDir, 'node_modules')
+          ]
+        }).css.toString();
+
+        fs.writeFileSync(destPath, css);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     const buildConfig         = await readBuildConfig(this.repositoryDir, this.environment);
     const customRollupPlugins = buildConfig?.rollup?.plugins || [];
 
@@ -155,32 +187,9 @@ async function virtualModules(stanza, repositoryDir) {
     ];
   `;
 
-  let css;
-
-  try {
-    css = (await promisify(sass.render)({
-      file: stanza.filepath('style.scss'),
-
-      importer(url) {
-        return {
-          file: url.replace(/^@/, repositoryDir)
-        };
-      },
-
-      includePaths: [
-        path.join(repositoryDir, 'node_modules')
-      ]
-    })).css.toString();
-  } catch (e) {
-    css = null;
-
-    console.error(e);
-  }
-
   return [
     [`${stanza.id}.js`,                entrypoint],
-    [`-stanza/${stanza.id}/templates`, templates],
-    [`-stanza/${stanza.id}/css`,       `export default ${JSON.stringify(css)}`]
+    [`-stanza/${stanza.id}/templates`, templates]
   ];
 }
 

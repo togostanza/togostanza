@@ -6,7 +6,7 @@ import ContainerElement from './elements/togostanza-container.mjs';
 import DataSourceElement from './elements/togostanza-data-source.mjs';
 import Stanza from './stanza.mjs';
 
-export async function defineStanzaElement({stanzaModule, metadata, templates, css, url}) {
+export async function defineStanzaElement({stanzaModule, metadata, templates, url}) {
   const id        = metadata['@id'];
   const paramKeys = metadata['stanza:parameter'].map(param => param['stanza:key']);
 
@@ -34,9 +34,10 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
       hostStyle.append(cssVariableDefaults(metadata['stanza:style']) || '');
       this.append(hostStyle);
 
-      const shadowStyle = document.createElement('style');
-      shadowStyle.append(css || '');
-      this.shadowRoot.append(shadowStyle);
+      const shadowStyleLink = document.createElement('link');
+      shadowStyleLink.rel = 'stylesheet';
+      shadowStyleLink.href = url.replace(/\.js$/, '.css');
+      this.shadowRoot.append(shadowStyleLink);
 
       this.renderDebounced();
       this.renderDebounced.flush();
@@ -47,6 +48,7 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
         this.stanza.setAboutLinkPlacement(newValue);
         return;
       }
+
       if (stanzaModule.handleAttributeChange) {
         stanzaModule.handleAttributeChange(this.stanza, this.params, name, oldValue, newValue);
       } else {
@@ -57,7 +59,7 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, cs
     get params() {
       return Object.fromEntries(
         metadata['stanza:parameter'].map((param) => {
-          const key = param['stanza:key'];
+          const key  = param['stanza:key'];
           const type = param['stanza:type'];
 
           if (type === 'boolean') {
