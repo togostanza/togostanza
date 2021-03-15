@@ -13,6 +13,7 @@ import url from '@rollup/plugin-url';
 import virtual from '@rollup/plugin-virtual';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 import { rollup } from 'rollup';
+import replace from '@rollup/plugin-replace';
 
 import StanzaRepository from './stanza-repository.mjs';
 import { handlebarsTemplate, packagePath } from './util.mjs';
@@ -93,6 +94,10 @@ export default class BuildStanzas extends BroccoliPlugin {
 
             ...stanzas.flatMap(aliasEntries)
           ]
+        }),
+
+        replace({
+          'process.env.NODE_ENV': JSON.stringify(this.environment),
         }),
 
         nodeResolve(),
