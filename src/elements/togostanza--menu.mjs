@@ -6,6 +6,7 @@ import Dropdown from "bootstrap/js/dist/dropdown";
 export default class MenuElement extends LitElement {
   constructor() {
     super();
+    this.placement = "";
     this.dropdownOpen = false;
     this.dropdown = null;
     this.menuItems = [];
@@ -74,8 +75,16 @@ export default class MenuElement extends LitElement {
     `;
   }
 
+  reset() {
+    this.menuItems.splice(0);
+  }
+
   item(label, handler) {
     this.menuItems.push({ type: "item", label, handler });
+  }
+
+  divider() {
+    this.menuItems.push({ type: "divider" });
   }
 
   render() {
