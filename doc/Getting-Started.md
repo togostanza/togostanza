@@ -236,7 +236,7 @@ stanzas/hello
       "stanza:required": false
     }
   ],
-  "stanza:about-link-placement": "bottom-right",
+  "stanza:menu-placement": "bottom-right",
   "stanza:style": [
     {
       "stanza:key": "--greeting-color",
