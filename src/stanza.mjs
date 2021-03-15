@@ -23,11 +23,11 @@ export default class Stanza {
     main.style.overflow = 'auto';
     bbox.appendChild(main);
 
-    this.aboutLink = document.createElement('togostanza--about-link');
-    this.aboutLink.setAttribute('href', url.replace(/\.js$/, '.html'));
-    this.setAboutLinkPlacement(host.getAttribute('togostanza-about-link-placement'));
+    this.menu = document.createElement('togostanza--menu');
+    this.menu.setAttribute('href', url.replace(/\.js$/, '.html'));
+    this.setMenuPlacement(host.getAttribute('togostanza-menu-placement'));
 
-    bbox.appendChild(this.aboutLink);
+    bbox.appendChild(this.menu);
 
     this.root.appendChild(bbox);
 
@@ -36,11 +36,11 @@ export default class Stanza {
     this.unwrapValueFromBinding = unwrapValueFromBinding;
   }
 
-  setAboutLinkPlacement(placement) {
+  setMenuPlacement(placement) {
     if (placement) {
-      this.aboutLink.setAttribute('placement', placement);
+      this.menu.setAttribute('placement', placement);
     } else {
-      this.aboutLink.removeAttribute('placement');
+      this.menu.removeAttribute('placement');
     }
   }
 

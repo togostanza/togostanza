@@ -108,7 +108,7 @@ Also, the togostanza generate stanza command generates files and directory struc
 | `stanza:created`              | Date the stanza was created.                                                                                                                 |
 | `stanza:updated`              | Date the stanza was updated.                                                                                                                 |
 | `stanza:parameter`            | Parameter definitions that the stanza receives from the outside. See below.                                                                  |
-| `stanza:about-link-placement` | Display position of the icon link that opens the stanza overview page.                                                                       |
+| `stanza:menu-placement`       | Display position of the icon link that opens the stanza menu page.                                                                           |
 | `stanza:style`                | Definition of CSS variables to customize the appearance of the stanza. See below.                                                            |
 
 #### Parameters

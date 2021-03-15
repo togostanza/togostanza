@@ -138,7 +138,7 @@ function metadataJSON({id, label, definition, type, display, provider, license, 
         'stanza:required': false
       }
     ],
-    'stanza:about-link-placement': 'bottom-right',
+    'stanza:menu-placement': 'bottom-right',
     'stanza:style': [
       {
         'stanza:key': '--greeting-color',
