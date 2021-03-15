@@ -1,19 +1,25 @@
 import { info } from "@primer/octicons";
+import { LitElement, css, html } from "lit-element";
+import { unsafeSVG } from "lit-html/directives/unsafe-svg";
 
-export default class MenuElement extends HTMLElement {
-  constructor() {
-    super(...arguments);
+export default class MenuElement extends LitElement {
+  static get properties() {
+    return {
+      placement: { type: String },
+      href: { type: String },
+    };
+  }
 
-    this.attachShadow({ mode: "open" });
-
-    const style = document.createElement("style");
-
-    style.textContent = `
+  static get styles() {
+    return css`
       :host {
         position: absolute;
         background-color: white;
         opacity: 0.5;
         transition: opacity 0.2s ease-in-out;
+
+        bottom: 0;
+        right: 0;
       }
 
       :host(:hover) {
@@ -28,89 +34,37 @@ export default class MenuElement extends HTMLElement {
       a svg {
         display: block;
       }
+
+      :host([placement="top-left"]) {
+        top: 0;
+        left: 0;
+      }
+
+      :host([placement="top-right"]) {
+        top: 0;
+        right: 0;
+      }
+
+      :host([placement="bottom-left"]) {
+        bottom: 0;
+        left: 0;
+      }
+
+      :host([placement="none"]) {
+        display: none;
+      }
     `;
-
-    this.shadowRoot.appendChild(style);
-
-    this.anchor = document.createElement("a");
-
-    this.anchor.innerHTML = info.toSVG({ width: 16 });
-    this.anchor.title = "About this stanza";
-    this.anchor.target = "_blank";
-    this.anchor.rel = "noopener noreferrer";
-
-    this.shadowRoot.appendChild(this.anchor);
   }
 
-  connectedCallback() {
-    this.anchor.href = this.getAttribute("href");
-
-    this.setPlacement(this.getAttribute("placement"));
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "placement") {
-      this.setPlacement(newValue);
-    }
-  }
-
-  setPlacement(placement) {
-    switch (placement || "bottom-right") {
-      case "top-left":
-        Object.assign(this.style, {
-          display: "initial",
-          top: "0",
-          right: null,
-          bottom: null,
-          left: "0",
-        });
-
-        break;
-      case "top-right":
-        Object.assign(this.style, {
-          display: "initial",
-          top: "0",
-          right: "0",
-          bottom: null,
-          left: null,
-        });
-
-        break;
-      case "bottom-right":
-        Object.assign(this.style, {
-          display: "initial",
-          top: null,
-          right: "0",
-          bottom: "0",
-          left: null,
-        });
-
-        break;
-      case "bottom-left":
-        Object.assign(this.style, {
-          display: "initial",
-          top: null,
-          right: null,
-          bottom: "0",
-          left: "0",
-        });
-
-        break;
-      case "none":
-        Object.assign(this.style, {
-          display: "none",
-          top: null,
-          right: null,
-          bottom: null,
-          left: null,
-        });
-
-        break;
-      default:
-        throw new Error(`illegal placement: ${placement}`);
-    }
+  render() {
+    return html`<a
+      href="${this.href}"
+      title="About this stanza"
+      target="_blank"
+      rel="noopener noreferrer"
+      >${unsafeSVG(info.toSVG({ width: 16 }))}</a
+    >`;
   }
 }
 
 MenuElement.customElementName = "togostanza--menu";
-MenuElement.observedAttributes = ["placement"];
