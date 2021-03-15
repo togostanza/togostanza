@@ -1,9 +1,9 @@
 import debounce from 'lodash.debounce';
 import outdent from 'outdent';
 
-import AboutLinkElement from './elements/togostanza-about-link.mjs';
-import ContainerElement from './elements/togostanza-container.mjs';
-import DataSourceElement from './elements/togostanza-data-source.mjs';
+import AboutLinkElement from './elements/togostanza--about-link.mjs';
+import ContainerElement from './elements/togostanza--container.mjs';
+import DataSourceElement from './elements/togostanza--data-source.mjs';
 import Stanza from './stanza.mjs';
 
 export async function defineStanzaElement({stanzaModule, metadata, templates, url}) {

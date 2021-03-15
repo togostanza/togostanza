@@ -23,7 +23,7 @@ export default class Stanza {
     main.style.overflow = 'auto';
     bbox.appendChild(main);
 
-    this.aboutLink = document.createElement('togostanza-about-link');
+    this.aboutLink = document.createElement('togostanza--about-link');
     this.aboutLink.setAttribute('href', url.replace(/\.js$/, '.html'));
     this.setAboutLinkPlacement(host.getAttribute('togostanza-about-link-placement'));
 

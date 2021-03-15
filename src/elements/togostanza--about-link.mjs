@@ -112,5 +112,5 @@ export default class AboutLinkElement extends HTMLElement {
   }
 }
 
-AboutLinkElement.customElementName = 'togostanza-about-link';
+AboutLinkElement.customElementName = 'togostanza--about-link';
 AboutLinkElement.observedAttributes = ['placement'];

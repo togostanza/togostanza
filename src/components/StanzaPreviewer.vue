@@ -10,11 +10,11 @@
   <div class="overflow-auto p-3 bg-light">
     <div v-html="styleSnippet"></div>
 
-    <togostanza-container>
+    <togostanza--container>
       <div v-html="stanzaSnippet"></div>
       <!-- <component :is="tagName" v-bind="props"></component> -->
       <!-- temporary disable this because some stanzas don't seem to work as expected with the "component" approach -->
-    </togostanza-container>
+    </togostanza--container>
   </div>
 </template>
 

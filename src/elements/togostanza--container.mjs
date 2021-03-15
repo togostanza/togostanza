@@ -69,7 +69,7 @@ export default class ContainerElement extends HTMLElement {
   }
 }
 
-ContainerElement.customElementName = 'togostanza-container';
+ContainerElement.customElementName = 'togostanza--container';
 
 function connectStanzasWithHandler(stanzaElements) {
   for (const srcEl of stanzaElements) {
@@ -86,7 +86,7 @@ function connectStanzasWithHandler(stanzaElements) {
 }
 
 function connectStanzasWithAttributes(container, stanzaElements) {
-  for (const mapElement of container.querySelectorAll('togostanza-event-map')) {
+  for (const mapElement of container.querySelectorAll('togostanza--event-map')) {
     const on              = mapElement.getAttribute('on');
     const receiver        = mapElement.getAttribute('receiver');
     const targetAttribute = mapElement.getAttribute('target-attribute');
@@ -115,7 +115,7 @@ function connectStanzasWithAttributes(container, stanzaElements) {
 }
 
 function connectDataSource(container) {
-  for (const dataSource of container.querySelectorAll('togostanza-data-source')) {
+  for (const dataSource of container.querySelectorAll('togostanza--data-source')) {
     dataSource.containerElement = container;
 
     const url             = dataSource.getAttribute('url');

@@ -10,4 +10,4 @@ export default class DataSourceElement extends HTMLElement {
 }
 
 DataSourceElement.observedAttributes = ['url'];
-DataSourceElement.customElementName = 'togostanza-data-source';
+DataSourceElement.customElementName = 'togostanza--data-source';
