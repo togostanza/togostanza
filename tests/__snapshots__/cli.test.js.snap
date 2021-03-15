@@ -25,6 +25,7 @@ Array [
   "-togostanza/index-app.js.map",
   "assets/",
   "assets/foo",
+  "hello.css",
   "hello.html",
   "hello.js",
   "hello.js.map",
