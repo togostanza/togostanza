@@ -1,9 +1,9 @@
 import debounce from 'lodash.debounce';
 import outdent from 'outdent';
 
-import AboutLinkElement from './elements/togostanza--about-link.mjs';
-import ContainerElement from './elements/togostanza--container.mjs';
-import DataSourceElement from './elements/togostanza--data-source.mjs';
+import MenuElement from './elements/togostanza--menu.mjs';
+import ContainerElement from './elements/togostanza-container.mjs';
+import DataSourceElement from './elements/togostanza-data-source.mjs';
 import Stanza from './stanza.mjs';
 
 export async function defineStanzaElement({stanzaModule, metadata, templates, url}) {
@@ -44,8 +44,8 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, ur
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-      if (name === 'togostanza-about-link-placement') {
-        this.stanza.setAboutLinkPlacement(newValue);
+      if (name === 'togostanza-menu-placement') {
+        this.stanza.setMenuPlacement(newValue);
         return;
       }
 
@@ -99,7 +99,7 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, ur
     }
   }
 
-  StanzaElement.observedAttributes = [...paramKeys, 'togostanza-about-link-placement'];
+  StanzaElement.observedAttributes = [...paramKeys, 'togostanza-menu-placement'];
 
   customElements.define(`togostanza-${id}`, StanzaElement);
 }
@@ -115,7 +115,7 @@ function cssVariableDefaults(defs) {
 }
 
 function ensureBuiltinElementsDefined() {
-  for (const el of [AboutLinkElement, ContainerElement, DataSourceElement]) {
+  for (const el of [MenuElement, ContainerElement, DataSourceElement]) {
     const name = el.customElementName;
 
     if (!customElements.get(name)) {

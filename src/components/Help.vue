@@ -118,8 +118,8 @@ th, td {
 
                 <div class="col">
                   <FormField
-                    :input="aboutLinkPlacement"
-                    name="togostanza-about-link-placement"
+                    :input="menuPlacement"
+                    name="togostanza-menu-placement"
                     type="single-choice"
                     :choices="['top-left', 'top-right', 'bottom-left', 'bottom-right', 'none']"
                     :help-text="'Placement of the information icon which links to this page.'"
@@ -216,7 +216,7 @@ export default defineComponent({
       };
     });
 
-    const aboutLinkPlacement = useInput(metadata['stanza:about-link-placement'] || 'bottom-right', 'string');
+    const menuPlacement = useInput(metadata['stanza:menu-placement'] || 'bottom-right', 'string');
 
     const params = computed(() => {
       return [
@@ -228,8 +228,8 @@ export default defineComponent({
           };
         }),
         {
-          name:  'togostanza-about-link-placement',
-          input: aboutLinkPlacement
+          name:  'togostanza-menu-placement',
+          input: menuPlacement
         }
       ].filter(({input}) => (
         !input.isDefault.value
@@ -278,7 +278,7 @@ export default defineComponent({
       metadata,
       readme,
       paramFields,
-      aboutLinkPlacement,
+      menuPlacement,
       params,
       styleFields,
       styleVars,
