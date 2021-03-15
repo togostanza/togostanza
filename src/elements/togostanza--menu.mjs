@@ -29,6 +29,10 @@ export default class MenuElement extends LitElement {
         opacity: 0.5;
         transition: opacity 0.2s ease-in-out;
 
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+
         top: initial;
         right: 0;
         bottom: 0;
@@ -46,6 +50,7 @@ export default class MenuElement extends LitElement {
 
       a svg {
         display: block;
+        transform: translateY(0.5px);
       }
 
       :host([placement="top-left"]) {
