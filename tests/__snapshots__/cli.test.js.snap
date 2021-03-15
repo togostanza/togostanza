@@ -96,7 +96,7 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
       \\"stanza:required\\": false
     }
   ],
-  \\"stanza:about-link-placement\\": \\"bottom-right\\",
+  \\"stanza:menu-placement\\": \\"bottom-right\\",
   \\"stanza:style\\": [
     {
       \\"stanza:key\\": \\"--greeting-color\\",
@@ -204,7 +204,7 @@ Stanza description goes here. Edit \`stanzas/hello-world/README.md\` to update.
       \\"stanza:required\\": false
     }
   ],
-  \\"stanza:about-link-placement\\": \\"bottom-right\\",
+  \\"stanza:menu-placement\\": \\"bottom-right\\",
   \\"stanza:style\\": [
     {
       \\"stanza:key\\": \\"--greeting-color\\",
