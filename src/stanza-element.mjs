@@ -95,7 +95,6 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, ur
     }
 
     render() {
-      this.stanza.menu.reset();
       stanzaModule.default(this.stanza, this.params);
     }
   }
