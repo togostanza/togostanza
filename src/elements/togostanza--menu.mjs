@@ -116,7 +116,7 @@ export default class MenuElement extends LitElement {
             switch (item.type) {
               case 'item':
                 return html`<li>
-                  <a class="dropdown-item" @click=${item.handler}
+                  <a class="dropdown-item" @click=${item.handler} href="#"
                     >${item.label}</a
                   >
                 </li>`;
