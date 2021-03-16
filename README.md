@@ -13,3 +13,11 @@
 ```
 $ npx togostanza init
 ```
+
+## Development
+
+### How to release
+
+1. Bump the version in `package.json`.
+2. `npx jest -u` to update snapshots to include the new version.
+3. `git push` to publish.
