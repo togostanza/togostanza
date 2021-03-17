@@ -28,6 +28,6 @@ You can serve your stanza repository with your own web server:
 1. Run `npx togostanza build` to build stanzas for production.
 2. Serve contents under `dist` directory.
 
-Note that web servers that are going to serve stanzas need to add "Access-Control-Allow-Origin" header. This is because the stanzas are loaded by `<script type="module" ...>` and the request will be cross-origin requests.
+Note that web servers that are going to serve stanzas need to add "Access-Control-Allow-Origin" header. This is because the stanzas are loaded by `<script type="module" ...>` and the request will be cross-origin requests. See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers for details.
 
 GitHub pages are configured that way, so you won't have any problems. If you want to host stanzas yourself, you need to do it yourself.
