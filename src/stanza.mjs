@@ -81,12 +81,12 @@ export default class Stanza {
     }).then((res) => res.json());
   }
 
-  importWebFontCSS(url) {
+  importWebFontCSS(cssUrl) {
     const el = document.createElement('link');
 
     el.rel  = 'stylesheet';
     el.type = 'text/css';
-    el.href = url;
+    el.href = new URL(cssUrl, this.url).href;
 
     document.head.appendChild(el);
     this.root.appendChild(el.cloneNode());
