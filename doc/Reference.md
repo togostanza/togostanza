@@ -68,7 +68,7 @@ Display help for command.
 The `togostanza init` command generates the files and directory structure for a new stanza repository.
 
 | File/directory      | Purpose                                                                                             |
-|---------------------|-----------------------------------------------------------------------------------------------------|
+| ------------------- | --------------------------------------------------------------------------------------------------- |
 | `README.md`         | Description of the repository. This is for informational purposes only (mainly for view on GitHub). |
 | `package.json`      | Basic metadata and dependency packages for the repository, managed by the `npm` command.            |
 | `package-lock.json` | The versions of the dependencies that the `npm` command resolved. Do not edit it manually.          |
@@ -81,7 +81,7 @@ The `togostanza init` command generates the files and directory structure for a 
 Also, the togostanza generate stanza command generates files and directory structure for new stanza in the `stanzas` directory.
 
 | File/directory               | Purpose                                                                                  |
-|------------------------------|------------------------------------------------------------------------------------------|
+| ---------------------------- | ---------------------------------------------------------------------------------------- |
 | `stanzas/{id}/README.md`     | Description of the stanza. It appears in the Overview tab of the stanza page.            |
 | `stanzas/{id}/index.js`      | Entry point for the stanza. Implement the logic in this file.                            |
 | `stanzas/{id}/metadata.json` | Definitions of basic stanza metadata and parameters, styles, etc.                        |
@@ -93,45 +93,60 @@ Also, the togostanza generate stanza command generates files and directory struc
 
 `metadata.json` is a file that represents stanza metadata in [JSON-LD](https://json-ld.org/) format. Define general information such as stanza identifiers, display names, and author information, as well as parameters and style variables to customize the behavior and appearance of the stanza.
 
-| Key                           | Purpose                                                                                                                                      |
-|-------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `@id`                         | Identifier of the stanza. Used as the name of the stanza element (`<togostanza-{{id}}>`) and the name of the generated JavaScript file, etc. |
-| `stanza:label`                | Human-readable stanza name. Used for the list of stanzas and help pages in the repository.                                                   |
-| `stanza:defintion`            | Brief description of the stanza. Used for the list of stanzas and stanza pages in the repository.                                            |
-| `stanza:type`                 | Type of the stanza, e.g. Stanza, MetaStanza, NanoStanza.                                                                                     |
-| `stanza:display`              | Display format of this stanza, such as a table or tree.                                                                                      |
-| `stanza:provider`             | Name of the organization or individual providing the stanza.                                                                                 |
-| `stanza:license`              | License for this stanza.                                                                                                                     |
-| `stanza:author`               | Name of the stanza author.                                                                                                                   |
-| `stanza:address`              | Email address of the stanza author.                                                                                                          |
-| `stanza:contributor`          | List of names who have contributed to this stanza.                                                                                           |
-| `stanza:created`              | Date the stanza was created.                                                                                                                 |
-| `stanza:updated`              | Date the stanza was updated.                                                                                                                 |
-| `stanza:parameter`            | Parameter definitions that the stanza receives from the outside. See below.                                                                  |
-| `stanza:menu-placement`       | Display position of the icon link that opens the stanza menu page.                                                                           |
-| `stanza:style`                | Definition of CSS variables to customize the appearance of the stanza. See below.                                                            |
+| Key                     | Purpose                                                                                                                                      |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@id`                   | Identifier of the stanza. Used as the name of the stanza element (`<togostanza-{{id}}>`) and the name of the generated JavaScript file, etc. |
+| `stanza:label`          | Human-readable stanza name. Used for the list of stanzas and help pages in the repository.                                                   |
+| `stanza:defintion`      | Brief description of the stanza. Used for the list of stanzas and stanza pages in the repository.                                            |
+| `stanza:type`           | Type of the stanza, e.g. Stanza, MetaStanza, NanoStanza.                                                                                     |
+| `stanza:display`        | Display format of this stanza, such as a table or tree.                                                                                      |
+| `stanza:provider`       | Name of the organization or individual providing the stanza.                                                                                 |
+| `stanza:license`        | License for this stanza.                                                                                                                     |
+| `stanza:author`         | Name of the stanza author.                                                                                                                   |
+| `stanza:address`        | Email address of the stanza author.                                                                                                          |
+| `stanza:contributor`    | List of names who have contributed to this stanza.                                                                                           |
+| `stanza:created`        | Date the stanza was created.                                                                                                                 |
+| `stanza:updated`        | Date the stanza was updated.                                                                                                                 |
+| `stanza:parameter`      | Parameter definitions that the stanza receives from the outside. See below.                                                                  |
+| `stanza:menu-placement` | Display position of the icon link that opens the stanza menu page.                                                                           |
+| `stanza:style`          | Definition of CSS variables to customize the appearance of the stanza. See below.                                                            |
 
 #### Parameters
 
 The parameters are a property of the `stanza:parameter` key in `metadata.json`, which is an array of objects. Each object has the following properties:
 
-| Key                  | Purpose                                                                                               |
-|----------------------|-------------------------------------------------------------------------------------------------------|
-| `stanza:key`         | Key name of the parameter.                                                                            |
-| `stanza:example`     | The value to be set as the initial value in the input field of the stanza page.                       |
-| `stanza:description` | Brief description of this parameter. It will appear below the input field.                            |
-| `stanza:required`    | Whether this parameter is mandatory or not. If true, the field name will be prefixed with a red sign. |
+| Key                  | Purpose                                                                                                                                                                                 |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `stanza:key`         | Key name of the parameter.                                                                                                                                                              |
+| `stanza:type`        | The data type of this parameter. It is used for type conversion of the parameter value and the type attribute of the input field on the stanza page. Possible values are described below. |
+| `stanza:choice`      | List of choices used when `stanza:type` is `single-choice`. The value is an array of strings.                                                                                                                                           |
+| `stanza:example`     | The value to be set as the initial value in the input field of the stanza page.                                                                                                         |
+| `stanza:description` | Brief description of this parameter. It will appear below the input field.                                                                                                              |
+| `stanza:required`    | Whether this parameter is mandatory or not. If true, the field name will be prefixed with a red sign.                                                                                   |
+
+##### Possible values for `stanza:type`
+
+| `stanza:type`     | Data type of parameter | Type attribute of input field                        |
+| ----------------- | ---------------------- | ---------------------------------------------------- |
+| `string`          | String                 | text                                                 |
+| `number`          | Number                 | number                                               |
+| `boolean`         | Boolean                | checkbox                                             |
+| `date`            | Date                   | date                                                 |
+| `datetime`        | Date                   | datetime-local                                       |
+| `json`            | Object                 | text                                                 |
+| `single-choice`   | String                 | (`<select>` is used instead of `<input>`)            |
+| (everything else) | String                 | (The value of `stanza:type` will be passed directly) |
 
 #### Style variables
 
 Stanzas can declare their own parameterized style variables, allowing stanza users to customize their appearance when they are embedded. The `stanza:style` property is also an array and each element has the following properties:
 
 | Key                  | Purpose                                                                                                                                                                                                                                 |
-|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `stanza:key`         | Name of the CSS variable.                                                                                                                                                                                                               |
-| `stanza:type`        | Type of input field for setting this variable on the stanza page. You can specify any value that can be specified in the type attribute of the input element. In addition, a special value `single-choice` can be specified. See below. |
+| `stanza:type`        | Type of input field for setting this variable on the stanza page. Possible values are identical to those of the parameters. |
 | `stanza:choice`      | List of choices used when `stanza:type` is `single-choice`. The value is an array of strings.                                                                                                                                           |
-| `stanza:description` | Brief description of this variable. It will appear below the input field.                                                                                                                                                                                                                                        |
+| `stanza:description` | Brief description of this variable. It will appear below the input field.                                                                                                                                                               |
 
 ### Stanza function
 
