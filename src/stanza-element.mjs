@@ -80,7 +80,7 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, ur
               break;
             case 'date':
             case 'datetime':
-              value = Date.parse(valueStr);
+              value = new Date(valueStr);
               break;
             case 'json':
               value = JSON.parse(valueStr);

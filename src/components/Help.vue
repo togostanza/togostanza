@@ -337,7 +337,7 @@ function parse(valueStr, type) {
       return JSON.parse(valueStr);
     case 'date':
     case 'datetime':
-      return Date.parse(valueStr);
+      return new Date(valueStr);
     default:
       return valueStr;
   }
