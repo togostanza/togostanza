@@ -120,7 +120,7 @@ The parameters are a property of the `stanza:parameter` key in `metadata.json`, 
 | `stanza:key`         | Key name of the parameter.                                                                                                                                                                |
 | `stanza:type`        | The data type of this parameter. It is used for type conversion of the parameter value and the type attribute of the input field on the stanza page. Possible values are described below. |
 | `stanza:choice`      | List of choices used when `stanza:type` is `single-choice`. The value is an array of strings.                                                                                             |
-| `stanza:example`     | The value to be set as the initial value in the input field of the stanza page.                                                                                                           |
+| `stanza:example`     | The value to be set as the initial value in the input field of the stanza page, given as the type corresponding to `stanza:type` (for example, `true` instead of `"true"` for Boolean).   |
 | `stanza:description` | Brief description of this parameter. It will appear below the input field.                                                                                                                |
 | `stanza:required`    | Whether this parameter is mandatory or not. If true, the field name will be prefixed with a red sign.                                                                                     |
 
