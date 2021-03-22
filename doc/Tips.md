@@ -31,3 +31,25 @@ You can serve your stanza repository with your own web server:
 Note that web servers that are going to serve stanzas need to add `Access-Control-Allow-Origin` header. This is because the stanzas are loaded by `<script type="module" ...>` and the request will be cross-origin requests. Usually, specifying `Access-Control-Allow-Origin: *` will work. If you need more fine grained controls, see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers for details.
 
 GitHub pages are configured that way, so you won't have any problems. If you want to host stanzas yourself, you need to do it yourself.
+
+## Customizing the Rollup plugins (EXPERIMENTAL)
+
+togostanza uses Rollup internally to build stanzas. You can add plugins to Rollup by placing a file named `togostanza-build.mjs` in the root of the repository. The `environment` argument can be either `"development"` or `"production"` (indicating whether to serve or build).
+
+``` js
+// togostanza-build.mjs
+
+import vue from 'rollup-plugin-vue';
+
+export default function config(environment) {
+  return {
+    rollup: {
+      plugins: [
+        vue()
+      ]
+    }
+  };
+}
+```
+
+Note that this feature is highly experimental and may change in future versions.
