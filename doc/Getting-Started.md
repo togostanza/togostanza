@@ -209,7 +209,7 @@ stanzas/hello
 
 ### Metadata
 
-`metadata.json` describes the stanza itself. This contains the basic information (appears in "Overview" tab) and customizable items (appears in "Customize" tab).
+`metadata.json` describes the stanza itself. This contains the basic information (appears in "Overview" tab), customizable items (appears in "Customize" tab) and events that can be handled by the stanza (appears in "Events" tab).
 
 ```json
 {
@@ -231,6 +231,7 @@ stanzas/hello
   "stanza:parameter": [
     {
       "stanza:key": "say-to",
+      "stanza:type": "string",
       "stanza:example": "world",
       "stanza:description": "who to say hello to",
       "stanza:required": false
@@ -255,7 +256,9 @@ stanzas/hello
       "stanza:default": "center",
       "stanza:description": "text align of greeting"
     }
-  ]
+  ],
+  "stanza:incomingEvent": [],
+  "stanza:outgoingEvent": []
 }
 ```
 
