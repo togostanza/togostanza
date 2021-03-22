@@ -395,3 +395,82 @@ export default async function hello(stanza, params) {
   }
 }
 ```
+
+## Parameter type conversion
+
+For the parameters received by the stanza, the type can be specified using `stanza:type`. The default value is `string`. This means that the string passed to stanza's attribute value will be stored in `stanza.params` verbatim.
+
+In the case of parameters that accept numbers, for example, it may be troublesome to do the conversion from string to number, so by specifying `number` for `stanza:type`, Togostanza will do the conversion for you. Take a look at the example.
+
+### Number
+
+Consider `the-number` stanza, which takes the parameter `n`. First, let's define it as a string for an illustration:
+
+```json
+...
+"stanza:parameter": [
+    {
+      "stanza:key": "n",
+      "stanza:type": "string",
+      "stanza:example": "42",
+      "stanza:description": "the number",
+      "stanza:required": false
+    }
+],
+...
+```
+
+The stanza function should look like this:
+
+```javascript
+// stanzas/the-number/index.js
+
+export default async function theNumber(stanza, params) {
+  stanza.render({
+    template: 'stanza.html.hbs',
+    parameters: {
+      message: `The number is ${params.n}. Next is ${params.n + 1}.`,
+    },
+  });
+}
+```
+
+The template should be like this:
+
+```html
+{{! stanzas/the-number/templates/stanza.html.hbs }}
+
+<p>{{message}}</p>
+```
+
+When you open the preview of the stanza, you will see:
+
+> The number is 42. The next is 421.
+
+This is because `params.n` is a `string`, so `"42" + 1` is evaluated and a string concatenation is performed, resulting in `"421"`. Now, let's treat `params.n` as a `number`, so that we can get `43` as the successor of the value `42`, given through `n`.
+
+Update `metadata.json` as follows:
+
+```json
+...
+"stanza:parameter": [
+    {
+      "stanza:key": "n",
+      "stanza:type": "number",
+      "stanza:example": 42,
+      "stanza:description": "the number",
+      "stanza:required": false
+    }
+],
+...
+```
+
+Two changes were made: (1) `stanza:type` was changed from `string` to `number`, and (2) `stanza:example` was changed from `"42"` (string) to `42` (number).
+
+As you can see, you need to write values in `stanza:example` with the type according to `stanza:type`. stanza function is unchanged. Now you should see that it works fine:
+
+> The number is 42. The next is 43.
+
+### Boolean
+
+(WIP)
