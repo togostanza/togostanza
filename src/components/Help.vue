@@ -151,7 +151,7 @@ th, td {
             </section>
           </div>
 
-          <div class="tab-pane active px-lg-5" id="event" role="tabpanel">
+          <div class="tab-pane" id="event" role="tabpanel">
             <h2 class="my-3">Outgoing Events</h2>
 
             <div class="row row-cols-2">
