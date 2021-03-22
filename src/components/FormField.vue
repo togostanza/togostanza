@@ -16,15 +16,16 @@
     </template>
 
     <template v-else-if="formType === 'boolean'">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" :checked="input.valueParsed.value" @change="input.setValueStr($event.target.checked.toString())" :id="name">
-        <label class="form-check-label" :for="name">
-          {{helpText}}
-        </label>
+      <div class="input-group-text">
+        <input class="form-check-input mt-0" type="checkbox" :checked="input.valueParsed.value" @change="input.setValueStr($event.target.checked.toString())" :id="name">
       </div>
+
+      <label class="input-group-text flex-fill bg-body" :for="name">
+        {{helpText}}
+      </label>
     </template>
 
-    <input v-else :type="formType" :value="input.valueStr.value" @input="input.setValueStr($event.target.value)" class="form-control" :class="{'form-control-color': formType === 'color'}">
+    <input v-else :type="formType" :value="input.valueStr.value" @input="input.setValueStr($event.target.value)" class="form-control mw-100" :class="{'form-control-color': formType === 'color'}">
 
     <button v-if="input.hasDefault" @click="input.resetToDefault()" :disabled="input.isDefault.value" type="button" class="btn btn-light border">Reset</button>
   </div>
@@ -48,7 +49,6 @@ export default defineComponent({
   ],
 
   setup(props) {
-
     const formType = computed(() => {
       return props.type === "datetime" ? "datetime-local" : props.type;
     });
