@@ -588,3 +588,7 @@ when embedded as
 ```
 
 Here `{&quot;value&quot;:42}` is the HTML escaped value of `{"value": 42}`.
+
+### Other types
+
+See https://github.com/togostanza/togostanza/blob/master/doc/Reference.md#possible-values-for-stanzatype for other supported types.
