@@ -159,7 +159,7 @@ export default async function qux(stanza, params) {
 ```
 
 ```html
-{{! stanzas/qux/templates/stanza.hbs}}
+{{! stanzas/qux/templates/stanza.html.hbs}}
 <pre><code>{{receivedData}}</code></pre>
 ```
 

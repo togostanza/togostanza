@@ -324,7 +324,7 @@ import img2 from '@/stanzas/foo-stanza/assets/img2.png';
 
 export default function fooStanza() {
   stanza.render({
-    template: "stanza.hbs",
+    template: "stanza.html.hbs",
     parameters: {
       img1,
       img2
@@ -334,7 +334,7 @@ export default function fooStanza() {
 ```
 
 ``` hbs
-{{! stanzas/foo-stanza/templates/stanza.hbs }}
+{{! stanzas/foo-stanza/templates/stanza.html.hbs }}
 
 <img src={{img1}}>
 <img src={{img2}}>
