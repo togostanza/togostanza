@@ -4,4 +4,6 @@ import * as stanzaModule from '-stanza/{{stanzaId}}/js';
 import metadata from '-stanza/{{stanzaId}}/metadata';
 import templates from '-stanza/{{stanzaId}}/templates';
 
-defineStanzaElement({stanzaModule, metadata, templates, url: import.meta.url});
+const url = import.meta.url.replace(/\?.*$/, '');
+
+defineStanzaElement({stanzaModule, metadata, templates, url});
