@@ -143,6 +143,7 @@ As an example, consider the scenario where a request to [https://api.github.com/
 
 ```javascript
 // stanzas/qux/index.js
+
 export default async function qux(stanza, params) {
   const dataUrl = params["data-url"];
   if (!dataUrl) {
