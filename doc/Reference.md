@@ -146,6 +146,7 @@ Stanzas can declare their own parameterized style variables, allowing stanza use
 | `stanza:key`         | Name of the CSS variable.                                                                                                   |
 | `stanza:type`        | Type of input field for setting this variable on the stanza page. Possible values are identical to those of the parameters. |
 | `stanza:choice`      | List of choices used when `stanza:type` is `single-choice`. The value is an array of strings.                               |
+| `stanza:default`     | Default value, given as the type corresponding to `stanza:type` (for example, `true` instead of `"true"` for Boolean).      |
 | `stanza:description` | Brief description of this variable. It will appear below the input field.                                                   |
 
 ### Stanza function
