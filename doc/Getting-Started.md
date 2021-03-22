@@ -479,7 +479,7 @@ This time, we will specify `boolean` for `stanza:type`:
 
 ```json
 {
-    "stanza:key": "x",
+    "stanza:key": "flag",
     "stanza:type": "boolean",
     "stanza:example": true,
     "stanza:description": "true of false",
@@ -496,7 +496,7 @@ export default async function yesNo(stanza, params) {
   stanza.render({
     template: 'stanza.html.hbs',
     parameters: {
-      message: params.x ? 'yes' : 'no'
+      message: params.flag ? 'yes' : 'no'
     }
   });
 }
@@ -515,7 +515,7 @@ Note that Boolean has a special way of passing values compared to values of othe
 When embedding a stanza, it is sufficient to give the attribute name to represent true:
 
 ```html
-<togostanza-yes-no x></togostanza-yes-no>
+<togostanza-yes-no flag></togostanza-yes-no>
 ```
 
 This results in
