@@ -178,6 +178,22 @@ Example of the use of this stanza:
 
 When a stanza is embedded like this, the attributes of the element are passed as parameters to the stanza function.
 
+#### Customizing the behavior when changing attributes
+
+By default, whenever the attributes of a stanza element are changed, the stanza function is executed and the element is drawn from scratch.
+
+If this behavior is undesirable, for example because the stanza function contains heavy processing, it can be controlled manually by exporting the `handleAttributeChange` function.
+
+``` js
+export default function hello(stanza, params) {
+  // The stanza function will only be executed once
+}
+
+export function handleAttributeChange(stanza, params, attributeName, oldValue, newValue) {
+  // Write the code to update the element when the attribute is changed here
+}
+```
+
 ### Templating
 
 The files in `stanzas/{id}/templates/` will be interpreted as Handlebars templates. This makes it easy to generate different outputs depending on the parameters.
