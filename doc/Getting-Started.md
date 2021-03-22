@@ -289,6 +289,8 @@ Calling `stanza.render()` renders the stanza, using `templates/stanza.html.hbs` 
 
 In this example, we generate the greeting message interpolating `params['say-to']` and use the `greeting` in the view template, `stanza.html.hbs`.
 
+Since we have specified `string` as the type of `say-to` parameter in metadata (as the value for `stanza:type`), `params['say-to']` will come as a string as passed to stanza. See [Reference](./Reference.md#possible-values-for-stanzatype) for details.
+
 ### View template
 
 Look into the template:
