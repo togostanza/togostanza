@@ -60,7 +60,7 @@ First, let's explain how to receive via HTML attributes. This is the simple and 
 
 ```html
 <togostanza--container>
-	<togostanza--event-map on="valueChanged" receiver="togostanza-bar" value-path="value" target-attribute="v">
+  <togostanza--event-map on="valueChanged" receiver="togostanza-bar" value-path="value" target-attribute="v"></togostanza--event-map>
 
   <togostanza-foo></togostanza-foo>
   <togostanza-bar></togostanza-bar>
@@ -137,9 +137,9 @@ With this setup, the `baz` stanza's `handleEvent` function will be called when t
 
 ## Efficient data acquisition from URL
 
-There are some cases where you want to retrieve data from the same URL among multiple stanzas. In such a case, `togostanza--data-source`, which is provided as an application function of togostanza--container, is useful. Using this function, you can issue HTTP request only once, and share the content fetched among stanzas.
+There are some cases where you want to retrieve data from the same URL among multiple stanzas. In such a case, `togostanza--data-source`, which is provided as an application function of `togostanza--container`, is useful. Using this function, you can issue HTTP request only once, and share the content fetched among stanzas.
 
-As an example, consider the scenario where a request to [https://api.github.com/orgs/togostanza/repos](https://api.github.com/orgs/togostanza/repos) is issued and the result is received by both the `qux` and `quux` stanzas. Both the `qux` stanza and the `quux` stanza will receive the URL of the data to be retrieved in the parameter `data-url`. For example, the qux stanza looks like this:
+As an example, consider the scenario where a request to [https://api.github.com/orgs/togostanza/repos](https://api.github.com/orgs/togostanza/repos) is issued and the result is received by both the `qux` and `quux` stanzas. Both the `qux` stanza and the `quux` stanza will receive the URL of the data to be retrieved in the parameter `data-url`. For example, the `qux` stanza looks like this:
 
 ```javascript
 // stanzas/qux/index.js
@@ -169,7 +169,7 @@ Wrap these `qux` and `quux` stanzas with `togostanza--data-container` and includ
 
 ```html
 <togostanza--container>
-  <togostanza--data-source url="https://api.github.com/orgs/togostanza/repos" receiver="togostanza-qux, togostanza-quux" target-attribute="data-url" />
+  <togostanza--data-source url="https://api.github.com/orgs/togostanza/repos" receiver="togostanza-qux, togostanza-quux" target-attribute="data-url"></togostanza--data-source>
 
   <togostanza-qux></togostanza-qux>
   <togostanza-quux></togostanza-quux>
