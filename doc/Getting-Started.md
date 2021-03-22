@@ -473,4 +473,63 @@ As you can see, you need to write values in `stanza:example` with the type accor
 
 ### Boolean
 
-(WIP)
+The boolean type is another commonly used type. Let's consider a stanza `yes-no` stanza that displays `"yes"` when given `true` and `"no"` when given `false`.
+
+This time, we will specify `boolean` for `stanza:type`:
+
+```json
+{
+    "stanza:key": "x",
+    "stanza:type": "boolean",
+    "stanza:example": true,
+    "stanza:description": "true of false",
+    "stanza:required": true
+}
+```
+
+The stanza function should look like this:
+
+```javascript
+// stanzas/yes-no/index.js
+
+export default async function yesNo(stanza, params) {
+  stanza.render({
+    template: 'stanza.html.hbs',
+    parameters: {
+      message: params.x ? 'yes' : 'no'
+    }
+  });
+}
+```
+
+The template should be like this:
+
+```html
+{{! stanzas/yes-no/templates/stanza.html.hbs }}
+
+<p>{{message}}</p>
+```
+
+Note that Boolean has a special way of passing values compared to values of other types.
+
+When embedding a stanza, it is sufficient to give the attribute name to represent true:
+
+```html
+<togostanza-yes-no x></togostanza-yes-no>
+```
+
+This results in
+
+> yes
+
+On the other hand,
+
+```html
+<togostanza-yes-no></togostanza-yes-no>
+```
+
+results in
+
+> no
+
+This may seem a little strange, but when you consider stanza as an HTML element, this behavior is reasonable. See [https://www.w3.org/TR/html52/infrastructure.html#sec-boolean-attributes](https://www.w3.org/TR/html52/infrastructure.html#sec-boolean-attributes) for details.
