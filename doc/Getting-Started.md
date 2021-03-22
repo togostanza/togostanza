@@ -533,3 +533,58 @@ results in
 > no
 
 This may seem a little strange, but when you consider stanza as an HTML element, this behavior is reasonable. See [https://www.w3.org/TR/html52/infrastructure.html#sec-boolean-attributes](https://www.w3.org/TR/html52/infrastructure.html#sec-boolean-attributes) for details.
+
+### JSON
+
+If you want to receive a structured value, it is convenient to use `json` for `stanza:type`.
+
+Now, let's make `extract-value` stanza, which takes a JSON object, extracts the value of the `value` property passed via `data` parameter, and displays it.
+
+This time, we will specify `json` for `stanza:type` and give an immediate JSON object to `stanza:example`:
+
+```json
+...
+"stanza:parameter": [
+  {
+    "stanza:key": "data",
+    "stanza:type": "json",
+    "stanza:example": { "value": 42 },
+    "stanza:description": "a object",
+    "stanza:required": true
+  }
+],
+...
+```
+
+The stanza function should look like this:
+
+```javascript
+export default async function extractValue(stanza, params) {
+  stanza.render({
+    template: 'stanza.html.hbs',
+    parameters: {
+      message: `The value is ${params.data.value}.`
+    }
+  });
+}
+```
+
+The template should be like this:
+
+```html
+{{! stanzas/extract-value/templates/stanza.html.hbs }}
+
+<p>{{message}}</p>
+```
+
+This stanza will display
+
+> The value is 42.
+
+when embedded as
+
+```html
+<togostanza-extract-value data="{&quot;value&quot;:42}"></togostanza-extract-value>
+```
+
+Here `{&quot;value&quot;:42}` is the HTML escaped value of `{"value": 42}`.
