@@ -473,7 +473,7 @@ As you can see, you need to write values in `stanza:example` with the type accor
 
 ### Boolean
 
-The boolean type is another commonly used type. Let's consider a stanza `yes-no` stanza that displays `"yes"` when given `true` and `"no"` when given `false`.
+The boolean type is another commonly used type. Let's consider `yes-no` stanza that displays `"yes"` when given `true` and `"no"` when given `false`.
 
 This time, we will specify `boolean` for `stanza:type`:
 
