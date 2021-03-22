@@ -297,7 +297,7 @@ Assets are static files, like images, and are stored in directories `assets/` or
 
 #### Use from JS
 
-You can use the import statement to load assets as base64-encoded data URLs. Supported file types are `.svg`, `.png`, `.jpg`, `.jpeg`, `.gif` and `.webp`.
+You can use the `import` statement to load assets as base64-encoded data URLs. Supported file types are `.svg`, `.png`, `.jpg`, `.jpeg`, `.gif` and `.webp`.
 
 ``` js
 // stanzas/foo-stanza/index.js
