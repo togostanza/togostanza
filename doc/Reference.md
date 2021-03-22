@@ -293,11 +293,43 @@ p.greeting {
 
 ### Static assets
 
-Assets are static files, such as images. Files in the `assets/` or `stanzas/{id}/assets/` directories will be copied into the output, keeping the directory structure.
+Assets are static files, like images, and are stored in directories `assets/` or `stanzas/{id}/assets`.
 
-``` html
-<img src="http://stanza-repo.example.com/assets/foo.png">
-<img src="http://stanza-repo.example.com/{id}/assets/bar.png">
+#### Use from JS
+
+You can use the import statement to load assets as base64-encoded data URLs. Supported file types are `.svg`, `.png`, `.jpg`, `.jpeg`, `.gif` and `.webp`.
+
+``` js
+// stanzas/foo-stanza/index.js
+
+import img1 from '@/assets/img1.png';
+import img2 from '@/stanzas/foo-stanza/assets/img2.png';
+
+export default function fooStanza() {
+  stanza.render({
+    template: "stanza.hbs",
+    parameters: {
+      img1,
+      img2
+    }
+  });
+}
+```
+
+``` hbs
+{{! stanzas/foo-stanza/templates/stanza.hbs }}
+
+<img src={{img1}}>
+<img src={{img2}}>
+```
+
+#### Use from CSS
+
+Prepend `./assets/` or `./{stanza-id}/assets/` to the file name of the asset.
+
+``` css
+background-image: url(./assets/img1.png);
+background-image: url(./foo-stanza/assets/img2.png);
 ```
 
 ### Shared libraries
