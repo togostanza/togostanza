@@ -482,7 +482,7 @@ This time, we will specify `boolean` for `stanza:type`:
     "stanza:key": "flag",
     "stanza:type": "boolean",
     "stanza:example": true,
-    "stanza:description": "true of false",
+    "stanza:description": "true or false",
     "stanza:required": true
 }
 ```
