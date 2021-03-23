@@ -19,5 +19,6 @@ $ npx togostanza init
 ### How to release
 
 1. Bump the version in `package.json`.
-2. `npx jest -u` to update snapshots to include the new version.
-3. `git push` to publish.
+2. `npm install` to update dependencies.
+3. `npx jest -u` to update snapshots to include the new version.
+4. `git push` to publish.
