@@ -32,7 +32,7 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, ur
     connectedCallback() {
       const hostStyle = document.createElement('style');
       hostStyle.append(cssVariableDefaults(metadata['stanza:style']) || '');
-      this.append(hostStyle);
+      this.shadowRoot.append(hostStyle);
 
       const shadowStyleLink = document.createElement('link');
       shadowStyleLink.rel = 'stylesheet';
@@ -108,7 +108,7 @@ function cssVariableDefaults(defs) {
   if (!defs) { return null; }
 
   return outdent`
-    :root {
+    :host {
     ${defs.map(def => `  ${def['stanza:key']}: ${def['stanza:default']};`).join('\n')}
     }
   `;
