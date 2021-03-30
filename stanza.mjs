@@ -1,3 +1,4 @@
+import debounce from 'lodash.debounce';
 import HandlebarsRuntime from 'handlebars/runtime.js';
 
 export default class Stanza {
@@ -13,6 +14,10 @@ export default class Stanza {
     );
 
     this.url = url;
+
+    this.renderDebounced = debounce(() => {
+      this.render();
+    }, 50);
   }
 
   renderTemplate(templateName, { parameters, selector }) {
@@ -27,9 +32,7 @@ export default class Stanza {
     }
 
     const html = template(parameters);
-    this.element.shadowRoot.querySelector(
-      selector || 'main'
-    ).innerHTML = html;
+    this.element.shadowRoot.querySelector(selector || 'main').innerHTML = html;
   }
 
   get params() {
@@ -81,5 +84,9 @@ export default class Stanza {
 
     document.head.appendChild(el);
     this.element.shadowRoot.appendChild(el.cloneNode());
+  }
+
+  handleAttributeChange() {
+    this.renderDebounced();
   }
 }

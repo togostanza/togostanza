@@ -1,4 +1,3 @@
-import debounce from 'lodash.debounce';
 import outdent from 'outdent';
 
 import MenuElement from './elements/togostanza--menu.mjs';
@@ -21,10 +20,6 @@ export async function defineStanzaElement({
     constructor() {
       super(...arguments);
 
-      this.renderDebounced = debounce(() => {
-        this.render();
-      }, 50);
-
       ensureBuiltinElementsDefined();
 
       this.attachShadow({ mode: 'open' });
@@ -42,8 +37,7 @@ export async function defineStanzaElement({
       shadowStyleLink.href = url.replace(/\.js$/, '.css');
       this.shadowRoot.append(shadowStyleLink);
 
-      this.renderDebounced();
-      this.renderDebounced.flush();
+      this.stanzaInstance.render();
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -52,16 +46,7 @@ export async function defineStanzaElement({
         // TODO fix
         return;
       }
-
-      if (this.stanzaInstance.handleAttributeChange) {
-        this.stanzaInstance.handleAttributeChange(name, oldValue, newValue);
-      } else {
-        this.renderDebounced();
-      }
-    }
-
-    render() {
-      this.stanzaInstance.render();
+      this.stanzaInstance.handleAttributeChange(name, oldValue, newValue);
     }
   }
 

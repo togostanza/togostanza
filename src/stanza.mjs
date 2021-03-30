@@ -59,15 +59,4 @@ export default class Stanza {
       body: payload
     }).then((res) => res.json());
   }
-
-  importWebFontCSS(cssUrl) {
-    const el = document.createElement('link');
-
-    el.rel  = 'stylesheet';
-    el.type = 'text/css';
-    el.href = new URL(cssUrl, this.url).href;
-
-    document.head.appendChild(el);
-    this.root.appendChild(el.cloneNode());
-  }
 }
