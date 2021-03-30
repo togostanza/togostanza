@@ -6,9 +6,16 @@ import ContainerElement from './elements/togostanza--container.mjs';
 import DataSourceElement from './elements/togostanza--data-source.mjs';
 import Stanza from './stanza.mjs';
 
-export async function defineStanzaElement({stanzaModule, metadata, templates, url}) {
-  const id        = metadata['@id'];
-  const paramKeys = metadata['stanza:parameter'].map(param => param['stanza:key']);
+export async function defineStanzaElement({
+  stanzaModule,
+  metadata,
+  templates,
+  url,
+}) {
+  const id = metadata['@id'];
+  const paramKeys = metadata['stanza:parameter'].map(
+    (param) => param['stanza:key']
+  );
 
   class StanzaElement extends HTMLElement {
     constructor() {
@@ -20,13 +27,9 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, ur
 
       ensureBuiltinElementsDefined();
 
-      this.attachShadow({mode: 'open'});
+      this.attachShadow({ mode: 'open' });
 
-      const handleEvent = (event) => {
-        stanzaModule.handleEvent?.(this.stanza, this.params, event);
-      };
-
-      this.stanza = new Stanza(this, metadata, templates, url, handleEvent);
+      this.stanzaInstance = new stanzaModule.default(this, metadata, templates, url);
     }
 
     connectedCallback() {
@@ -45,71 +48,41 @@ export async function defineStanzaElement({stanzaModule, metadata, templates, ur
 
     attributeChangedCallback(name, oldValue, newValue) {
       if (name === 'togostanza-menu-placement') {
-        this.stanza.setMenuPlacement(newValue);
+        // this.stanza.setMenuPlacement(newValue);
+        // TODO fix
         return;
       }
 
-      if (stanzaModule.handleAttributeChange) {
-        stanzaModule.handleAttributeChange(this.stanza, this.params, name, oldValue, newValue);
+      if (this.stanzaInstance.handleAttributeChange) {
+        this.stanzaInstance.handleAttributeChange(name, oldValue, newValue);
       } else {
         this.renderDebounced();
       }
     }
 
-    get params() {
-      return Object.fromEntries(
-        metadata['stanza:parameter'].map((param) => {
-          const key  = param['stanza:key'];
-          const type = param['stanza:type'];
-
-          if (type === 'boolean') {
-            return [key, this.attributes.hasOwnProperty(key)];
-          }
-
-          const valueStr = this.attributes[key]?.value;
-
-          if (valueStr === null || valueStr === undefined) {
-            return [key, valueStr];
-          }
-
-          let value;
-
-          switch (type) {
-            case 'number':
-              value = Number(valueStr);
-              break;
-            case 'date':
-            case 'datetime':
-              value = new Date(valueStr);
-              break;
-            case 'json':
-              value = JSON.parse(valueStr);
-              break;
-            default:
-              value = valueStr;
-          }
-
-          return [key, value];
-        })
-      );
-    }
-
     render() {
-      stanzaModule.default(this.stanza, this.params);
+      this.stanzaInstance.render();
     }
   }
 
-  StanzaElement.observedAttributes = [...paramKeys, 'togostanza-menu-placement'];
+  StanzaElement.observedAttributes = [
+    ...paramKeys,
+    'togostanza-menu-placement',
+  ];
 
   customElements.define(`togostanza-${id}`, StanzaElement);
 }
 
 function cssVariableDefaults(defs) {
-  if (!defs) { return null; }
+  if (!defs) {
+    return null;
+  }
 
   return outdent`
     :host {
-    ${defs.map(def => `  ${def['stanza:key']}: ${def['stanza:default']};`).join('\n')}
+    ${defs
+      .map((def) => `  ${def['stanza:key']}: ${def['stanza:default']};`)
+      .join('\n')}
     }
   `;
 }

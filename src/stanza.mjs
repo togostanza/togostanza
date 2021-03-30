@@ -1,20 +1,11 @@
-import HandlebarsRuntime from 'handlebars/runtime.js';
-
 import { grouping, unwrapValueFromBinding } from '../utils.mjs';
 
 export default class Stanza {
-  constructor(host, metadata, templates, url, handleEvent) {
+  constructor(host, metadata, templates, url) {
     this.host        = host;
     this.root        = host.shadowRoot;
     this.metadata    = metadata;
     this.url         = url;
-    this.handleEvent = handleEvent;
-
-    const handlebarsRuntime = HandlebarsRuntime.create();
-
-    this.templates = Object.fromEntries(templates.map(([name, spec]) => {
-      return [name, handlebarsRuntime.template(spec)];
-    }));
 
     const bbox = document.createElement('div');
     bbox.style.position = 'relative';
@@ -50,18 +41,6 @@ export default class Stanza {
 
   selectAll(selector) {
     return this.root.querySelectorAll(selector);
-  }
-
-  render({template: templateName, parameters, selector}) {
-    const template = this.templates[templateName];
-
-    if (!template) {
-      throw new Error(`template "${templateName}" is missing, available templates: ${Object.keys(this.templates).join(', ')}`);
-    }
-
-    const html = template(parameters);
-
-    this.select(selector || 'main').innerHTML = html;
   }
 
   async query({template, parameters, endpoint, method}) {
