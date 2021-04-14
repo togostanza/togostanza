@@ -34,6 +34,10 @@ export default class Stanza {
     }, 50);
   }
 
+  get root() {
+    return this.element.shadowRoot;
+  }
+
   renderTemplate(templateName, { parameters, selector }) {
     const template = this.templates[templateName];
 
@@ -46,7 +50,7 @@ export default class Stanza {
     }
 
     const html = template(parameters);
-    this.element.shadowRoot.querySelector(selector || 'main').innerHTML = html;
+    this.root.querySelector(selector || 'main').innerHTML = html;
   }
 
   get params() {
@@ -97,7 +101,7 @@ export default class Stanza {
     el.href = new URL(cssUrl, this.url).href;
 
     document.head.appendChild(el);
-    this.element.shadowRoot.appendChild(el.cloneNode());
+    this.root.appendChild(el.cloneNode());
   }
 
   handleAttributeChange() {
