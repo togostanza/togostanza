@@ -13,6 +13,10 @@ export default class Stanza {
       })
     );
 
+    const main = document.createElement('main');
+    main.style.overflow = 'auto';
+    element.shadowRoot.appendChild(main);
+
     this.url = url;
 
     this.renderDebounced = debounce(() => {
