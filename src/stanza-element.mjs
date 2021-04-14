@@ -41,8 +41,11 @@ export async function defineStanzaElement({
 
     attributeChangedCallback(name, oldValue, newValue) {
       if (name === 'togostanza-menu-placement') {
-        // this.stanza.setMenuPlacement(newValue);
-        // TODO fix
+        if (newValue) {
+          this.stanzaInstance.menu.setAttribute('placement', newValue);
+        } else {
+          this.stanzaInstance.menu.removeAttribute();
+        }
         return;
       }
       this.stanzaInstance.handleAttributeChange(name, oldValue, newValue);

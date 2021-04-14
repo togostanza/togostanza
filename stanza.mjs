@@ -22,7 +22,6 @@ export default class Stanza {
 
     this.menu = document.createElement('togostanza--menu');
     this.menu.setAttribute('href', url.replace(/\.js$/, '.html'));
-    // TODO set menu placement from 'togostanza-menu-placement' attr
 
     bbox.appendChild(this.menu);
 
