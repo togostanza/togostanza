@@ -3,7 +3,6 @@ import outdent from 'outdent';
 import MenuElement from './elements/togostanza--menu.mjs';
 import ContainerElement from './elements/togostanza--container.mjs';
 import DataSourceElement from './elements/togostanza--data-source.mjs';
-import Stanza from './stanza.mjs';
 
 export async function defineStanzaElement({
   stanzaModule,
@@ -37,7 +36,7 @@ export async function defineStanzaElement({
       shadowStyleLink.href = url.replace(/\.js$/, '.css');
       this.shadowRoot.append(shadowStyleLink);
 
-      this.stanzaInstance.render();
+      this.stanzaInstance.renderDebounced();
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

@@ -13,9 +13,20 @@ export default class Stanza {
       })
     );
 
+    const bbox = document.createElement('div');
+    bbox.style.position = 'relative';
+
     const main = document.createElement('main');
     main.style.overflow = 'auto';
-    element.shadowRoot.appendChild(main);
+    bbox.appendChild(main);
+
+    this.menu = document.createElement('togostanza--menu');
+    this.menu.setAttribute('href', url.replace(/\.js$/, '.html'));
+    // TODO set menu placement from 'togostanza-menu-placement' attr
+
+    bbox.appendChild(this.menu);
+
+    element.shadowRoot.appendChild(bbox);
 
     this.url = url;
 
@@ -92,5 +103,22 @@ export default class Stanza {
 
   handleAttributeChange() {
     this.renderDebounced();
+  }
+
+  async query({template, parameters, endpoint, method}) {
+    const sparql  = this.templates[template](parameters);
+    const payload = new URLSearchParams();
+
+    payload.set('query', sparql);
+
+    // NOTE specifying Content-Type explicitly because some browsers sends `application/x-www-form-urlencoded;charset=UTF-8` without this, and some endpoints may not support this form.
+    return await fetch(endpoint, {
+      method: method || 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept':       'application/sparql-results+json'
+      },
+      body: payload
+    }).then((res) => res.json());
   }
 }
