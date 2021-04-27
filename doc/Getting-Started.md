@@ -138,14 +138,13 @@ Open "Actions" tab on the GitHub Repository. You will see the action "Initialize
 
 Click "Initialize new stanza repository: example-stanza-repo" link to see the job details. Wait until the job is successfully completed.
 
-Due to technical restrictions, this first deployment will fail even if the action have completed successfully. In order to resolve this problem, go "Settings" tab on the repository and choose "gh-pages branch" as "Source" (You won't see this choice if the GitHub Actions job has never been successfully completed). See [First Deployment with GITHUB_TOKEN](https://github.com/marketplace/actions/github-pages-action#%EF%B8%8F-first-deployment-with-github_token) for details, since we use [https://github.com/marketplace/actions/github-pages-action](https://github.com/marketplace/actions/github-pages-action) for this feature.
+Due to technical restrictions, this first deployment will fail even if the action have completed successfully. In order to resolve this problem, go "Settings" tab on the repository, select "Pages" sub menu on the left pane, and choose "gh-pages branch" as "Source" (You won't see this choice if the GitHub Actions job has never been successfully completed). See [First Deployment with GITHUB_TOKEN](https://github.com/marketplace/actions/github-pages-action#%EF%B8%8F-first-deployment-with-github_token) for details, since we use [https://github.com/marketplace/actions/github-pages-action](https://github.com/marketplace/actions/github-pages-action) for this feature.
 
 After choosing "gh-pages branch" as "Source", press "Rerun-jobs" button to publish correctly.
 
 You will see the [https://togostanza.github.io/example-stanza-repo](https://togostanza.github.io/example-stanza-repo). Note that this URL is corresponding to [https://github.com/togostanza/example-stanza-repo](https://github.com/togostanza/example-stanza-repo).
 
 NOTE: If you forked a stanza repository, the action will not run on the forked repository. You need to enable GitHub Actions in the Actions tab of the forked repository. See https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows for details.
-
 
 ## Embedding stanza
 
@@ -157,18 +156,24 @@ Open the stanza page on GitHub pages. Then copy and paste the HTML snippet shown
 The snippet will be like this (the subdomain part of the URL, represented by OWNER, should be different):
 
 ```html
-<script type="module" src="https://OWNER.github.io/example-stanza-repo/hello.js" async></script>
+<script
+  type="module"
+  src="https://OWNER.github.io/example-stanza-repo/hello.js"
+  async
+></script>
 
-<togostanza-hello
-  say-to="world"
-></togostanza-hello>
+<togostanza-hello say-to="world"></togostanza-hello>
 ```
 
 If you customize some parameters on the customize tab on the stanza page, a different snippet will be generated.
 For example, If you change the color to blue, and change it to say hello to "stanza users", you will get the following HTML snippet:
 
 ```html
-<script type="module" src="https://OWNER.github.io/example-stanza-repo/hello.js" async></script>
+<script
+  type="module"
+  src="https://OWNER.github.io/example-stanza-repo/hello.js"
+  async
+></script>
 
 <style>
   togostanza-hello {
@@ -176,9 +181,7 @@ For example, If you change the color to blue, and change it to say hello to "sta
   }
 </style>
 
-<togostanza-hello
-  say-to="stanza users"
-></togostanza-hello>
+<togostanza-hello say-to="stanza users"></togostanza-hello>
 ```
 
 You can put this snippet to the online IDE service and see it in action.
@@ -186,7 +189,6 @@ You can put this snippet to the online IDE service and see it in action.
 Stanzas receive the parameters via HTML attribute values. In this example, `say-to` is what it is. If you change this value, the stanza will be updated.
 
 Here, `--greeting-color` is a CSS variable. We use CSS variables to allow styling of stanzas from outside (the pages embedding the stanza). In this way, stanzas can provide customizable points of styling as parameters via these variables. See [Using CSS custom properties (variables)](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) for more information about CSS variables.
-
 
 ## See how it works
 
@@ -248,11 +250,7 @@ stanzas/hello
     {
       "stanza:key": "--greeting-align",
       "stanza:type": "single-choice",
-      "stanza:choice": [
-        "left",
-        "center",
-        "right"
-      ],
+      "stanza:choice": ["left", "center", "right"],
       "stanza:default": "center",
       "stanza:description": "text align of greeting"
     }
@@ -273,10 +271,10 @@ Look into `stanzas/hello/index.js`.
 ```jsx
 export default async function hello(stanza, params) {
   stanza.render({
-    template: 'stanza.html.hbs',
+    template: "stanza.html.hbs",
     parameters: {
-      greeting: `Hello, ${params['say-to']}!`
-    }
+      greeting: `Hello, ${params["say-to"]}!`,
+    },
   });
 }
 ```
@@ -343,16 +341,16 @@ As an example, let's create a stanza that uses [ipify.org](http://ipify.org/) to
 ```javascript
 // stanzas/hello/index.js
 export default async function hello(stanza, params) {
-  const res  = await fetch('https://api.ipify.org?format=json');
+  const res = await fetch("https://api.ipify.org?format=json");
   const data = await res.json();
 
   console.log(data); // {"ip": "..."}
 
   stanza.render({
-    template: 'stanza.html.hbs',
+    template: "stanza.html.hbs",
     parameters: {
-      greeting: `Hello, you're accessing from ${data.ip}!`
-    }
+      greeting: `Hello, you're accessing from ${data.ip}!`,
+    },
   });
 }
 ```
@@ -372,7 +370,7 @@ Example:
 // stanzas/hello/index.js
 export default async function hello(stanza, params) {
   try {
-    const res = await fetch('https://example.com/may-cause-errors');
+    const res = await fetch("https://example.com/may-cause-errors");
 
     console.log(res.ok); // true or false
     console.log(res.status); // 200, ...
@@ -427,7 +425,7 @@ The stanza function should look like this:
 
 export default async function theNumber(stanza, params) {
   stanza.render({
-    template: 'stanza.html.hbs',
+    template: "stanza.html.hbs",
     parameters: {
       message: `The number is ${params.n}. Next is ${params.n + 1}.`,
     },
@@ -479,11 +477,11 @@ This time, we will specify `boolean` for `stanza:type`:
 
 ```json
 {
-    "stanza:key": "flag",
-    "stanza:type": "boolean",
-    "stanza:example": true,
-    "stanza:description": "true or false",
-    "stanza:required": true
+  "stanza:key": "flag",
+  "stanza:type": "boolean",
+  "stanza:example": true,
+  "stanza:description": "true or false",
+  "stanza:required": true
 }
 ```
 
@@ -494,10 +492,10 @@ The stanza function should look like this:
 
 export default async function yesNo(stanza, params) {
   stanza.render({
-    template: 'stanza.html.hbs',
+    template: "stanza.html.hbs",
     parameters: {
-      message: params.flag ? 'yes' : 'no'
-    }
+      message: params.flag ? "yes" : "no",
+    },
   });
 }
 ```
@@ -561,10 +559,10 @@ The stanza function should look like this:
 ```javascript
 export default async function extractValue(stanza, params) {
   stanza.render({
-    template: 'stanza.html.hbs',
+    template: "stanza.html.hbs",
     parameters: {
-      message: `The value is ${params.data.value}.`
-    }
+      message: `The value is ${params.data.value}.`,
+    },
   });
 }
 ```
@@ -584,7 +582,7 @@ This stanza will display
 when embedded as
 
 ```html
-<togostanza-extract-value data="{&quot;value&quot;:42}"></togostanza-extract-value>
+<togostanza-extract-value data='{"value":42}'></togostanza-extract-value>
 ```
 
 Here `{&quot;value&quot;:42}` is the HTML escaped value of `{"value": 42}`.
