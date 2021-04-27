@@ -140,7 +140,7 @@ Click "Initialize new stanza repository: example-stanza-repo" link to see the jo
 
 Due to technical restrictions, this first deployment will fail even if the action have completed successfully. In order to resolve this problem, go "Settings" tab on the repository, select "Pages" sub menu on the left pane, and choose "gh-pages branch" as "Source" (You won't see this choice if the GitHub Actions job has never been successfully completed). See [First Deployment with GITHUB_TOKEN](https://github.com/marketplace/actions/github-pages-action#%EF%B8%8F-first-deployment-with-github_token) for details, since we use [https://github.com/marketplace/actions/github-pages-action](https://github.com/marketplace/actions/github-pages-action) for this feature.
 
-After choosing "gh-pages branch" as "Source", press "Rerun-jobs" button to publish correctly.
+After choosing "gh-pages branch" as "Source", press "Rerun-jobs" button of the job (choose the job from the list on "Actions" tab, then you'll see the button), to publish correctly.
 
 You will see the [https://togostanza.github.io/example-stanza-repo](https://togostanza.github.io/example-stanza-repo). Note that this URL is corresponding to [https://github.com/togostanza/example-stanza-repo](https://github.com/togostanza/example-stanza-repo).
 
