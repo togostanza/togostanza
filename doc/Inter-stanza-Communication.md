@@ -7,10 +7,12 @@ You may want to coordinate multiple stanzas in order to provide a more sophistic
 If you want to send out a message from a stanza, just dispatch an event containing the message from the host element of the stanza. This can be done as follows:
 
 ```javascript
-export default async function foo(stanza, params) {
-    stanza.host.dispatchEvent(
-        new CustomEvent("valueChanged", { detail: { value: 42 } })
+export default class extends Stanza {
+  async render() {
+    this.element.dispatchEvent(
+      new CustomEvent("valueChanged", { detail: { value: 42 } })
     );
+  }
 }
 ```
 
@@ -77,7 +79,8 @@ Here, `<togostanza--event-map>` does most of the work. Let's take a closer look.
 In short, if a stanza within the container emits the event as follows,
 
 ```javascript
-    stanza.host.dispatchEvent(
+...
+    this.element.dispatchEvent(
         new CustomEvent("valueChanged", { detail: { value: 42 } })
     );
 ```
@@ -88,9 +91,9 @@ Then `togostanza-bar` will receive that as being:
 <togostanza-bar v="42"></togostanza-bar>
 ```
 
-Using this mechanism, the receiving stanzas do not need to do anything special to handle the event. It just needs to react appropriately to changes of the attributes, i.e. `stanza.params`. Events are seamlessly passed as normal stanza parameters thanks to `togostanza--event-map`.
+Using this mechanism, the receiving stanzas do not need to do anything special to handle the event. It just needs to react appropriately to changes of the attributes, i.e. `this.params`. Events are seamlessly passed as normal stanza parameters thanks to `togostanza--event-map`.
 
-The `value-path` attribute is used to "drill down" to the value of the event detail. If omitted, the detail object itself will be passed to the attribute specified as `target-attribute` (in this case, `{value: 42}`. If we use `json` as `stanza:type` for `v`, we can receive the object with `params.v` directly). The `value-path` accepts `path` of `lodash.get`. See [https://lodash.com/docs/4.17.15#get](https://lodash.com/docs/4.17.15#get) for details.
+The `value-path` attribute is used to "drill down" to the value of the event detail. If omitted, the detail object itself will be passed to the attribute specified as `target-attribute` (in this case, `{value: 42}`. If we use `json` as `stanza:type` for `v`, we can receive the object with `this.params.v` directly). The `value-path` accepts `path` of `lodash.get`. See [https://lodash.com/docs/4.17.15#get](https://lodash.com/docs/4.17.15#get) for details.
 
 Again, note that even in the case of using `togostanza-event--map`, events that are not listed in `stanza:outgoingEvent` will not be propagated by the container.
 
@@ -114,13 +117,15 @@ Suppose the `baz` stanza receives an event. First, list the events being receive
 Second, define and export `handleEvent` function in `index.js` for the `baz` stanza (alongside the stanza function, i.e. the default export function):
 
 ```javascript
-export function handleEvent(stanza, params, event) {
-  stanza.render({
-    template: "stanza.html.hbs",
-    parameters: {
-      name: event.detail.value,
-    },
-  });
+export default class extends Stanza {
+  handleEvent(event) {
+    this.renderTemplate({
+      template: "stanza.html.hbs",
+      parameters: {
+        name: event.detail.value,
+      },
+    });
+  }
 }
 ```
 
@@ -144,18 +149,20 @@ As an example, consider the scenario where a request to [https://api.github.com/
 ```javascript
 // stanzas/qux/index.js
 
-export default async function qux(stanza, params) {
-  const dataUrl = params["data-url"];
-  if (!dataUrl) {
-    return;
+export default class extends Stanza {
+  async render() {
+    const dataUrl = this.params["data-url"];
+    if (!dataUrl) {
+      return;
+    }
+    const receivedData = await fetch(dataUrl).then((res) => res.json());
+    stanza.render({
+      template: "stanza.html.hbs",
+      parameters: {
+        receivedData: JSON.stringify(receivedData, null, "  "),
+      },
+    });
   }
-  const receivedData = await fetch(dataUrl).then((res) => res.json());
-  stanza.render({
-    template: "stanza.html.hbs",
-    parameters: {
-      receivedData: JSON.stringify(receivedData, null, "  "),
-    },
-  });
 }
 ```
 
@@ -165,7 +172,7 @@ export default async function qux(stanza, params) {
 <pre><code>{{receivedData}}</code></pre>
 ```
 
-Nothing special, just fetch the URL passed to `params["data-url"]`. The `quux` stanza will be somewhat similar, so I'll skip it here.
+Nothing special, just fetch the URL passed to `this.params["data-url"]`. The `quux` stanza will be somewhat similar, so I'll skip it here.
 
 Wrap these `qux` and `quux` stanzas with `togostanza--data-container` and include `togostanza--data-source` in the container:
 
