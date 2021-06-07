@@ -303,7 +303,7 @@ Object {
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
@@ -370,7 +370,7 @@ h1 {
   \\"license\\": \\"MIT\\",
   \\"repository\\": \\"https://github.com/ursm/some-repo.git\\",
   \\"dependencies\\": {
-    \\"togostanza\\": \\"^3.0.0-beta.18\\"
+    \\"togostanza\\": \\"^3.0.0-beta.19\\"
   },
   \\"engines\\": {
     \\"node\\": \\">=14\\"
@@ -432,7 +432,7 @@ Object {
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
@@ -499,7 +499,7 @@ h1 {
   \\"license\\": \\"MIT\\",
   \\"repository\\": \\"https://github.com/ursm/some-repo.git\\",
   \\"dependencies\\": {
-    \\"togostanza\\": \\"^3.0.0-beta.18\\"
+    \\"togostanza\\": \\"^3.0.0-beta.19\\"
   },
   \\"engines\\": {
     \\"node\\": \\">=14\\"
@@ -561,7 +561,7 @@ Object {
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
@@ -628,7 +628,7 @@ h1 {
   \\"license\\": \\"MIT\\",
   \\"repository\\": \\"https://github.com/ursm/some-repo.git\\",
   \\"dependencies\\": {
-    \\"togostanza\\": \\"^3.0.0-beta.18\\"
+    \\"togostanza\\": \\"^3.0.0-beta.19\\"
   },
   \\"engines\\": {
     \\"node\\": \\">=14\\"
