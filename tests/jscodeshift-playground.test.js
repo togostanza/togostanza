@@ -31,23 +31,27 @@ const transformToClassBased = (file, api) => {
   const j = api.jscodeshift;
   const root = j(file.source);
 
-  root.find(j.ExportDefaultDeclaration).replaceWith((path) => {
-    const functionDecl = path.node.declaration;
-    const body = functionDecl.body;
+  root
+    .find(j.ExportDefaultDeclaration, {
+      declaration: { type: 'FunctionDeclaration' },
+    })
+    .replaceWith((path) => {
+      const functionDecl = path.node.declaration;
+      const body = functionDecl.body;
 
-    const fnExpr = j.functionExpression(null, [], body);
-    fnExpr.async = functionDecl.async; // NOTE workaround: j.functionExpression doesn't handle async argument
+      const fnExpr = j.functionExpression(null, [], body);
+      fnExpr.async = functionDecl.async; // NOTE workaround: j.functionExpression doesn't handle async argument
 
-    return j.exportDefaultDeclaration(
-      j.classDeclaration(
-        null,
-        j.classBody([
-          j.methodDefinition('method', j.identifier('render'), fnExpr),
-        ]),
-        j.identifier('Stanza')
-      )
-    );
-  });
+      return j.exportDefaultDeclaration(
+        j.classDeclaration(
+          null,
+          j.classBody([
+            j.methodDefinition('method', j.identifier('render'), fnExpr),
+          ]),
+          j.identifier('Stanza')
+        )
+      );
+    });
 
   return root.toSource();
 };
@@ -60,7 +64,8 @@ function fn() { expr };`,
   `export default class extends Stanza {
   render() { foo; }
 };
-function fn() { expr };`
+function fn() { expr };`,
+  'change to class-based stanza'
 );
 
 defineInlineTest(
@@ -71,5 +76,20 @@ function fn() { expr };`,
   `export default class extends Stanza {
   async render() { foo; }
 };
-function fn() { expr };`
+function fn() { expr };`,
+  'change to classe-based stanza keeping async'
+);
+
+defineInlineTest(
+  transformToClassBased,
+  {},
+  `export default class extends Stanza {
+  async render() { foo; }
+};
+function fn() { expr };`,
+  `export default class extends Stanza {
+  async render() { foo; }
+};
+function fn() { expr };`,
+  'does not change class-based stanzas'
 );
