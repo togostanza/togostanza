@@ -62,13 +62,19 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
       "assets": Object {
         ".keep": "",
       },
-      "index.js": "export default async function hello(stanza, params) {
-  stanza.render({
-    template: 'stanza.html.hbs',
-    parameters: {
-      greeting: \`Hello, \${params['say-to']}!\`
-    }
-  });
+      "index.js": "import Stanza from 'togostanza/stanza';
+
+export default class hello extends Stanza {
+  async render() {
+    this.renderTemplate(
+      'stanza.html.hbs',
+      {
+        parameters: {
+          greeting: \`Hello, \${this.params['say-to']}!\`
+        }
+      }
+    );
+  }
 }
 ",
       "metadata.json": "{
@@ -170,13 +176,19 @@ Stanza description goes here. Edit \`stanzas/hello-world/README.md\` to update.
       "assets": Object {
         ".keep": "",
       },
-      "index.js": "export default async function helloWorld(stanza, params) {
-  stanza.render({
-    template: 'stanza.html.hbs',
-    parameters: {
-      greeting: \`Hello, \${params['say-to']}!\`
-    }
-  });
+      "index.js": "import Stanza from 'togostanza/stanza';
+
+export default class helloWorld extends Stanza {
+  async render() {
+    this.renderTemplate(
+      'stanza.html.hbs',
+      {
+        parameters: {
+          greeting: \`Hello, \${this.params['say-to']}!\`
+        }
+      }
+    );
+  }
 }
 ",
       "metadata.json": "{
