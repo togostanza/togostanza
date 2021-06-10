@@ -1,4 +1,4 @@
-import get from "lodash.get";
+import get from 'lodash.get';
 
 export default class ContainerElement extends HTMLElement {
   dataSourceUrls = {};
@@ -6,8 +6,8 @@ export default class ContainerElement extends HTMLElement {
   connectedCallback() {
     setTimeout(() => {
       // wait until stanzas ready
-      const stanzaElements = Array.from(this.querySelectorAll("*")).filter(
-        (el) => el.tagName.startsWith("TOGOSTANZA-") && "stanzaInstance" in el
+      const stanzaElements = Array.from(this.querySelectorAll('*')).filter(
+        (el) => el.tagName.startsWith('TOGOSTANZA-') && 'stanzaInstance' in el
       );
       connectStanzasWithAttributes(this, stanzaElements);
       connectStanzasWithHandler(stanzaElements);
@@ -71,7 +71,7 @@ export default class ContainerElement extends HTMLElement {
   }
 }
 
-ContainerElement.customElementName = "togostanza--container";
+ContainerElement.customElementName = 'togostanza--container';
 
 function connectStanzasWithHandler(stanzaElements) {
   for (const srcEl of stanzaElements) {
@@ -89,12 +89,12 @@ function connectStanzasWithHandler(stanzaElements) {
 
 function connectStanzasWithAttributes(container, stanzaElements) {
   for (const mapElement of container.querySelectorAll(
-    "togostanza--event-map"
+    'togostanza--event-map'
   )) {
-    const on = mapElement.getAttribute("on");
-    const receiver = mapElement.getAttribute("receiver");
-    const targetAttribute = mapElement.getAttribute("target-attribute");
-    const valuePath = mapElement.getAttribute("value-path");
+    const on = mapElement.getAttribute('on');
+    const receiver = mapElement.getAttribute('receiver');
+    const targetAttribute = mapElement.getAttribute('target-attribute');
+    const valuePath = mapElement.getAttribute('value-path');
 
     const receiverElements = container.querySelectorAll(receiver);
 
@@ -107,7 +107,7 @@ function connectStanzasWithAttributes(container, stanzaElements) {
         const value = valuePath ? get(event.detail, valuePath) : event.detail;
 
         if (value === true) {
-          setEach(receiverElements, targetAttribute, "");
+          setEach(receiverElements, targetAttribute, '');
         } else if (value === false || value === undefined) {
           removeEach(receiverElements, targetAttribute);
         } else if (value.constructor === String) {
@@ -123,13 +123,13 @@ function connectStanzasWithAttributes(container, stanzaElements) {
 
 function connectDataSource(container) {
   for (const dataSource of container.querySelectorAll(
-    "togostanza--data-source"
+    'togostanza--data-source'
   )) {
     dataSource.containerElement = container;
 
-    const url = dataSource.getAttribute("url");
-    const receiver = dataSource.getAttribute("receiver");
-    const targetAttribute = dataSource.getAttribute("target-attribute");
+    const url = dataSource.getAttribute('url');
+    const receiver = dataSource.getAttribute('receiver');
+    const targetAttribute = dataSource.getAttribute('target-attribute');
 
     container.dataSourceUrlChanged(null, url, receiver, targetAttribute);
   }
@@ -149,12 +149,16 @@ function removeEach(elements, key) {
 
 function outgoingEventNames(stanzaInstance) {
   return (
-    stanzaInstance.metadata["stanza:outgoingEvent"]?.map((e) => e["stanza:key"]) || []
+    stanzaInstance.metadata['stanza:outgoingEvent']?.map(
+      (e) => e['stanza:key']
+    ) || []
   );
 }
 
 function incomingEventNames(stanzaInstance) {
   return (
-    stanzaInstance.metadata["stanza:incomingEvent"]?.map((e) => e["stanza:key"]) || []
+    stanzaInstance.metadata['stanza:incomingEvent']?.map(
+      (e) => e['stanza:key']
+    ) || []
   );
 }
