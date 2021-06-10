@@ -27,36 +27,49 @@ defineInlineTest(
   'export default function foo(bar) { baz; };'
 );
 
+const transformToClassBased = (file, api) => {
+  const j = api.jscodeshift;
+  const root = j(file.source);
+
+  root.find(j.ExportDefaultDeclaration).replaceWith((path) => {
+    const functionDecl = path.node.declaration;
+    const body = functionDecl.body;
+
+    const fnExpr = j.functionExpression(null, [], body);
+    fnExpr.async = functionDecl.async; // NOTE workaround: j.functionExpression doesn't handle async argument
+
+    return j.exportDefaultDeclaration(
+      j.classDeclaration(
+        null,
+        j.classBody([
+          j.methodDefinition('method', j.identifier('render'), fnExpr),
+        ]),
+        j.identifier('Stanza')
+      )
+    );
+  });
+
+  return root.toSource();
+};
+
 defineInlineTest(
-  (file, api) => {
-    const j = api.jscodeshift;
-    const root = j(file.source);
-
-    root.find(j.ExportDefaultDeclaration).replaceWith((path) => {
-      const functionDecl = path.node.declaration;
-      const body = functionDecl.body;
-
-      const fnExpr = j.functionExpression(null, [], body);
-      fnExpr.async = functionDecl.async; // NOTE workaround: j.functionExpression doesn't handle async argument
-
-      return j.exportDefaultDeclaration(
-        j.classDeclaration(
-          null,
-          j.classBody([
-            j.methodDefinition('method', j.identifier('render'), fnExpr),
-          ]),
-          j.identifier('Stanza')
-        )
-      );
-    });
-
-    return root.toSource();
-  },
+  transformToClassBased,
   {},
   `export default function foo(stanza, params) { foo; };
 function fn() { expr };`,
   `export default class extends Stanza {
   render() { foo; }
+};
+function fn() { expr };`
+);
+
+defineInlineTest(
+  transformToClassBased,
+  {},
+  `export default async function foo(stanza, params) { foo; };
+function fn() { expr };`,
+  `export default class extends Stanza {
+  async render() { foo; }
 };
 function fn() { expr };`
 );
