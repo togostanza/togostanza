@@ -271,13 +271,18 @@ See [Reference](./Reference.md#stanza-metadata) for details.
 Look into `stanzas/hello/index.js`.
 
 ```jsx
-export default async function hello(stanza, params) {
-  stanza.render({
-    template: "stanza.html.hbs",
-    parameters: {
-      greeting: `Hello, ${params["say-to"]}!`,
-    },
-  });
+// stanzas/hello/index.js
+
+import Stanza from "togostanza/stanza";
+
+export default class Hello extends Stanza {
+  async render() {
+    this.renderTemplate("stanza.html.hbs", {
+      parameters: {
+        greeting: `Hello, ${this.params["say-to"]}!`,
+      },
+    });
+  }
 }
 ```
 
@@ -342,18 +347,22 @@ As an example, let's create a stanza that uses [ipify.org](http://ipify.org/) to
 
 ```javascript
 // stanzas/hello/index.js
-export default async function hello(stanza, params) {
-  const res = await fetch("https://api.ipify.org?format=json");
-  const data = await res.json();
 
-  console.log(data); // {"ip": "..."}
+import Stanza from "togostanza/stanza";
 
-  stanza.render({
-    template: "stanza.html.hbs",
-    parameters: {
-      greeting: `Hello, you're accessing from ${data.ip}!`,
-    },
-  });
+export default class Hello extends Stanza {
+  async render() {
+    const res = await fetch("https://api.ipify.org?format=json");
+    const data = await res.json();
+
+    console.log(data); // {"ip": "..."}
+
+    this.renderTemplate("stanza.html.hbs", {
+      parameters: {
+        greeting: `Hello, you're accessing from ${data.ip}!`,
+      },
+    });
+  }
 }
 ```
 
@@ -370,28 +379,33 @@ Example:
 
 ```javascript
 // stanzas/hello/index.js
-export default async function hello(stanza, params) {
-  try {
-    const res = await fetch("https://example.com/may-cause-errors");
 
-    console.log(res.ok); // true or false
-    console.log(res.status); // 200, ...
+import Stanza from "togostanza/stanza";
 
-    switch (res.status) {
-      case "200":
-        console.log("OK");
-        break;
-      case "404":
-        console.warn("Not found");
-        break;
-      case "500":
-        console.warn("Internal server error");
-        break;
-      default:
-        console.warn("other HTTP errors");
+export default class Hello extends Stanza {
+  async render() {
+    try {
+      const res = await fetch("https://example.com/may-cause-errors");
+
+      console.log(res.ok); // true or false
+      console.log(res.status); // 200, ...
+
+      switch (res.status) {
+        case "200":
+          console.log("OK");
+          break;
+        case "404":
+          console.warn("Not found");
+          break;
+        case "500":
+          console.warn("Internal server error");
+          break;
+        default:
+          console.warn("other HTTP errors");
+      }
+    } catch (e) {
+      console.error(e); // network error
     }
-  } catch (e) {
-    console.error(e); // network error
   }
 }
 ```
@@ -425,13 +439,18 @@ The stanza function should look like this:
 ```javascript
 // stanzas/the-number/index.js
 
-export default async function theNumber(stanza, params) {
-  stanza.render({
-    template: "stanza.html.hbs",
-    parameters: {
-      message: `The number is ${params.n}. Next is ${params.n + 1}.`,
-    },
-  });
+import Stanza from "togostanza/stanza";
+
+export default class TheNumber extends Stanza {
+  async render() {
+    const n = this.params.n;
+
+    this.renderTemplate("stanza.html.hbs", {
+      parameters: {
+        message: `The number is ${n}. Next is ${n + 1}.`,
+      },
+    });
+  }
 }
 ```
 
@@ -492,13 +511,16 @@ The stanza function should look like this:
 ```javascript
 // stanzas/yes-no/index.js
 
-export default async function yesNo(stanza, params) {
-  stanza.render({
-    template: "stanza.html.hbs",
-    parameters: {
-      message: params.flag ? "yes" : "no",
-    },
-  });
+import Stanza from "togostanza/stanza";
+
+export default class YesNo extends Stanza {
+  async render() {
+    this.renderTemplate("stanza.html.hbs", {
+      parameters: {
+        message: this.params.flag ? "yes" : "no",
+      },
+    });
+  }
 }
 ```
 
@@ -559,13 +581,18 @@ This time, we will specify `json` for `stanza:type` and give an immediate JSON o
 The stanza function should look like this:
 
 ```javascript
-export default async function extractValue(stanza, params) {
-  stanza.render({
-    template: "stanza.html.hbs",
-    parameters: {
-      message: `The value is ${params.data.value}.`,
-    },
-  });
+// stanzas/extract-value/index.js
+
+import Stanza from "togostanza/stanza";
+
+export default class ExtractValue extends Stanza {
+  async render() {
+    this.renderTemplate("stanza.html.hbs", {
+      parameters: {
+        message: `The value is ${this.params.data.value}.`,
+      },
+    });
+  }
 }
 ```
 
