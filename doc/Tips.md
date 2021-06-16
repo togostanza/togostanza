@@ -13,11 +13,15 @@ $ npm install d3-scale
 Then use `import` in `stanzas/hello/index.js`:
 
 ```js
+import Stanza from 'togostanza/stanza';
+
 import { scaleLinear } from 'd3-scale';
 
-export default async function hello(stanza, params) {
-  const scale = scaleLinear().domain([0, 1.0]).range([0, 100]);
-  console.log(scale(0.42));
+export default class Hello extends Stanza {
+  async render() {
+    const scale = scaleLinear().domain([0, 1.0]).range([0, 100]);
+    console.log(scale(0.42));
+  }
 }
 ```
 
