@@ -149,16 +149,11 @@ Stanzas can declare their own parameterized style variables, allowing stanza use
 | `stanza:default`     | Default value, given as the type corresponding to `stanza:type` (for example, `true` instead of `"true"` for Boolean).      |
 | `stanza:description` | Brief description of this variable. It will appear below the input field.                                                   |
 
-### Stanza function
+### Stanza class
 
-The stanza function is defined in the stanza script (`stanzas/<stanza-id>/index.js`) and is called when a stanza is to be rendered.
+The stanza class is defined in the stanza script (`stanzas/<stanza-id>/index.js`) and is called when a stanza is to be rendered.
 
-It takes the following two arguments:
-
-- `stanza` The stanza object. To be described below.
-- `params` An object containing the parameters passed from the page in which the stanza was embedded.
-
-For example, a typical stanza function might look like this:
+For example, a typical stanza class might look like this:
 
 ```js
 import Stanza from 'togostanza/stanza';
@@ -181,20 +176,20 @@ Example of the use of this stanza:
 <togostanza-hello say-to="world"></togostanza-hello>
 ```
 
-When a stanza is embedded like this, the attributes of the element are passed as parameters to the stanza function.
+When a stanza is embedded like this, the attributes of the element are accesible via `this.params`.
 
 #### Customizing the behavior when changing attributes
 
-By default, whenever the attributes of a stanza element are changed, the stanza function is executed and the element is drawn from scratch.
+By default, whenever the attributes of a stanza element are changed, the `render()` method is executed and the element is drawn from scratch.
 
-If this behavior is undesirable, for example because the stanza function contains heavy processing, it can be controlled manually by exporting the `handleAttributeChange` function.
+If this behavior is undesirable, for example because the `render()` method contains heavy processing, it can be controlled manually by defining the `handleAttributeChange` method.
 
 ```js
 import Stanza from 'togostanza/stanza';
 
 export default class Hello extends Stanza {
   async render() {
-    // The stanza function will only be executed once
+    // The render method will only be executed once
   }
 
   async handleAttributeChange(name, oldValue, newValue) {
@@ -207,7 +202,7 @@ export default class Hello extends Stanza {
 
 The files in `stanzas/{id}/templates/` will be interpreted as Handlebars templates. This makes it easy to generate different outputs depending on the parameters.
 
-For example, here is a invocation of `stanza.render()` and the corresponding template:
+For example, here is a invocation of `this.renderTemplate()` and the corresponding template:
 
 ```js
 this.renderTemplate({
@@ -224,7 +219,7 @@ this.renderTemplate({
 Hello, {{greeting}}!
 ```
 
-`{{...}}` is an expression of Handlebars, here outputting the value of the `greeting` parameter. `stanza.render()` function treats the object passed to the `parameters` option as the context of the template. Note that `{{! ... }}` is a comment.
+`{{...}}` is an expression of Handlebars, here outputting the value of the `greeting` parameter. `this.renderTemplate()` method treats the object passed to the `parameters` option as the context of the template. Note that `{{! ... }}` is a comment.
 
 If your template file has a `.html.hbs` or `.html` extension, the output of the `{{...}}` will be automatically HTML escaped. You can disable escaping with three curly brackets (`{{{...}}}`).
 

@@ -266,7 +266,7 @@ The stanza page that you have seen was generated using this information.
 This file contains information about the stanza itself, as well as variables for styling and parameters.
 See [Reference](./Reference.md#stanza-metadata) for details.
 
-### Stanza function
+### Stanza class
 
 Look into `stanzas/hello/index.js`.
 
@@ -287,15 +287,15 @@ export default class Hello extends Stanza {
 }
 ```
 
-This defines the behavior of the stanza. When the stanza is embedded, this function is called.
+This defines the behavior of the stanza. When the stanza is embedded, `render()` method of this class is called.
 
-This function defines how the stanza works. The parameters passed to the stanza are accessible via `params` (the second argument of the function).
+The class defines how the stanza works. The parameters passed to the stanza are accessible via `this.params`.
 
-Calling `stanza.render()` renders the stanza, using `templates/stanza.html.hbs` template with `parameters`.
+Calling `this.renderTemplate()` renders the stanza, using `templates/stanza.html.hbs` template with `parameters`.
 
-In this example, we generate the greeting message interpolating `params['say-to']` and use the `greeting` in the view template, `stanza.html.hbs`.
+In this example, we generate the greeting message interpolating `this.params['say-to']` and use the `greeting` in the view template, `stanza.html.hbs`.
 
-Since we have specified `string` as the type of `say-to` parameter in metadata (as the value for `stanza:type`), `params['say-to']` will come as a string as passed to stanza. See [Reference](./Reference.md#possible-values-for-stanzatype) for details.
+Since we have specified `string` as the type of `say-to` parameter in metadata (as the value for `stanza:type`), `this.params['say-to']` will come as a string as passed to stanza. See [Reference](./Reference.md#possible-values-for-stanzatype) for details.
 
 ### View template
 
@@ -306,7 +306,7 @@ Look into the template:
 <p>{{greeting}}</p>
 ```
 
-Templates are written in [Handlebars](http://handlebarsjs.com/). With `{{...}}` notation, we can obtain values of `parameters` object passed to `stanza.render()` method.
+Templates are written in [Handlebars](http://handlebarsjs.com/). With `{{...}}` notation, we can obtain values of `parameters` object passed to `this.renderTemplate()` method.
 
 In this example, this stanza outputs `greeting` wrapping `<p>` and `</p>`.
 
@@ -414,7 +414,7 @@ export default class Hello extends Stanza {
 
 ## Parameter type conversion
 
-For the parameters received by the stanza, the type can be specified using `stanza:type`. The default value is `string`. This means that the string passed to stanza's attribute value will be stored in `stanza.params` verbatim.
+For the parameters received by the stanza, the type can be specified using `stanza:type`. The default value is `string`. This means that the string passed to stanza's attribute value will be stored in `this.params` verbatim.
 
 In the case of parameters that accept numbers, for example, it may be troublesome to do the conversion from string to number, so by specifying `number` for `stanza:type`, Togostanza will do the conversion for you. Take a look at the example.
 
@@ -436,7 +436,7 @@ Consider `the-number` stanza, which takes the parameter `n`. First, let's define
 ...
 ```
 
-The stanza function should look like this:
+The stanza class should look like this:
 
 ```javascript
 // stanzas/the-number/index.js
@@ -469,7 +469,7 @@ When you open the preview of the stanza, you will see:
 
 > The number is 42. The next is 421.
 
-This is because `params.n` is a `string`, so `"42" + 1` is evaluated and a string concatenation is performed, resulting in `"421"`. Now, let's treat `params.n` as a `number`, so that we can get `43` as the successor of the value `42`, given through `n`.
+This is because `this.params.n` is a `string`, so `"42" + 1` is evaluated and a string concatenation is performed, resulting in `"421"`. Now, let's treat `this.params.n` as a `number`, so that we can get `43` as the successor of the value `42`, given through `n`.
 
 Update `metadata.json` as follows:
 
@@ -489,7 +489,7 @@ Update `metadata.json` as follows:
 
 Two changes were made: (1) `stanza:type` was changed from `string` to `number`, and (2) `stanza:example` was changed from `"42"` (string) to `42` (number).
 
-As you can see, you need to write values in `stanza:example` with the type according to `stanza:type`. stanza function is unchanged. Now you should see that it works fine:
+As you can see, you need to write values in `stanza:example` with the type according to `stanza:type`. Here, the stanza class is unchanged. Now you should see that it works fine:
 
 > The number is 42. The next is 43.
 
@@ -509,7 +509,7 @@ This time, we will specify `boolean` for `stanza:type`:
 }
 ```
 
-The stanza function should look like this:
+The stanza class should look like this:
 
 ```javascript
 // stanzas/yes-no/index.js
@@ -582,7 +582,7 @@ This time, we will specify `json` for `stanza:type` and give an immediate JSON o
 ...
 ```
 
-The stanza function should look like this:
+The stanza class should look like this:
 
 ```javascript
 // stanzas/extract-value/index.js

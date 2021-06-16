@@ -10,7 +10,7 @@ If you want to send out a message from a stanza, just dispatch an event containi
 export default class extends Stanza {
   async render() {
     this.element.dispatchEvent(
-      new CustomEvent("valueChanged", { detail: { value: 42 } })
+      new CustomEvent('valueChanged', { detail: { value: 42 } })
     );
   }
 }
@@ -21,11 +21,11 @@ The code in the snippet sends out the `valueChanged` event. The body of the mess
 If you're going to receive the message on the webpage embedding this stanza, you can use `addEventListener()` as follows (assuming that receiving message from `<togostanza-foo>`):
 
 ```javascript
-const stanzaElement = document.getElementsByTagName("togostanza-foo")[0];
+const stanzaElement = document.getElementsByTagName('togostanza-foo')[0];
 
-stanzaElement.addEventListener("valueChanged", (event) => {
-    console.log("event received", event);
-    console.log(event.detail); // {value: 42}
+stanzaElement.addEventListener('valueChanged', (event) => {
+  console.log('event received', event);
+  console.log(event.detail); // {value: 42}
 });
 ```
 
@@ -54,7 +54,7 @@ In this example case, the case that the stanza is going to send `valueChanged` m
 
 ## Receiving events
 
-There are two main ways for a stanza to receive events: one is to use attribute values, and the other is to define `handleEvent()` in the stanza. Either way, use `<togostanza--container>` to wrap the sending and receiving stanzas (Note that here we put two dashes between "togostanza" and "container". This indicates that this is a togostanza built-in element). The container element will bridge the events stanzas.
+There are two main ways for a stanza to receive events: one is to use attribute values, and the other is to define `handleEvent()` method in the stanza class. Either way, use `<togostanza--container>` to wrap the sending and receiving stanzas (Note that here we put two dashes between "togostanza" and "container". This indicates that this is a togostanza built-in element). The container element will bridge the events stanzas.
 
 ## Receiving events via attributes (stanza parameters)
 
@@ -62,7 +62,12 @@ First, let's explain how to receive via HTML attributes. This is the simple and 
 
 ```html
 <togostanza--container>
-  <togostanza--event-map on="valueChanged" receiver="togostanza-bar" value-path="value" target-attribute="v"></togostanza--event-map>
+  <togostanza--event-map
+    on="valueChanged"
+    receiver="togostanza-bar"
+    value-path="value"
+    target-attribute="v"
+  ></togostanza--event-map>
 
   <togostanza-foo></togostanza-foo>
   <togostanza-bar></togostanza-bar>
@@ -114,18 +119,20 @@ Suppose the `baz` stanza receives an event. First, list the events being receive
 ...
 ```
 
-Second, define and export `handleEvent` function in `index.js` for the `baz` stanza (alongside the stanza function, i.e. the default export function):
+Second, define `handleEvent` method of the stanza class in `index.js`:
 
 ```javascript
 export default class extends Stanza {
+  // ...
   handleEvent(event) {
     this.renderTemplate({
-      template: "stanza.html.hbs",
+      template: 'stanza.html.hbs',
       parameters: {
         name: event.detail.value,
       },
     });
   }
+  // ...
 }
 ```
 
@@ -138,7 +145,7 @@ Finally, wrap the stanzas with `togostanza--container`:
 </togostanza--container>
 ```
 
-With this setup, the `baz` stanza's `handleEvent` function will be called when the `foo` stanza fires a `valueChanged` event. Since the event object is passed to the handleEvent function, you can arbitrarily handle the value contained in the event.
+With this setup, the `baz` stanza's `handleEvent` method will be called when the `foo` stanza fires a `valueChanged` event. Since the event object is passed to the `handleEvent` method, you can arbitrarily handle the value contained in the event.
 
 ## Efficient data acquisition from URL
 
@@ -151,15 +158,15 @@ As an example, consider the scenario where a request to [https://api.github.com/
 
 export default class extends Stanza {
   async render() {
-    const dataUrl = this.params["data-url"];
+    const dataUrl = this.params['data-url'];
     if (!dataUrl) {
       return;
     }
     const receivedData = await fetch(dataUrl).then((res) => res.json());
-    stanza.render({
-      template: "stanza.html.hbs",
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
       parameters: {
-        receivedData: JSON.stringify(receivedData, null, "  "),
+        receivedData: JSON.stringify(receivedData, null, '  '),
       },
     });
   }
@@ -178,7 +185,11 @@ Wrap these `qux` and `quux` stanzas with `togostanza--data-container` and includ
 
 ```html
 <togostanza--container>
-  <togostanza--data-source url="https://api.github.com/orgs/togostanza/repos" receiver="togostanza-qux, togostanza-quux" target-attribute="data-url"></togostanza--data-source>
+  <togostanza--data-source
+    url="https://api.github.com/orgs/togostanza/repos"
+    receiver="togostanza-qux, togostanza-quux"
+    target-attribute="data-url"
+  ></togostanza--data-source>
 
   <togostanza-qux></togostanza-qux>
   <togostanza-quux></togostanza-quux>
