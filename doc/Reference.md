@@ -161,13 +161,16 @@ It takes the following two arguments:
 For example, a typical stanza function might look like this:
 
 ```js
-export default function hello(stanza, params) {
-  stanza.render({
-    template: 'stanza.html.hbs',
-    parameters: {
-      greeting: `Hello, ${params['say-to']}!`
-    }
-  });
+import Stanza from "togostanza/stanza";
+
+export default class Hello extends Stanza {
+  async render() {
+    this.renderTemplate("stanza.html.hbs", {
+      parameters: {
+        greeting: `Hello, ${this.params["say-to"]}!`,
+      },
+    });
+  }
 }
 ```
 
@@ -186,12 +189,16 @@ By default, whenever the attributes of a stanza element are changed, the stanza 
 If this behavior is undesirable, for example because the stanza function contains heavy processing, it can be controlled manually by exporting the `handleAttributeChange` function.
 
 ``` js
-export default function hello(stanza, params) {
-  // The stanza function will only be executed once
-}
+import Stanza from "togostanza/stanza";
 
-export function handleAttributeChange(stanza, params, attributeName, oldValue, newValue) {
-  // Write the code to update the element when the attribute is changed here
+export default class Hello extends Stanza {
+  async render() {
+    // The stanza function will only be executed once
+  }
+
+  async handleAttributeChange(name, oldValue, newValue) {
+    // Write the code to update the element when the attribute is changed here
+  }
 }
 ```
 
@@ -202,10 +209,9 @@ The files in `stanzas/{id}/templates/` will be interpreted as Handlebars templat
 For example, here is a invocation of `stanza.render()` and the corresponding template:
 
 ``` js
-stanza.render({
-  template: 'stanza.html.hbs',
+this.renderTemplate('stanza.html.hbs', {
   parameters: {
-    greeting: `Hello, ${params['say-to']}!`
+    greeting: `Hello, ${this.params['say-to']}!`
   }
 });
 ```
@@ -223,8 +229,7 @@ If your template file has a `.html.hbs` or `.html` extension, the output of the 
 Nested objects can be accessed using the dot-notation just like normal JavaScript.
 
 ``` js
-stanza.render({
-  template: 'stanza.html.hbs',
+this.renderTemplate('stanza.html.hbs', {
   parameters: {
     user: {
       name: 'ursm'
@@ -242,8 +247,7 @@ Hello, {{user.name}}!
 You can also use helpers such as `#if` and `#each` to perform conditional branches and loops.
 
 ``` js
-stanza.render({
-  template: 'stanza.html.hbs',
+this.renderTemplate('stanza.html.hbs', {
   parameters: {
     fields: [
       {
@@ -319,17 +323,20 @@ You can use the `import` statement to load assets as base64-encoded data URLs. S
 ``` js
 // stanzas/foo-stanza/index.js
 
+import Stanza from 'togostanza/stanza';
+
 import img1 from '@/assets/img1.png';
 import img2 from '@/stanzas/foo-stanza/assets/img2.png';
 
-export default function fooStanza() {
-  stanza.render({
-    template: "stanza.html.hbs",
-    parameters: {
-      img1,
-      img2
-    }
-  });
+export default class FooStanza extends Stanza {
+  async render() {
+    this.renderTemplate('stanza.html.hbs', {
+      parameters: {
+        img1,
+        img2
+      }
+    });
+  }
 }
 ```
 
@@ -408,8 +415,7 @@ The template is written in [Handlebars](https://handlebarsjs.com/).
 ```js
 // stanzas/hello/index.js
 
-stanza.render({
-  template: 'stanza.html.hbs',
+this.renderTemplate('stanza.html.hbs', {
   parameters: {
     users: ['Alice', 'Bob']
   }
@@ -446,18 +452,24 @@ This method returns a promise. Use `await` to wait until the query completed. Yo
 ```js
 // stanzas/hello/index.js
 
-try {
-  const results = await stanza.query({
-    endpoint: 'http://ja.dbpedia.org/sparql',
-    template: 'adjacent-prefectures.rq.hbs',
-    parameters: {
-      of: '東京都'
-    }
-  });
+import Stanza from "togostanza/stanza";
 
-  console.log(results);
-} catch (e) {
-  console.error(e);
+export default class Hello extends Stanza {
+  async render() {
+    try {
+      const results = await this.query({
+        endpoint: "http://ja.dbpedia.org/sparql",
+        template: "adjacent-prefectures.rq.hbs",
+        parameters: {
+          of: "東京都",
+        },
+      });
+
+      console.log(results);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 }
 ```
 
@@ -477,12 +489,20 @@ WHERE {
 Stylesheets defining web fonts are ignored in the Shadow DOM. To work around this, we provide a helper method to insert the CSS of the specified URL outside of the Shadow DOM.
 
 ``` js
-// stanzas/hello/index.js
+import Stanza from "togostanza/stanza";
 
-export default function(stanza, params) {
-  stanza.importWebFontCSS('https://weloveiconfonts.com/api/?family=entypo');
+export default class extends Stanza {
+  constructor() {
+    super(...arguments);
 
-  // ...
+    this.importWebFontCSS(
+      "https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+    );
+  }
+
+  async render() {
+    // ...
+  }
 }
 ```
 
@@ -493,19 +513,19 @@ Shadow root of the stanza. See [Using shadow DOM - Web Components | MDN](https:/
 #### Example: Get all anchors contained in the stanza's shadow root
 
 ```js
-console.log(stanza.root.querySelectorAll('a'));
+console.log(this.root.querySelectorAll('a'));
 ```
 
 #### Example: Update stanza output manually without using stanza.render()
 
 ```js
-stanza.root.querySelector('main').textContent = 'Look at me!';
+this.root.querySelector('main').textContent = 'Look at me!';
 ```
 
 #### Example: Get a value of stanza's CSS custom property
 
 ```js
-console.log(getComputedStyle(stanza.root.host).getPropertyValue('--text-color'));
+console.log(getComputedStyle(this.element).getPropertyValue('--text-color'));
 ```
 
 ## Utility functions
@@ -620,8 +640,8 @@ console.log(unwrapValueFromBinding(result));
 
 ### stanza.select(selector)
 
-Deprecated. Use `stanza.root.querySelector(selector)` instead.
+Deprecated. Use `this.root.querySelector(selector)` instead.
 
 ### stanza.selectAll(selector)
 
-Deprecated. Use `stanza.root.querySelectorAll(selector)` instead.
+Deprecated. Use `this.root.querySelectorAll(selector)` instead.
