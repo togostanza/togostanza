@@ -161,13 +161,14 @@ It takes the following two arguments:
 For example, a typical stanza function might look like this:
 
 ```js
-import Stanza from "togostanza/stanza";
+import Stanza from 'togostanza/stanza';
 
 export default class Hello extends Stanza {
   async render() {
-    this.renderTemplate("stanza.html.hbs", {
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
       parameters: {
-        greeting: `Hello, ${this.params["say-to"]}!`,
+        greeting: `Hello, ${this.params['say-to']}!`,
       },
     });
   }
@@ -188,8 +189,8 @@ By default, whenever the attributes of a stanza element are changed, the stanza 
 
 If this behavior is undesirable, for example because the stanza function contains heavy processing, it can be controlled manually by exporting the `handleAttributeChange` function.
 
-``` js
-import Stanza from "togostanza/stanza";
+```js
+import Stanza from 'togostanza/stanza';
 
 export default class Hello extends Stanza {
   async render() {
@@ -208,15 +209,16 @@ The files in `stanzas/{id}/templates/` will be interpreted as Handlebars templat
 
 For example, here is a invocation of `stanza.render()` and the corresponding template:
 
-``` js
-this.renderTemplate('stanza.html.hbs', {
+```js
+this.renderTemplate({
+  template: 'stanza.html.hbs',
   parameters: {
-    greeting: `Hello, ${this.params['say-to']}!`
-  }
+    greeting: `Hello, ${this.params['say-to']}!`,
+  },
 });
 ```
 
-``` hbs
+```hbs
 {{! stanzas/hello/templates/stanza.html.hbs }}
 
 Hello, {{greeting}}!
@@ -228,17 +230,18 @@ If your template file has a `.html.hbs` or `.html` extension, the output of the 
 
 Nested objects can be accessed using the dot-notation just like normal JavaScript.
 
-``` js
-this.renderTemplate('stanza.html.hbs', {
+```js
+this.renderTemplate({
+  template: 'stanza.html.hbs',
   parameters: {
     user: {
-      name: 'ursm'
-    }
-  }
+      name: 'ursm',
+    },
+  },
 });
 ```
 
-``` hbs
+```hbs
 {{! stanzas/hello/templates/stanza.html.hbs }}
 
 Hello, {{user.name}}!
@@ -246,8 +249,9 @@ Hello, {{user.name}}!
 
 You can also use helpers such as `#if` and `#each` to perform conditional branches and loops.
 
-``` js
-this.renderTemplate('stanza.html.hbs', {
+```js
+this.renderTemplate({
+  template: 'stanza.html.hbs',
   parameters: {
     fields: [
       {
@@ -267,7 +271,7 @@ this.renderTemplate('stanza.html.hbs', {
 });
 ```
 
-``` hbs
+```hbs
 {{! stanzas/hello/templates/stanza.html.hbs }}
 
 {{#each fields as |field|}}
@@ -297,7 +301,7 @@ Stanza CSS is evaluated in the Shadow DOM context, so its behavior may differ in
 
 Each `stanza:style` item you define in metadata.json can be used in the stanza's stylesheet as a CSS variable.
 
-``` json
+```json
 {
   "stanza:key": "--greeting-color",
   "stanza:type": "color",
@@ -306,7 +310,7 @@ Each `stanza:style` item you define in metadata.json can be used in the stanza's
 }
 ```
 
-``` css
+```css
 p.greeting {
   color: var(--greeting-color);
 }
@@ -320,7 +324,7 @@ Assets are static files, like images, and are stored in directories `assets/` or
 
 You can use the `import` statement to load assets as base64-encoded data URLs. Supported file types are `.svg`, `.png`, `.jpg`, `.jpeg`, `.gif` and `.webp`.
 
-``` js
+```js
 // stanzas/foo-stanza/index.js
 
 import Stanza from 'togostanza/stanza';
@@ -330,17 +334,18 @@ import img2 from '@/stanzas/foo-stanza/assets/img2.png';
 
 export default class FooStanza extends Stanza {
   async render() {
-    this.renderTemplate('stanza.html.hbs', {
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
       parameters: {
         img1,
-        img2
-      }
+        img2,
+      },
     });
   }
 }
 ```
 
-``` hbs
+```hbs
 {{! stanzas/foo-stanza/templates/stanza.html.hbs }}
 
 <img src={{img1}}>
@@ -351,7 +356,7 @@ export default class FooStanza extends Stanza {
 
 Prepend `./assets/` or `./{stanza-id}/assets/` to the file name of the asset.
 
-``` css
+```css
 background-image: url(./assets/img1.png);
 background-image: url(./foo-stanza/assets/img2.png);
 ```
@@ -362,7 +367,7 @@ Code shared from multiple stanzas can be placed in the `lib/` directory.
 
 #### Using named exports
 
-``` js
+```js
 // lib/calc.js
 
 export function add(x, y) {
@@ -374,7 +379,7 @@ export function subtract(x, y) {
 }
 ```
 
-``` js
+```js
 // stanzas/hello/index.js
 
 import { add, subtract } from '@/lib/calc.js';
@@ -382,15 +387,15 @@ import { add, subtract } from '@/lib/calc.js';
 
 #### Using default exports
 
-``` js
+```js
 // lib/multiply.js
 
-export default function(x, y) {
+export default function (x, y) {
   return x * y;
 }
 ```
 
-``` js
+```js
 // stanzas/hello/index.js
 
 import multiply from '@/lib/multiply.js';
@@ -415,10 +420,11 @@ The template is written in [Handlebars](https://handlebarsjs.com/).
 ```js
 // stanzas/hello/index.js
 
-this.renderTemplate('stanza.html.hbs', {
+this.renderTemplate({
+  template: 'stanza.html.hbs',
   parameters: {
-    users: ['Alice', 'Bob']
-  }
+    users: ['Alice', 'Bob'],
+  },
 });
 ```
 
@@ -452,16 +458,16 @@ This method returns a promise. Use `await` to wait until the query completed. Yo
 ```js
 // stanzas/hello/index.js
 
-import Stanza from "togostanza/stanza";
+import Stanza from 'togostanza/stanza';
 
 export default class Hello extends Stanza {
   async render() {
     try {
       const results = await this.query({
-        endpoint: "http://ja.dbpedia.org/sparql",
-        template: "adjacent-prefectures.rq.hbs",
+        endpoint: 'http://ja.dbpedia.org/sparql',
+        template: 'adjacent-prefectures.rq.hbs',
         parameters: {
-          of: "東京都",
+          of: '東京都',
         },
       });
 
@@ -488,15 +494,15 @@ WHERE {
 
 Stylesheets defining web fonts are ignored in the Shadow DOM. To work around this, we provide a helper method to insert the CSS of the specified URL outside of the Shadow DOM.
 
-``` js
-import Stanza from "togostanza/stanza";
+```js
+import Stanza from 'togostanza/stanza';
 
 export default class extends Stanza {
   constructor() {
     super(...arguments);
 
     this.importWebFontCSS(
-      "https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      'https://use.fontawesome.com/releases/v5.6.3/css/all.css'
     );
   }
 
@@ -540,10 +546,10 @@ Groups an array of objects by specified keys.
 import { grouping } from 'togostanza/utils';
 
 const objs = [
-  {x: 1, y: 3},
-  {x: 1, y: 4},
-  {x: 2, y: 5},
-  {x: 2, y: 6}
+  { x: 1, y: 3 },
+  { x: 1, y: 4 },
+  { x: 2, y: 5 },
+  { x: 2, y: 6 },
 ];
 
 console.log(grouping(objs, 'x', 'y'));
@@ -559,12 +565,12 @@ console.log(grouping(objs, 'x', 'y'));
 import { grouping } from 'togostanza/utils';
 
 const objs = [
-  {x: 1, y: 1, z: 3},
-  {x: 1, y: 2, z: 4},
-  {x: 2, y: 1, z: 5},
-  {x: 2, y: 2, z: 6},
-  {x: 1, y: 2, z: 7},
-  {x: 2, y: 1, z: 8}
+  { x: 1, y: 1, z: 3 },
+  { x: 1, y: 2, z: 4 },
+  { x: 2, y: 1, z: 5 },
+  { x: 2, y: 2, z: 6 },
+  { x: 1, y: 2, z: 7 },
+  { x: 2, y: 1, z: 8 },
 ];
 
 console.log(grouping(objs, ['x', 'y'], 'z'));
@@ -582,13 +588,13 @@ console.log(grouping(objs, ['x', 'y'], 'z'));
 import { grouping } from 'togostanza/utils';
 
 const objs = [
-  {x: 1, y: 3},
-  {x: 1, y: 4},
-  {x: 2, y: 5},
-  {x: 2, y: 6}
+  { x: 1, y: 3 },
+  { x: 1, y: 4 },
+  { x: 2, y: 5 },
+  { x: 2, y: 6 },
 ];
 
-console.log(grouping(objs, {key: 'x', alias: 'z'}, 'y'));
+console.log(grouping(objs, { key: 'x', alias: 'z' }, 'y'));
 //=> [
 //     {z: 1, y: [3, 4]},
 //     {z: 2, y: [5, 6]}
@@ -605,25 +611,27 @@ Unwraps an [SPARQL JSON Results Object](https://www.w3.org/TR/sparql11-results-j
 import { unwrapValueFromBinding } from 'togostanza/utils';
 
 const result = {
-  "head": {
-    "vars": ["s", "p", "o"]
+  head: {
+    vars: ['s', 'p', 'o'],
   },
-  "results": {
-    "bindings": [{
-      "s": {
-        "type": "uri",
-        "value": "http://example.com/s"
+  results: {
+    bindings: [
+      {
+        s: {
+          type: 'uri',
+          value: 'http://example.com/s',
+        },
+        p: {
+          type: 'uri',
+          value: 'http://example.com/p',
+        },
+        o: {
+          type: 'uri',
+          value: 'http://example.com/o',
+        },
       },
-      "p": {
-        "type": "uri",
-        "value": "http://example.com/p"
-      },
-      "o": {
-        "type": "uri",
-        "value": "http://example.com/o"
-      }
-    }]
-  }
+    ],
+  },
 };
 
 console.log(unwrapValueFromBinding(result));

@@ -273,13 +273,14 @@ Look into `stanzas/hello/index.js`.
 ```jsx
 // stanzas/hello/index.js
 
-import Stanza from "togostanza/stanza";
+import Stanza from 'togostanza/stanza';
 
 export default class Hello extends Stanza {
   async render() {
-    this.renderTemplate("stanza.html.hbs", {
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
       parameters: {
-        greeting: `Hello, ${this.params["say-to"]}!`,
+        greeting: `Hello, ${this.params['say-to']}!`,
       },
     });
   }
@@ -348,16 +349,17 @@ As an example, let's create a stanza that uses [ipify.org](http://ipify.org/) to
 ```javascript
 // stanzas/hello/index.js
 
-import Stanza from "togostanza/stanza";
+import Stanza from 'togostanza/stanza';
 
 export default class Hello extends Stanza {
   async render() {
-    const res = await fetch("https://api.ipify.org?format=json");
+    const res = await fetch('https://api.ipify.org?format=json');
     const data = await res.json();
 
     console.log(data); // {"ip": "..."}
 
-    this.renderTemplate("stanza.html.hbs", {
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
       parameters: {
         greeting: `Hello, you're accessing from ${data.ip}!`,
       },
@@ -380,28 +382,28 @@ Example:
 ```javascript
 // stanzas/hello/index.js
 
-import Stanza from "togostanza/stanza";
+import Stanza from 'togostanza/stanza';
 
 export default class Hello extends Stanza {
   async render() {
     try {
-      const res = await fetch("https://example.com/may-cause-errors");
+      const res = await fetch('https://example.com/may-cause-errors');
 
       console.log(res.ok); // true or false
       console.log(res.status); // 200, ...
 
       switch (res.status) {
-        case "200":
-          console.log("OK");
+        case '200':
+          console.log('OK');
           break;
-        case "404":
-          console.warn("Not found");
+        case '404':
+          console.warn('Not found');
           break;
-        case "500":
-          console.warn("Internal server error");
+        case '500':
+          console.warn('Internal server error');
           break;
         default:
-          console.warn("other HTTP errors");
+          console.warn('other HTTP errors');
       }
     } catch (e) {
       console.error(e); // network error
@@ -439,13 +441,14 @@ The stanza function should look like this:
 ```javascript
 // stanzas/the-number/index.js
 
-import Stanza from "togostanza/stanza";
+import Stanza from 'togostanza/stanza';
 
 export default class TheNumber extends Stanza {
   async render() {
     const n = this.params.n;
 
-    this.renderTemplate("stanza.html.hbs", {
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
       parameters: {
         message: `The number is ${n}. Next is ${n + 1}.`,
       },
@@ -511,13 +514,14 @@ The stanza function should look like this:
 ```javascript
 // stanzas/yes-no/index.js
 
-import Stanza from "togostanza/stanza";
+import Stanza from 'togostanza/stanza';
 
 export default class YesNo extends Stanza {
   async render() {
-    this.renderTemplate("stanza.html.hbs", {
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
       parameters: {
-        message: this.params.flag ? "yes" : "no",
+        message: this.params.flag ? 'yes' : 'no',
       },
     });
   }
@@ -583,11 +587,12 @@ The stanza function should look like this:
 ```javascript
 // stanzas/extract-value/index.js
 
-import Stanza from "togostanza/stanza";
+import Stanza from 'togostanza/stanza';
 
 export default class ExtractValue extends Stanza {
   async render() {
-    this.renderTemplate("stanza.html.hbs", {
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
       parameters: {
         message: `The value is ${this.params.data.value}.`,
       },

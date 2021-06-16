@@ -38,7 +38,7 @@ export default class Stanza {
     return this.element.shadowRoot;
   }
 
-  renderTemplate(templateName, { parameters, selector }) {
+  renderTemplate({ template: templateName, parameters, selector }) {
     const template = this.templates[templateName];
 
     if (!template) {
