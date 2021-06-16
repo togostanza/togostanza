@@ -67,8 +67,8 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
 export default class hello extends Stanza {
   async render() {
     this.renderTemplate(
-      'stanza.html.hbs',
       {
+        template: 'stanza.html.hbs',
         parameters: {
           greeting: \`Hello, \${this.params['say-to']}!\`
         }
@@ -181,8 +181,8 @@ Stanza description goes here. Edit \`stanzas/hello-world/README.md\` to update.
 export default class helloWorld extends Stanza {
   async render() {
     this.renderTemplate(
-      'stanza.html.hbs',
       {
+        template: 'stanza.html.hbs',
         parameters: {
           greeting: \`Hello, \${this.params['say-to']}!\`
         }
