@@ -1,6 +1,6 @@
 import Stanza from 'togostanza/stanza';
 
-export default class <%= camelCase(id) %> extends Stanza {
+export default class <%= pascalCase(id) %> extends Stanza {
   async render() {
     this.renderTemplate(
       {
