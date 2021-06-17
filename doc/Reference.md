@@ -149,9 +149,12 @@ Stanzas can declare their own parameterized style variables, allowing stanza use
 | `stanza:default`     | Default value, given as the type corresponding to `stanza:type` (for example, `true` instead of `"true"` for Boolean).      |
 | `stanza:description` | Brief description of this variable. It will appear below the input field.                                                   |
 
+
 ### Stanza class
 
-The stanza class is defined in the stanza script (`stanzas/<stanza-id>/index.js`) and is called when a stanza is to be rendered.
+The stanza class is defined in the stanza script (`stanzas/<stanza-id>/index.js`), extending the `Stanza` base class, which is provided by `togostanza` package.
+
+There are several methods in the Stanza class the are expected to be overridden. One of them is the `render()` method, which is called when a stanza is to be rendered.
 
 For example, a typical stanza class might look like this:
 
@@ -176,13 +179,13 @@ Example of the use of this stanza:
 <togostanza-hello say-to="world"></togostanza-hello>
 ```
 
-When a stanza is embedded like this, the attributes of the element are accesible via `this.params`.
+When a stanza is embedded like this, the attributes of the element are accessible via `this.params`.
 
 #### Customizing the behavior when changing attributes
 
 By default, whenever the attributes of a stanza element are changed, the `render()` method is executed and the element is drawn from scratch.
 
-If this behavior is undesirable, for example because the `render()` method contains heavy processing, it can be controlled manually by defining the `handleAttributeChange` method.
+If this behavior is undesirable, for example because the `render()` method contains heavy processing, it can be controlled manually by defining the `handleAttributeChange` method. The default behavior of `handleAttributeChange()` defined in the `Stanza` base class is to call the `render()` method with debounce to reduce unnecessary rendering.
 
 ```js
 import Stanza from 'togostanza/stanza';
@@ -202,7 +205,7 @@ export default class Hello extends Stanza {
 
 The files in `stanzas/{id}/templates/` will be interpreted as Handlebars templates. This makes it easy to generate different outputs depending on the parameters.
 
-For example, here is a invocation of `this.renderTemplate()` and the corresponding template:
+For example, here is a invocation of `this.renderTemplate()` method and the corresponding template:
 
 ```js
 this.renderTemplate({
@@ -396,11 +399,11 @@ export default function (x, y) {
 import multiply from '@/lib/multiply.js';
 ```
 
-## Stanza object
+## Utility methods of Stanza
 
-The stanza object is an object which wraps the DOM element of the stanza and provides several properties and methods.
+You can use the utility methods provided by the stanza base class.
 
-### stanza.render(options)
+### this.renderTemplate(options)
 
 Renders contents from the given template. `options` is an object that has the following properties:
 
@@ -435,7 +438,11 @@ this.renderTemplate({
 </ul>
 ```
 
-### stanza.query(options)
+### this.params
+
+Returns the parameters passed to the stanza as an object.
+
+### this.query(options)
 
 Issues SPARQL query. `options` is an object that has the following properties:
 
@@ -485,7 +492,7 @@ WHERE {
 }
 ```
 
-### stanza.importWebFontCSS(url)
+### this.importWebFontCSS(url)
 
 Stylesheets defining web fonts are ignored in the Shadow DOM. To work around this, we provide a helper method to insert the CSS of the specified URL outside of the Shadow DOM.
 
@@ -507,7 +514,7 @@ export default class extends Stanza {
 }
 ```
 
-### stanza.root
+### this.root
 
 Shadow root of the stanza. See [Using shadow DOM - Web Components | MDN](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) for details.
 
@@ -528,6 +535,11 @@ this.root.querySelector('main').textContent = 'Look at me!';
 ```js
 console.log(getComputedStyle(this.element).getPropertyValue('--text-color'));
 ```
+
+### this.element
+
+Returns the stanza element. An instance of a subclass of [`HTMLElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement), i.e. `<togostanza-{{id}}></togostanza-{{id}}>` is returned.
+
 
 ## Utility functions
 
@@ -638,13 +650,3 @@ console.log(unwrapValueFromBinding(result));
 //     }
 //   ]
 ```
-
-## Deprecated APIs
-
-### stanza.select(selector)
-
-Deprecated. Use `this.root.querySelector(selector)` instead.
-
-### stanza.selectAll(selector)
-
-Deprecated. Use `this.root.querySelectorAll(selector)` instead.
