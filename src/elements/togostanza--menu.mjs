@@ -1,6 +1,7 @@
 import { info } from '@primer/octicons';
 import { LitElement, css, html } from 'lit-element';
 import { unsafeSVG } from 'lit-html/directives/unsafe-svg';
+import { createPopper } from '@popperjs/core';
 
 export default class MenuElement extends LitElement {
   constructor() {
@@ -20,8 +21,7 @@ export default class MenuElement extends LitElement {
       :host {
         position: absolute;
         background-color: white;
-        opacity: 0.5;
-        transition: opacity 0.2s ease-in-out;
+        opacity: 0.8;
 
         width: 24px;
         height: 24px;
@@ -33,16 +33,12 @@ export default class MenuElement extends LitElement {
         left: initial;
       }
 
-      :host(:hover) {
-        opacity: 0.8;
-      }
-
-      a {
+      #info-button {
         display: block;
         padding: 4px;
       }
 
-      a svg {
+      #info-button svg {
         display: block;
         transform: translateY(0.5px);
       }
@@ -71,18 +67,117 @@ export default class MenuElement extends LitElement {
       :host([placement='none']) {
         display: none;
       }
+
+      .menu {
+        min-width: 6rem;
+        padding: 0.5rem 0;
+        color: #212529;
+        background-color: #fff;
+        background-clip: padding-box;
+        list-style: none;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 0.25rem;
+        display: none;
+      }
+
+      .menu[data-show] {
+        display: block;
+      }
+
+      .menu-item {
+        display: block;
+        padding: 0.25rem 1rem;
+        font-size: 12px;
+        font-weight: 400;
+        color: #212529;
+        text-decoration: none;
+        white-space: nowrap;
+        background-color: transparent;
+        border: 0;
+      }
+
+      .menu-item:focus,
+      .menu-item:hover {
+        color: #1e2125;
+        background-color: #e9ecef;
+      }
     `;
   }
 
+  _hideMenu() {
+    const menu = this.shadowRoot.querySelector('.menu');
+    menu.removeAttribute('data-show');
+  }
+
+  firstUpdated() {
+    const infoButton = this.shadowRoot.querySelector('#info-button');
+    const menu = this.shadowRoot.querySelector('.menu');
+
+    const popperInstance = createPopper(infoButton, menu, {
+      placement: this._menuPlacement(),
+    });
+
+    infoButton.addEventListener('click', () => {
+      if (menu.getAttribute('data-show') === null) {
+        this.requestUpdate(); // update menu contents
+        menu.setAttribute('data-show', '');
+        popperInstance.update();
+      } else {
+        menu.removeAttribute('data-show');
+      }
+    });
+  }
+
+  _menuPlacement() {
+    switch (this.placement) {
+      case 'top-left':
+        return 'bottom-start';
+      case 'top-right':
+        return 'bottom-end';
+      case 'bottom-left':
+        return 'top-start';
+      case 'bottom-right':
+        return 'top-end';
+      case 'none':
+      default:
+        return 'top-end';
+    }
+  }
+
+  _handlerForMenuItem(menuItem) {
+    return () => {
+      this._hideMenu();
+      menuItem.handler();
+    };
+  }
+
   render() {
-    return html`<a
-      class="dropdown-item"
-      href=${this.href}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      ${unsafeSVG(info.toSVG({ width: 16 }))}
-    </a>`;
+    return html`<div id="info-button">
+        ${unsafeSVG(info.toSVG({ width: 16 }))}
+      </div>
+      <ul class="menu">
+        ${this.menuDefinition().map(
+          (menuItem) =>
+            html`<li>
+              <a
+                class="menu-item"
+                @click="${this._handlerForMenuItem(menuItem)}"
+                >${menuItem.label}</a
+              >
+            </li>`
+        )}
+        <li>
+          <a
+            class="menu-item"
+            href=${this.href}
+            @click="${this._hideMenu}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            About this stanza</a
+          >
+        </li>
+      </ul>`;
   }
 }
 
