@@ -64,7 +64,7 @@ Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
       },
       "index.js": "import Stanza from 'togostanza/stanza';
 
-export default class hello extends Stanza {
+export default class Hello extends Stanza {
   async render() {
     this.renderTemplate(
       {
@@ -178,7 +178,7 @@ Stanza description goes here. Edit \`stanzas/hello-world/README.md\` to update.
       },
       "index.js": "import Stanza from 'togostanza/stanza';
 
-export default class helloWorld extends Stanza {
+export default class HelloWorld extends Stanza {
   async render() {
     this.renderTemplate(
       {
