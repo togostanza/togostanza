@@ -2,10 +2,10 @@ import path from 'path';
 
 import Generator from 'yeoman-generator';
 import camelCase from 'lodash.camelcase';
+import kebabCase from 'lodash.kebabcase';
 import lowerCase from 'lodash.lowercase';
 import pick from 'lodash.pick';
 import upperFirst from 'lodash.upperfirst';
-import kebabCase from 'lodash.kebabcase';
 
 import MemoryStorage from '../memory-storage.mjs';
 import { required } from '../validators.mjs';
@@ -89,7 +89,9 @@ export default class StanzaGenerator extends Generator {
   writing() {
     this.writeDestinationJSON(this._stanzaDestinationPath('metadata.json'), metadataJSON(this.params));
 
-    const templateParams = {...this.params, camelCase};
+    const pascalCase = (str) => upperFirst(camelCase(str));
+
+    const templateParams = {...this.params, pascalCase};
 
     const copyOptions = {
       processDestinationPath: (fullPath) => {

@@ -189,7 +189,7 @@ describe('build', () => {
         return fn.replace(/^(-togostanza\/Layout-)[0-9a-f]+(\.js(?:\.map)?)$/, '$1HASH$2');
       })).toMatchSnapshot();
 
-      expect(fs.readFileSync('dist/hello.js', 'utf8')).toContain('function hello(stanza, params) {');
+      expect(fs.readFileSync('dist/hello.js', 'utf8')).toContain("import Stanza from 'togostanza/stanza';");
     });
   });
 });

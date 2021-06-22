@@ -4,11 +4,11 @@ export default class ContainerElement extends HTMLElement {
   dataSourceUrls = {};
 
   connectedCallback() {
-    setTimeout(() => { // wait until stanzas ready
-      const stanzaElements = Array.from(
-        this.querySelectorAll('*')
-      ).filter((el) => el.tagName.startsWith('TOGOSTANZA-') && 'stanza' in el);
-
+    setTimeout(() => {
+      // wait until stanzas ready
+      const stanzaElements = Array.from(this.querySelectorAll('*')).filter(
+        (el) => el.tagName.startsWith('TOGOSTANZA-') && 'stanzaInstance' in el
+      );
       connectStanzasWithAttributes(this, stanzaElements);
       connectStanzasWithHandler(stanzaElements);
       connectDataSource(this);
@@ -43,12 +43,12 @@ export default class ContainerElement extends HTMLElement {
       return entry.value;
     }
 
-    const blob      = await fetch(url).then(res => res.blob());
+    const blob = await fetch(url).then((res) => res.blob());
     const objectUrl = URL.createObjectURL(blob);
 
     this.dataSourceUrls[url] = {
       value: objectUrl,
-      count: 1
+      count: 1,
     };
 
     return objectUrl;
@@ -57,7 +57,9 @@ export default class ContainerElement extends HTMLElement {
   disposeDataSourceUrl(url) {
     const entry = this.dataSourceUrls[url];
 
-    if (!entry) { return; }
+    if (!entry) {
+      return;
+    }
 
     entry.count--;
 
@@ -73,11 +75,11 @@ ContainerElement.customElementName = 'togostanza--container';
 
 function connectStanzasWithHandler(stanzaElements) {
   for (const srcEl of stanzaElements) {
-    for (const eventName of outgoingEventNames(srcEl.stanza)) {
+    for (const eventName of outgoingEventNames(srcEl.stanzaInstance)) {
       srcEl.addEventListener(eventName, (event) => {
         for (const destEl of stanzaElements) {
-          if (incomingEventNames(destEl.stanza).includes(eventName)) {
-            destEl.stanza.handleEvent(event);
+          if (incomingEventNames(destEl.stanzaInstance).includes(eventName)) {
+            destEl.stanzaInstance.handleEvent(event);
           }
         }
       });
@@ -86,16 +88,20 @@ function connectStanzasWithHandler(stanzaElements) {
 }
 
 function connectStanzasWithAttributes(container, stanzaElements) {
-  for (const mapElement of container.querySelectorAll('togostanza--event-map')) {
-    const on              = mapElement.getAttribute('on');
-    const receiver        = mapElement.getAttribute('receiver');
+  for (const mapElement of container.querySelectorAll(
+    'togostanza--event-map'
+  )) {
+    const on = mapElement.getAttribute('on');
+    const receiver = mapElement.getAttribute('receiver');
     const targetAttribute = mapElement.getAttribute('target-attribute');
-    const valuePath       = mapElement.getAttribute('value-path');
+    const valuePath = mapElement.getAttribute('value-path');
 
     const receiverElements = container.querySelectorAll(receiver);
 
     for (const srcEl of stanzaElements) {
-      if (!outgoingEventNames(srcEl.stanza).includes(on)) { continue; }
+      if (!outgoingEventNames(srcEl.stanzaInstance).includes(on)) {
+        continue;
+      }
 
       srcEl.addEventListener(on, (event) => {
         const value = valuePath ? get(event.detail, valuePath) : event.detail;
@@ -104,7 +110,8 @@ function connectStanzasWithAttributes(container, stanzaElements) {
           setEach(receiverElements, targetAttribute, '');
         } else if (value === false || value === undefined) {
           removeEach(receiverElements, targetAttribute);
-        } else if (value.constructor === String) { // a bit weird, but a unified way to determine string literals and objects
+        } else if (value.constructor === String) {
+          // a bit weird, but a unified way to determine string literals and objects
           setEach(receiverElements, targetAttribute, value);
         } else {
           setEach(receiverElements, targetAttribute, JSON.stringify(value));
@@ -115,11 +122,13 @@ function connectStanzasWithAttributes(container, stanzaElements) {
 }
 
 function connectDataSource(container) {
-  for (const dataSource of container.querySelectorAll('togostanza--data-source')) {
+  for (const dataSource of container.querySelectorAll(
+    'togostanza--data-source'
+  )) {
     dataSource.containerElement = container;
 
-    const url             = dataSource.getAttribute('url');
-    const receiver        = dataSource.getAttribute('receiver');
+    const url = dataSource.getAttribute('url');
+    const receiver = dataSource.getAttribute('receiver');
     const targetAttribute = dataSource.getAttribute('target-attribute');
 
     container.dataSourceUrlChanged(null, url, receiver, targetAttribute);
@@ -138,10 +147,18 @@ function removeEach(elements, key) {
   }
 }
 
-function outgoingEventNames(stanza) {
-  return stanza.metadata['stanza:outgoingEvent']?.map(e => e['stanza:key']) || [];
+function outgoingEventNames(stanzaInstance) {
+  return (
+    stanzaInstance.metadata['stanza:outgoingEvent']?.map(
+      (e) => e['stanza:key']
+    ) || []
+  );
 }
 
-function incomingEventNames(stanza) {
-  return stanza.metadata['stanza:incomingEvent']?.map(e => e['stanza:key']) || [];
+function incomingEventNames(stanzaInstance) {
+  return (
+    stanzaInstance.metadata['stanza:incomingEvent']?.map(
+      (e) => e['stanza:key']
+    ) || []
+  );
 }

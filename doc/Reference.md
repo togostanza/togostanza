@@ -149,25 +149,27 @@ Stanzas can declare their own parameterized style variables, allowing stanza use
 | `stanza:default`     | Default value, given as the type corresponding to `stanza:type` (for example, `true` instead of `"true"` for Boolean).      |
 | `stanza:description` | Brief description of this variable. It will appear below the input field.                                                   |
 
-### Stanza function
 
-The stanza function is defined in the stanza script (`stanzas/<stanza-id>/index.js`) and is called when a stanza is to be rendered.
+### Stanza class
 
-It takes the following two arguments:
+The stanza class is defined in the stanza script (`stanzas/<stanza-id>/index.js`), extending the `Stanza` base class, which is provided by `togostanza` package.
 
-- `stanza` The stanza object. To be described below.
-- `params` An object containing the parameters passed from the page in which the stanza was embedded.
+There are several methods in the Stanza class the are expected to be overridden. One of them is the `render()` method, which is called when a stanza is to be rendered.
 
-For example, a typical stanza function might look like this:
+For example, a typical stanza class might look like this:
 
 ```js
-export default function hello(stanza, params) {
-  stanza.render({
-    template: 'stanza.html.hbs',
-    parameters: {
-      greeting: `Hello, ${params['say-to']}!`
-    }
-  });
+import Stanza from 'togostanza/stanza';
+
+export default class Hello extends Stanza {
+  async render() {
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
+      parameters: {
+        greeting: `Hello, ${this.params['say-to']}!`,
+      },
+    });
+  }
 }
 ```
 
@@ -177,21 +179,25 @@ Example of the use of this stanza:
 <togostanza-hello say-to="world"></togostanza-hello>
 ```
 
-When a stanza is embedded like this, the attributes of the element are passed as parameters to the stanza function.
+When a stanza is embedded like this, the attributes of the element are accessible via `this.params`.
 
 #### Customizing the behavior when changing attributes
 
-By default, whenever the attributes of a stanza element are changed, the stanza function is executed and the element is drawn from scratch.
+By default, whenever the attributes of a stanza element are changed, the `render()` method is executed and the element is drawn from scratch.
 
-If this behavior is undesirable, for example because the stanza function contains heavy processing, it can be controlled manually by exporting the `handleAttributeChange` function.
+If this behavior is undesirable, for example because the `render()` method contains heavy processing, it can be controlled manually by defining the `handleAttributeChange` method. The default behavior of `handleAttributeChange()` defined in the `Stanza` base class is to call the `render()` method with debounce to reduce unnecessary rendering.
 
-``` js
-export default function hello(stanza, params) {
-  // The stanza function will only be executed once
-}
+```js
+import Stanza from 'togostanza/stanza';
 
-export function handleAttributeChange(stanza, params, attributeName, oldValue, newValue) {
-  // Write the code to update the element when the attribute is changed here
+export default class Hello extends Stanza {
+  async render() {
+    // The render method will only be executed once
+  }
+
+  async handleAttributeChange(name, oldValue, newValue) {
+    // Write the code to update the element when the attribute is changed here
+  }
 }
 ```
 
@@ -199,41 +205,41 @@ export function handleAttributeChange(stanza, params, attributeName, oldValue, n
 
 The files in `stanzas/{id}/templates/` will be interpreted as Handlebars templates. This makes it easy to generate different outputs depending on the parameters.
 
-For example, here is a invocation of `stanza.render()` and the corresponding template:
+For example, here is a invocation of `this.renderTemplate()` method and the corresponding template:
 
-``` js
-stanza.render({
+```js
+this.renderTemplate({
   template: 'stanza.html.hbs',
   parameters: {
-    greeting: `Hello, ${params['say-to']}!`
-  }
+    greeting: `Hello, ${this.params['say-to']}!`,
+  },
 });
 ```
 
-``` hbs
+```hbs
 {{! stanzas/hello/templates/stanza.html.hbs }}
 
 Hello, {{greeting}}!
 ```
 
-`{{...}}` is an expression of Handlebars, here outputting the value of the `greeting` parameter. `stanza.render()` function treats the object passed to the `parameters` option as the context of the template. Note that `{{! ... }}` is a comment.
+`{{...}}` is an expression of Handlebars, here outputting the value of the `greeting` parameter. `this.renderTemplate()` method treats the object passed to the `parameters` option as the context of the template. Note that `{{! ... }}` is a comment.
 
 If your template file has a `.html.hbs` or `.html` extension, the output of the `{{...}}` will be automatically HTML escaped. You can disable escaping with three curly brackets (`{{{...}}}`).
 
 Nested objects can be accessed using the dot-notation just like normal JavaScript.
 
-``` js
-stanza.render({
+```js
+this.renderTemplate({
   template: 'stanza.html.hbs',
   parameters: {
     user: {
-      name: 'ursm'
-    }
-  }
+      name: 'ursm',
+    },
+  },
 });
 ```
 
-``` hbs
+```hbs
 {{! stanzas/hello/templates/stanza.html.hbs }}
 
 Hello, {{user.name}}!
@@ -241,8 +247,8 @@ Hello, {{user.name}}!
 
 You can also use helpers such as `#if` and `#each` to perform conditional branches and loops.
 
-``` js
-stanza.render({
+```js
+this.renderTemplate({
   template: 'stanza.html.hbs',
   parameters: {
     fields: [
@@ -263,7 +269,7 @@ stanza.render({
 });
 ```
 
-``` hbs
+```hbs
 {{! stanzas/hello/templates/stanza.html.hbs }}
 
 {{#each fields as |field|}}
@@ -293,7 +299,7 @@ Stanza CSS is evaluated in the Shadow DOM context, so its behavior may differ in
 
 Each `stanza:style` item you define in metadata.json can be used in the stanza's stylesheet as a CSS variable.
 
-``` json
+```json
 {
   "stanza:key": "--greeting-color",
   "stanza:type": "color",
@@ -302,7 +308,7 @@ Each `stanza:style` item you define in metadata.json can be used in the stanza's
 }
 ```
 
-``` css
+```css
 p.greeting {
   color: var(--greeting-color);
 }
@@ -316,24 +322,28 @@ Assets are static files, like images, and are stored in directories `assets/` or
 
 You can use the `import` statement to load assets as base64-encoded data URLs. Supported file types are `.svg`, `.png`, `.jpg`, `.jpeg`, `.gif` and `.webp`.
 
-``` js
+```js
 // stanzas/foo-stanza/index.js
+
+import Stanza from 'togostanza/stanza';
 
 import img1 from '@/assets/img1.png';
 import img2 from '@/stanzas/foo-stanza/assets/img2.png';
 
-export default function fooStanza() {
-  stanza.render({
-    template: "stanza.html.hbs",
-    parameters: {
-      img1,
-      img2
-    }
-  });
+export default class FooStanza extends Stanza {
+  async render() {
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
+      parameters: {
+        img1,
+        img2,
+      },
+    });
+  }
 }
 ```
 
-``` hbs
+```hbs
 {{! stanzas/foo-stanza/templates/stanza.html.hbs }}
 
 <img src={{img1}}>
@@ -344,7 +354,7 @@ export default function fooStanza() {
 
 Prepend `./assets/` or `./{stanza-id}/assets/` to the file name of the asset.
 
-``` css
+```css
 background-image: url(./assets/img1.png);
 background-image: url(./foo-stanza/assets/img2.png);
 ```
@@ -355,7 +365,7 @@ Code shared from multiple stanzas can be placed in the `lib/` directory.
 
 #### Using named exports
 
-``` js
+```js
 // lib/calc.js
 
 export function add(x, y) {
@@ -367,7 +377,7 @@ export function subtract(x, y) {
 }
 ```
 
-``` js
+```js
 // stanzas/hello/index.js
 
 import { add, subtract } from '@/lib/calc.js';
@@ -375,25 +385,25 @@ import { add, subtract } from '@/lib/calc.js';
 
 #### Using default exports
 
-``` js
+```js
 // lib/multiply.js
 
-export default function(x, y) {
+export default function (x, y) {
   return x * y;
 }
 ```
 
-``` js
+```js
 // stanzas/hello/index.js
 
 import multiply from '@/lib/multiply.js';
 ```
 
-## Stanza object
+## Utility methods of Stanza
 
-The stanza object is an object which wraps the DOM element of the stanza and provides several properties and methods.
+You can use the utility methods provided by the stanza base class.
 
-### stanza.render(options)
+### this.renderTemplate(options)
 
 Renders contents from the given template. `options` is an object that has the following properties:
 
@@ -408,11 +418,11 @@ The template is written in [Handlebars](https://handlebarsjs.com/).
 ```js
 // stanzas/hello/index.js
 
-stanza.render({
+this.renderTemplate({
   template: 'stanza.html.hbs',
   parameters: {
-    users: ['Alice', 'Bob']
-  }
+    users: ['Alice', 'Bob'],
+  },
 });
 ```
 
@@ -428,7 +438,11 @@ stanza.render({
 </ul>
 ```
 
-### stanza.query(options)
+### this.params
+
+Returns the parameters passed to the stanza as an object.
+
+### this.query(options)
 
 Issues SPARQL query. `options` is an object that has the following properties:
 
@@ -446,18 +460,24 @@ This method returns a promise. Use `await` to wait until the query completed. Yo
 ```js
 // stanzas/hello/index.js
 
-try {
-  const results = await stanza.query({
-    endpoint: 'http://ja.dbpedia.org/sparql',
-    template: 'adjacent-prefectures.rq.hbs',
-    parameters: {
-      of: '東京都'
-    }
-  });
+import Stanza from 'togostanza/stanza';
 
-  console.log(results);
-} catch (e) {
-  console.error(e);
+export default class Hello extends Stanza {
+  async render() {
+    try {
+      const results = await this.query({
+        endpoint: 'http://ja.dbpedia.org/sparql',
+        template: 'adjacent-prefectures.rq.hbs',
+        parameters: {
+          of: '東京都',
+        },
+      });
+
+      console.log(results);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 }
 ```
 
@@ -472,41 +492,54 @@ WHERE {
 }
 ```
 
-### stanza.importWebFontCSS(url)
+### this.importWebFontCSS(url)
 
 Stylesheets defining web fonts are ignored in the Shadow DOM. To work around this, we provide a helper method to insert the CSS of the specified URL outside of the Shadow DOM.
 
-``` js
-// stanzas/hello/index.js
+```js
+import Stanza from 'togostanza/stanza';
 
-export default function(stanza, params) {
-  stanza.importWebFontCSS('https://weloveiconfonts.com/api/?family=entypo');
+export default class extends Stanza {
+  constructor() {
+    super(...arguments);
 
-  // ...
+    this.importWebFontCSS(
+      'https://use.fontawesome.com/releases/v5.6.3/css/all.css'
+    );
+  }
+
+  async render() {
+    // ...
+  }
 }
 ```
 
-### stanza.root
+### this.root
 
 Shadow root of the stanza. See [Using shadow DOM - Web Components | MDN](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM) for details.
 
 #### Example: Get all anchors contained in the stanza's shadow root
 
 ```js
-console.log(stanza.root.querySelectorAll('a'));
+console.log(this.root.querySelectorAll('a'));
 ```
 
 #### Example: Update stanza output manually without using stanza.render()
 
 ```js
-stanza.root.querySelector('main').textContent = 'Look at me!';
+this.root.querySelector('main').textContent = 'Look at me!';
 ```
 
 #### Example: Get a value of stanza's CSS custom property
 
 ```js
-console.log(getComputedStyle(stanza.root.host).getPropertyValue('--text-color'));
+console.log(getComputedStyle(this.element).getPropertyValue('--text-color'));
 ```
+
+### this.element
+
+Returns the stanza element. An instance of a subclass of [`HTMLElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement), i.e. `<togostanza-{{id}}></togostanza-{{id}}>` is returned.
+
 
 ## Utility functions
 
@@ -520,10 +553,10 @@ Groups an array of objects by specified keys.
 import { grouping } from 'togostanza/utils';
 
 const objs = [
-  {x: 1, y: 3},
-  {x: 1, y: 4},
-  {x: 2, y: 5},
-  {x: 2, y: 6}
+  { x: 1, y: 3 },
+  { x: 1, y: 4 },
+  { x: 2, y: 5 },
+  { x: 2, y: 6 },
 ];
 
 console.log(grouping(objs, 'x', 'y'));
@@ -539,12 +572,12 @@ console.log(grouping(objs, 'x', 'y'));
 import { grouping } from 'togostanza/utils';
 
 const objs = [
-  {x: 1, y: 1, z: 3},
-  {x: 1, y: 2, z: 4},
-  {x: 2, y: 1, z: 5},
-  {x: 2, y: 2, z: 6},
-  {x: 1, y: 2, z: 7},
-  {x: 2, y: 1, z: 8}
+  { x: 1, y: 1, z: 3 },
+  { x: 1, y: 2, z: 4 },
+  { x: 2, y: 1, z: 5 },
+  { x: 2, y: 2, z: 6 },
+  { x: 1, y: 2, z: 7 },
+  { x: 2, y: 1, z: 8 },
 ];
 
 console.log(grouping(objs, ['x', 'y'], 'z'));
@@ -562,13 +595,13 @@ console.log(grouping(objs, ['x', 'y'], 'z'));
 import { grouping } from 'togostanza/utils';
 
 const objs = [
-  {x: 1, y: 3},
-  {x: 1, y: 4},
-  {x: 2, y: 5},
-  {x: 2, y: 6}
+  { x: 1, y: 3 },
+  { x: 1, y: 4 },
+  { x: 2, y: 5 },
+  { x: 2, y: 6 },
 ];
 
-console.log(grouping(objs, {key: 'x', alias: 'z'}, 'y'));
+console.log(grouping(objs, { key: 'x', alias: 'z' }, 'y'));
 //=> [
 //     {z: 1, y: [3, 4]},
 //     {z: 2, y: [5, 6]}
@@ -585,25 +618,27 @@ Unwraps an [SPARQL JSON Results Object](https://www.w3.org/TR/sparql11-results-j
 import { unwrapValueFromBinding } from 'togostanza/utils';
 
 const result = {
-  "head": {
-    "vars": ["s", "p", "o"]
+  head: {
+    vars: ['s', 'p', 'o'],
   },
-  "results": {
-    "bindings": [{
-      "s": {
-        "type": "uri",
-        "value": "http://example.com/s"
+  results: {
+    bindings: [
+      {
+        s: {
+          type: 'uri',
+          value: 'http://example.com/s',
+        },
+        p: {
+          type: 'uri',
+          value: 'http://example.com/p',
+        },
+        o: {
+          type: 'uri',
+          value: 'http://example.com/o',
+        },
       },
-      "p": {
-        "type": "uri",
-        "value": "http://example.com/p"
-      },
-      "o": {
-        "type": "uri",
-        "value": "http://example.com/o"
-      }
-    }]
-  }
+    ],
+  },
 };
 
 console.log(unwrapValueFromBinding(result));
@@ -615,13 +650,3 @@ console.log(unwrapValueFromBinding(result));
 //     }
 //   ]
 ```
-
-## Deprecated APIs
-
-### stanza.select(selector)
-
-Deprecated. Use `stanza.root.querySelector(selector)` instead.
-
-### stanza.selectAll(selector)
-
-Deprecated. Use `stanza.root.querySelectorAll(selector)` instead.
