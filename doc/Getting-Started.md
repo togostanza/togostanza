@@ -70,6 +70,8 @@ $ git push
 
 Open [https://github.com/togostanza/example-stanza-repo](https://github.com/togostanza/example-stanza-repo) and make sure that we've pushed it correctly.
 
+On that page, you'll see the content of `README.md`, which is automatically generated. Write your own description of the stanza repository in `README.md`.
+
 ## Create the first stanza
 
 Enter the following command in order to create a stanza:
