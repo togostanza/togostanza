@@ -12,12 +12,12 @@ import { required } from '../validators.mjs';
 const packageManagers = {
   npm: {
     install: 'npm ci',
-    runner:  'npx'
+    runner: 'npx',
   },
   yarn: {
     install: 'yarn install --frozen-lockfile',
-    runner:  'yarn run'
-  }
+    runner: 'yarn run',
+  },
 };
 
 function errorOfGitUrl(url) {
@@ -38,7 +38,7 @@ function errorOfGitUrl(url) {
 
 export function canonifyGitUrl(url) {
   try {
-    new URL(url)
+    new URL(url);
   } catch (e) {
     if (e.code !== 'ERR_INVALID_URL') {
       throw e;
@@ -53,11 +53,15 @@ export function canonifyGitUrl(url) {
 }
 
 export function errorOfRepositoryName(name) {
-  return /^[\da-z][\da-z\._-]*$/i.test(name) ? null : `${name} is not valid repository name`;
+  return /^[\da-z][\da-z\._-]*$/i.test(name)
+    ? null
+    : `${name} is not valid repository name`;
 }
 
 export async function errorOfRepositoryPathExistence(dest) {
-  return await fs.pathExists(dest) ? `destination path already exists: ${dest}` : null;
+  return (await fs.pathExists(dest))
+    ? `destination path already exists: ${dest}`
+    : null;
 }
 
 export function getHttpsRepositoryUrlIfPossible(url) {
@@ -69,84 +73,117 @@ export function getHttpsRepositoryUrlIfPossible(url) {
   }
 
   if (gitUrl.protocol === 'ssh:' && gitUrl.host === 'github.com') {
-    return `https://${gitUrl.host}${gitUrl.pathname}`
+    return `https://${gitUrl.host}${gitUrl.pathname}`;
   }
 
   return url;
 }
 
+export function getGithubPagesUrlIfPossible(url) {
+  const repositoryUrl = getHttpsRepositoryUrlIfPossible(url);
+  const m = repositoryUrl.match(
+    /^https:\/\/github\.com\/([^/]+)\/([^/]+?)(?:\.git)?\/?$/
+  );
+  if (!m) {
+    return null;
+  }
+
+  return `https://${m[1]}.github.io/${m[2]}/`;
+}
+
 export default class RepositoryGenerator extends Generator {
   async prompting() {
-    const args    = pick(this.options, ['gitUrl', 'name', 'license', 'packageManager', 'skipGit']);
+    const args = pick(this.options, [
+      'gitUrl',
+      'name',
+      'license',
+      'packageManager',
+      'skipGit',
+    ]);
     const storage = new MemoryStorage(args);
 
-    await this.prompt([
-      {
-        name:    'gitUrl',
-        message: 'Git repository URL (leave blank if you don\'t need to push to a remote Git repository):',
+    await this.prompt(
+      [
+        {
+          name: 'gitUrl',
+          message:
+            "Git repository URL (leave blank if you don't need to push to a remote Git repository):",
 
-        validate(val) {
-          if (!val) { return true; }
+          validate(val) {
+            if (!val) {
+              return true;
+            }
 
-          return errorOfGitUrl(val) || true;
-        }
-      },
-      {
-        name:    'name',
-        message: 'stanza repository name (used as a directory name):',
-
-        default({gitUrl}) {
-          if (!gitUrl) { return null; }
-
-          const path = new URL(canonifyGitUrl(gitUrl)).pathname;
-          const name = path.split('/').slice(-1)[0].replace(/\.git$/, '');
-
-          return errorOfRepositoryName(name) ? null : name;
+            return errorOfGitUrl(val) || true;
+          },
         },
+        {
+          name: 'name',
+          message: 'stanza repository name (used as a directory name):',
 
-        validate: async (val) => {
-          const result = required(val);
+          default({ gitUrl }) {
+            if (!gitUrl) {
+              return null;
+            }
 
-          if (result !== true) { return result; }
+            const path = new URL(canonifyGitUrl(gitUrl)).pathname;
+            const name = path
+              .split('/')
+              .slice(-1)[0]
+              .replace(/\.git$/, '');
 
-          const error = errorOfRepositoryName(val);
-          if (error) {
-            return error;
-          }
+            return errorOfRepositoryName(name) ? null : name;
+          },
 
-          const dest = this.destinationPath(val);
+          validate: async (val) => {
+            const result = required(val);
 
-          return await errorOfRepositoryPathExistence(dest) || true;
-        }
-      },
-      {
-        name:    'license',
-        default: 'MIT'
-      },
-      {
-        name:    'packageManager',
-        message: 'package manager:',
-        type:    'list',
-        choices: Object.keys(packageManagers)
-      }
-    ], storage);
+            if (result !== true) {
+              return result;
+            }
+
+            const error = errorOfRepositoryName(val);
+            if (error) {
+              return error;
+            }
+
+            const dest = this.destinationPath(val);
+
+            return (await errorOfRepositoryPathExistence(dest)) || true;
+          },
+        },
+        {
+          name: 'license',
+          default: 'MIT',
+        },
+        {
+          name: 'packageManager',
+          message: 'package manager:',
+          type: 'list',
+          choices: Object.keys(packageManagers),
+        },
+      ],
+      storage
+    );
 
     this.params = storage.data;
   }
 
   async writing() {
-    const {skipGit, gitUrl, name, packageManager} = this.params;
+    const { skipGit, gitUrl, name, packageManager } = this.params;
 
     const dest = this.destinationPath(name);
 
     const errors = [
       errorOfGitUrl(gitUrl),
       errorOfRepositoryName(name),
-      await errorOfRepositoryPathExistence(dest)
+      await errorOfRepositoryPathExistence(dest),
     ];
 
     for (const e of errors) {
-      if (!e) { continue; }
+      if (!e) {
+        continue;
+      }
 
       this.log.error(e);
       process.exit(1);
@@ -155,51 +192,57 @@ export default class RepositoryGenerator extends Generator {
     const commands = packageManagers[packageManager];
 
     this.destinationRoot(name);
-    this._gitPrepare({skipGit, gitUrl, dest});
+    this._gitPrepare({ skipGit, gitUrl, dest });
     this.writeDestinationJSON('package.json', packageJSON(this.params));
 
-    const templateParams = {...this.params, commands};
+    const githubPagesUrl = getGithubPagesUrlIfPossible(gitUrl);
+
+    const templateParams = { ...this.params, commands, githubPagesUrl };
 
     const copyOptions = {
       processDestinationPath: (fullPath) => {
         const relativePath = fullPath.slice(dest.length + 1);
-        const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
+        const dotted = relativePath.replace(/(?<=^|\/)_/g, '.');
 
         return this.destinationPath(dotted);
       },
 
       globOptions: {
-        dot: true
-      }
+        dot: true,
+      },
     };
 
     this.renderTemplate('**/*', '.', templateParams, null, copyOptions);
   }
 
   install() {
-    const {skipInstall, packageManager} = this.params;
+    const { skipInstall, packageManager } = this.params;
 
-    if (skipInstall) { return; }
+    if (skipInstall) {
+      return;
+    }
 
     this.installDependencies({
-      yarn:  packageManager === 'yarn',
-      npm:   packageManager === 'npm',
-      bower: false
+      yarn: packageManager === 'yarn',
+      npm: packageManager === 'npm',
+      bower: false,
     });
   }
 
   async end() {
-    const {skipGit, name} = this.params;
+    const { skipGit, name } = this.params;
 
-    this._gitCommit({skipGit, name, dest: this.destinationPath()});
+    this._gitCommit({ skipGit, name, dest: this.destinationPath() });
 
     this.log();
     this.log(gettingStarted(this.params));
     this.log();
   }
 
-  _gitPrepare({skipGit, gitUrl, dest}) {
-    if (skipGit) { return; }
+  _gitPrepare({ skipGit, gitUrl, dest }) {
+    if (skipGit) {
+      return;
+    }
 
     if (gitUrl) {
       this.spawnCommandSync('git', ['clone', gitUrl, dest]);
@@ -208,36 +251,45 @@ export default class RepositoryGenerator extends Generator {
     }
   }
 
-  _gitCommit({skipGit, name, dest}) {
-    if (skipGit) { return; }
+  _gitCommit({ skipGit, name, dest }) {
+    if (skipGit) {
+      return;
+    }
 
     this.spawnCommandSync('git', ['-C', dest, 'init']);
     this.spawnCommandSync('git', ['-C', dest, 'add', '--all']);
-    this.spawnCommandSync('git', ['-C', dest, 'commit', '--message', `Initialize new stanza repository: ${name}`]);
+    this.spawnCommandSync('git', [
+      '-C',
+      dest,
+      'commit',
+      '--message',
+      `Initialize new stanza repository: ${name}`,
+    ]);
   }
-};
+}
 
-const {version} = JSON.parse(fs.readFileSync(path.join(packagePath, 'package.json')));
+const { version } = JSON.parse(
+  fs.readFileSync(path.join(packagePath, 'package.json'))
+);
 
-function packageJSON({name, license, gitUrl}) {
-
+function packageJSON({ name, license, gitUrl }) {
   return {
     name,
     version: '0.0.1',
     license,
     repository: getHttpsRepositoryUrlIfPossible(gitUrl) || '',
     dependencies: {
-      togostanza: `^${version}`
+      togostanza: `^${version}`,
     },
     engines: {
-      node: '>=14'
+      node: '>=14',
     },
-    private: true
+    private: true,
   };
 }
 
-function gettingStarted({name, packageManager}) {
-  const {runner} = packageManagers[packageManager];
+function gettingStarted({ name, packageManager }) {
+  const { runner } = packageManagers[packageManager];
 
   return outdent`
     Getting Started
