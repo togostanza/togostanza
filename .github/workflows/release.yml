@@ -24,6 +24,10 @@ jobs:
 
       - run: echo "CAN_NPM_PUBLISH=$(npx can-npm-publish && echo true)" >> $GITHUB_ENV
 
+      - name: Workaround for npm v7 bug. Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
       - run: npm ci
         if: env.CAN_NPM_PUBLISH == 'true'
 
