@@ -19,7 +19,7 @@
     "@rollup/plugin-url": "^6.0.0",
     "@rollup/plugin-virtual": "^2.0.3",
     "@vue/compiler-sfc": "^3.0.5",
-    "bootstrap": "^5.0.0-beta2",
+    "bootstrap": "^5.0.2",
     "broccoli": "^3.4.2",
     "broccoli-merge-trees": "^4.2.0",
     "broccoli-plugin": "^4.0.3",
