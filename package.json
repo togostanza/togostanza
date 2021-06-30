@@ -58,7 +58,7 @@
     "sass": "^1.32.5",
     "tree-sync": "^2.0.0",
     "vue": "3.0.7",
-    "walk-sync": "^2.1.0",
+    "walk-sync": "^3.0.0",
     "yeoman-environment": "^2.10.3",
     "yeoman-generator": "^4.12.0"
   },
