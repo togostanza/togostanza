@@ -23,5 +23,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Workaround for npm v7 bug. Reconfigure git to use HTTP authentication
+        run: >
+          git config --global url."https://github.com/".insteadOf
+          ssh://git@github.com/
       - run: npm ci
       - run: npm test
