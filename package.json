@@ -48,7 +48,6 @@
     "picomatch": "^2.2.2",
     "resolve": "^1.18.1",
     "rollup": "^2.37.1",
-    "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-handlebars-plus": "github:ursm/rollup-plugin-handlebars-plus#fix-helpers",
     "rollup-plugin-json5": "^1.0.0",
     "rollup-plugin-styles": "^3.12.2",
