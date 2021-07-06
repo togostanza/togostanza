@@ -151,21 +151,20 @@ export default class MenuElement extends LitElement {
     };
   }
 
+  _renderMenuItem(item) {
+    return html`<li>
+      <a class="menu-item" @click="${this._handlerForMenuItem(item)}"
+        >${item.label}</a
+      >
+    </li>`;
+  }
+
   render() {
     return html`<div id="info-button">
         ${unsafeSVG(info.toSVG({ width: 16 }))}
       </div>
       <ul class="menu">
-        ${this.menuDefinition().map(
-          (menuItem) =>
-            html`<li>
-              <a
-                class="menu-item"
-                @click="${this._handlerForMenuItem(menuItem)}"
-                >${menuItem.label}</a
-              >
-            </li>`
-        )}
+        ${this.menuDefinition().map((item) => this._renderMenuItem(item))}
         <li>
           <a
             class="menu-item"
