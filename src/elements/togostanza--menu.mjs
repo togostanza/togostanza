@@ -101,6 +101,13 @@ export default class MenuElement extends LitElement {
         color: #1e2125;
         background-color: #e9ecef;
       }
+
+      .menu .divider {
+        height: 1px;
+        margin: 4px 1px;
+        background-color: #e5e5e5;
+        border-bottom: 1px solid #ffffff;
+      }
     `;
   }
 
@@ -160,17 +167,22 @@ export default class MenuElement extends LitElement {
           >
         </li>`;
 
+      case 'divider':
+        return html`<li class="divider"></li>`;
+
       default:
         throw new Error(`unknown menu item type specified: ${item.type}`);
     }
   }
 
   render() {
+    const menuDefinition = this.menuDefinition();
     return html`<div id="info-button">
         ${unsafeSVG(info.toSVG({ width: 16 }))}
       </div>
       <ul class="menu">
-        ${this.menuDefinition().map((item) => this._renderMenuItem(item))}
+        ${menuDefinition.map((item) => this._renderMenuItem(item))}
+        ${menuDefinition.length > 0 ? html`<li class="divider"></li>` : ''}
         <li>
           <a
             class="menu-item"
