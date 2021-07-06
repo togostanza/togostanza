@@ -152,11 +152,17 @@ export default class MenuElement extends LitElement {
   }
 
   _renderMenuItem(item) {
-    return html`<li>
-      <a class="menu-item" @click="${this._handlerForMenuItem(item)}"
-        >${item.label}</a
-      >
-    </li>`;
+    switch (item.type) {
+      case 'item':
+        return html`<li>
+          <a class="menu-item" @click="${this._handlerForMenuItem(item)}"
+            >${item.label}</a
+          >
+        </li>`;
+
+      default:
+        throw new Error(`unknown menu item type specified: ${item.type}`);
+    }
   }
 
   render() {
