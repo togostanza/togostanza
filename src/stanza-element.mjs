@@ -23,7 +23,12 @@ export async function defineStanzaElement({
 
       this.attachShadow({ mode: 'open' });
 
-      this.stanzaInstance = new stanzaModule.default(this, metadata, templates, url);
+      this.stanzaInstance = new stanzaModule.default(
+        this,
+        metadata,
+        templates,
+        url
+      );
     }
 
     connectedCallback() {
@@ -42,9 +47,9 @@ export async function defineStanzaElement({
     attributeChangedCallback(name, oldValue, newValue) {
       if (name === 'togostanza-menu-placement') {
         if (newValue) {
-          this.stanzaInstance.menu.setAttribute('placement', newValue);
+          this.stanzaInstance.menuElement.setAttribute('placement', newValue);
         } else {
-          this.stanzaInstance.menu.removeAttribute();
+          this.stanzaInstance.menuElement.removeAttribute();
         }
         return;
       }
