@@ -3,7 +3,7 @@ import HandlebarsRuntime from 'handlebars/runtime.js';
 
 export default class Stanza {
   constructor(element, metadata, templates, url) {
-    this.element  = element;
+    this.element = element;
     this.metadata = metadata;
 
     const handlebarsRuntime = HandlebarsRuntime.create();
@@ -20,10 +20,11 @@ export default class Stanza {
     main.style.overflow = 'auto';
     bbox.appendChild(main);
 
-    this.menu = document.createElement('togostanza--menu');
-    this.menu.setAttribute('href', url.replace(/\.js$/, '.html'));
+    this.menuElement = document.createElement('togostanza--menu');
+    this.menuElement.setAttribute('href', url.replace(/\.js$/, '.html'));
+    this.menuElement.menuDefinition = this.menu.bind(this);
 
-    bbox.appendChild(this.menu);
+    bbox.appendChild(this.menuElement);
 
     element.shadowRoot.appendChild(bbox);
 
@@ -36,6 +37,10 @@ export default class Stanza {
 
   get root() {
     return this.element.shadowRoot;
+  }
+
+  menu() {
+    return [];
   }
 
   renderTemplate({ template: templateName, parameters, selector }) {
@@ -96,7 +101,7 @@ export default class Stanza {
   importWebFontCSS(cssUrl) {
     const el = document.createElement('link');
 
-    el.rel  = 'stylesheet';
+    el.rel = 'stylesheet';
     el.type = 'text/css';
     el.href = new URL(cssUrl, this.url).href;
 
@@ -108,8 +113,8 @@ export default class Stanza {
     this.renderDebounced();
   }
 
-  async query({template, parameters, endpoint, method}) {
-    const sparql  = this.templates[template](parameters);
+  async query({ template, parameters, endpoint, method }) {
+    const sparql = this.templates[template](parameters);
     const payload = new URLSearchParams();
 
     payload.set('query', sparql);
@@ -119,9 +124,9 @@ export default class Stanza {
       method: method || 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept':       'application/sparql-results+json'
+        Accept: 'application/sparql-results+json',
       },
-      body: payload
+      body: payload,
     }).then((res) => res.json());
   }
 }
