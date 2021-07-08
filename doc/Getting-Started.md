@@ -148,7 +148,7 @@ You will see the [https://togostanza.github.io/example-stanza-repo](https://togo
 
 NOTE 1: If you forked a stanza repository, the action will not run on the forked repository. You need to enable GitHub Actions in the Actions tab of the forked repository. See https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows for details.
 
-NOTE 2: As default, the stanza repository is configured to be deploied from `main` branch, which is the recent default branch setting on GitHub. If you want to deploy from a branch other than `main` (e.g. `master`), you need to update the `branches` value on `.github/workflow/publish.yml` to change the conditions for invoking the workflow.
+NOTE 2: As default, the stanza repository is configured to be deployed from `main` branch, which is the recent default branch setting on GitHub. If you want to deploy from a branch other than `main` (e.g. `master`), you need to update the `branches` value on `.github/workflow/publish.yml` to change the conditions for invoking the workflow.
 
 ## Embedding stanza
 
