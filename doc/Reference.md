@@ -402,7 +402,49 @@ import multiply from '@/lib/multiply.js';
 
 ## Custom menu
 
-TODO
+By defining (overriding) the `menu()` method in the stanza class, you can add a menu item:
+
+```javascript
+// stanzas/custom-menu/index.js
+
+import Stanza from 'togostanza/stanza';
+
+export default class CustomMenuStanza extends Stanza {
+  menu() {
+    return [
+      {
+        type: 'item',
+        label: 'Open alert',
+        handler: () => {
+          alert(`Hi, ${this.params['say-to']}!`);
+        },
+      },
+    ];
+  }
+  // ...
+}
+```
+
+`menu()` must return an array of menu items.
+
+A menu item is an object like this:
+
+```javascript
+{
+  type: 'item',
+  label: 'Arbitrary menu label',
+  handler: () => { /* code invoked on click */ }
+}
+```
+
+You can also add a divider by adding an object with `'divider'` type:
+
+```javascript
+{
+  type: 'divider'
+}
+```
+
 
 ## Utility methods of Stanza
 
