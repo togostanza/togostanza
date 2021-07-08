@@ -399,6 +399,11 @@ export default function (x, y) {
 import multiply from '@/lib/multiply.js';
 ```
 
+
+## Custom menu
+
+TODO
+
 ## Utility methods of Stanza
 
 You can use the utility methods provided by the stanza base class.

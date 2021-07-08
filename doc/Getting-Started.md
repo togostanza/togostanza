@@ -626,3 +626,43 @@ Here `{&quot;value&quot;:42}` is the HTML escaped value of `{"value": 42}`.
 ### Other types
 
 See https://github.com/togostanza/togostanza/blob/master/doc/Reference.md#possible-values-for-stanzatype for other supported types.
+
+
+## Customizing menu
+
+You may have notice the (i) icon on stanzas (shown on the bottom-right corner by default). When you click the icon, a menu will pop up. By default, there is the only item saying "About this stanza" which will open the stanza page.
+
+You can add any items here by defining `menu()` method in the Stanza class as follows:
+
+```javascript
+// stanzas/custom-menu/index.js
+
+import Stanza from 'togostanza/stanza';
+
+export default class CustomMenuStanza extends Stanza {
+  menu() {
+    return [
+      {
+        type: 'item',
+        label: 'Open alert',
+        handler: () => {
+          alert(`Hi, ${this.params['say-to']}!`);
+        },
+      },
+    ];
+  }
+
+  async render() {
+    this.renderTemplate({
+      template: 'stanza.html.hbs',
+      parameters: {
+        greeting: `Hello, ${this.params['say-to']}!`,
+      },
+    });
+  }
+}
+```
+
+This code will add a menu item labeled "Open alert" and when the menu is clicked, the code specified in the `handler` will be invoked.
+
+As shown above, `menu()` method must return an array of menu items. See [Reference](./Reference.md#custom-menu) for details.
