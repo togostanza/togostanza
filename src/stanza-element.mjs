@@ -55,6 +55,10 @@ export async function defineStanzaElement({
       }
       this.stanzaInstance.handleAttributeChange(name, oldValue, newValue);
     }
+
+    render() {
+      this.stanzaInstance.render();
+    }
   }
 
   StanzaElement.observedAttributes = [
