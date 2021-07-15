@@ -21,7 +21,7 @@ export default class BuildPages extends BroccoliPlugin {
     super([repositoryDir], options);
 
     this.repositoryDir = repositoryDir;
-    this.environment   = options.environment;
+    this.environment = options.environment;
   }
 
   async build() {
@@ -35,61 +35,67 @@ export default class BuildPages extends BroccoliPlugin {
   }
 
   async buildVueApps(stanzas) {
-    const allMetadata = await Promise.all(stanzas.map(({metadata}) => metadata));
+    const allMetadata = await Promise.all(
+      stanzas.map(({ metadata }) => metadata)
+    );
 
+    console.log('HIHI');
     const bundle = await rollup({
       input: [
         path.join(packagePath, 'src', 'index-app.js'),
-        path.join(packagePath, 'src', 'help-app.js')
+        path.join(packagePath, 'src', 'help-app.js'),
       ],
 
       plugins: [
         virtual({
-          '-repository/all-metadata': `export default ${JSON.stringify(allMetadata)}`
+          '-repository/all-metadata': `export default ${JSON.stringify(
+            allMetadata
+          )}`,
         }),
 
         alias({
           entries: {
-            '-repository/package.json': `${this.repositoryDir}/package.json`
-          }
+            '-repository/package.json': `${this.repositoryDir}/package.json`,
+          },
         }),
 
         replace({
           'process.env.NODE_ENV': JSON.stringify(this.environment),
-          __VUE_OPTIONS_API__:    'false',
-          __VUE_PROD_DEVTOOLS__:  'false'
+          __VUE_OPTIONS_API__: 'false',
+          __VUE_PROD_DEVTOOLS__: 'false',
         }),
 
         resolve(),
-        commonjs(),
         vue({
           compilerOptions: {
             isCustomElement(tagName) {
               return tagName.startsWith('togostanza-');
-            }
-          }
+            },
+          },
         }),
+        commonjs(),
         json(),
 
         handlebars({
           handlebars: {
             id: resolvePackage('handlebars/runtime'),
           },
-          helpers: [path.join(packagePath, 'src', 'handlebars-helpers.js')]
+          helpers: [path.join(packagePath, 'src', 'handlebars-helpers.js')],
         }),
 
         styles({
           sass: {
-            impl: resolvePackage('sass')
-          }
-        })
-      ]
+            impl: resolvePackage('sass'),
+          },
+        }),
+      ],
     });
+    console.log('HOHO');
 
     await bundle.write({
-      format:    'esm',
-      dir:       path.join(this.outputPath, '-togostanza'),
-      sourcemap: true
+      format: 'esm',
+      dir: path.join(this.outputPath, '-togostanza'),
+      sourcemap: true,
     });
   }
 
@@ -102,22 +108,29 @@ export default class BuildPages extends BroccoliPlugin {
   async buildHelpPages(stanzas) {
     const template = handlebarsTemplate('help.html.hbs');
 
-    await Promise.all(stanzas.map(async (stanza) => {
-      const metadata = await stanza.metadata;
-      const readme   = await stanza.readme;
+    await Promise.all(
+      stanzas.map(async (stanza) => {
+        const metadata = await stanza.metadata;
+        const readme = await stanza.readme;
 
-      this.output.writeFileSync(`${stanza.id}.html`, template({
-        metadata,
-        readme: renderMarkdown(readme)
-      }));
-    }));
+        this.output.writeFileSync(
+          `${stanza.id}.html`,
+          template({
+            metadata,
+            readme: renderMarkdown(readme),
+          })
+        );
+      })
+    );
   }
 }
 
 function renderMarkdown(md) {
-  if (!md) { return ''; }
+  if (!md) {
+    return '';
+  }
 
-  const parser   = new commonmark.Parser();
+  const parser = new commonmark.Parser();
   const renderer = new commonmark.HtmlRenderer();
 
   return renderer.render(parser.parse(md));
