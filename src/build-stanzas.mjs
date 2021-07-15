@@ -100,6 +100,8 @@ export default class BuildStanzas extends BroccoliPlugin {
           'process.env.NODE_ENV': JSON.stringify(this.environment),
         }),
 
+        ...customRollupPlugins,
+
         nodeResolve(),
         commonjs(),
         json(),
@@ -107,8 +109,6 @@ export default class BuildStanzas extends BroccoliPlugin {
         url({
           limit: Infinity
         }),
-
-        ...customRollupPlugins
       ],
 
       external(id) {
