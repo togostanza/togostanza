@@ -97,7 +97,10 @@ export default class BuildStanzas extends BroccoliPlugin {
         }),
 
         replace({
-          'process.env.NODE_ENV': JSON.stringify(this.environment),
+          values: {
+            'process.env.NODE_ENV': JSON.stringify(this.environment),
+          },
+          preventAssignment: true,
         }),
 
         ...customRollupPlugins,
