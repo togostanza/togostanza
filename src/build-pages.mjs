@@ -39,7 +39,6 @@ export default class BuildPages extends BroccoliPlugin {
       stanzas.map(({ metadata }) => metadata)
     );
 
-    console.log('HIHI');
     const bundle = await rollup({
       input: [
         path.join(packagePath, 'src', 'index-app.js'),
@@ -90,7 +89,6 @@ export default class BuildPages extends BroccoliPlugin {
         }),
       ],
     });
-    console.log('HOHO');
 
     await bundle.write({
       format: 'esm',
