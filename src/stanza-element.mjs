@@ -49,7 +49,7 @@ export async function defineStanzaElement({
         if (newValue) {
           this.stanzaInstance.menuElement.setAttribute('placement', newValue);
         } else {
-          this.stanzaInstance.menuElement.removeAttribute();
+          this.stanzaInstance.menuElement.removeAttribute('placement');
         }
         return;
       }
