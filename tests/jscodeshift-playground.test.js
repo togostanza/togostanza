@@ -77,7 +77,7 @@ function fn() { expr };`,
   async render() { foo; }
 };
 function fn() { expr };`,
-  'change to classe-based stanza keeping async'
+  'change to class-based stanza keeping async'
 );
 
 defineInlineTest(
