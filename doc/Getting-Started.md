@@ -150,6 +150,15 @@ NOTE 1: If you forked a stanza repository, the action will not run on the forked
 
 NOTE 2: As default, the stanza repository is configured to be deployed from `main` branch, which is the recent default branch setting on GitHub. If you want to deploy from a branch other than `main` (e.g. `master`), you need to update the `branches` value on `.github/workflow/publish.yml` to change the conditions for invoking the workflow.
 
+NOTE 3: If you get the following error when you try to `git push` to the repository, it is probably because the [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) you are using to push does not have a `workflow` scope.
+
+```
+! [remote rejected] main -> main (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/publish.yml` without `workflow` scope)
+```
+
+Please refer to https://github.com/settings/tokens and add the `workflow` scope to the corresponding personal access token.
+
+
 ## Embedding stanza
 
 Now your repository is hosted by GitHub pages and publicly accessible.
