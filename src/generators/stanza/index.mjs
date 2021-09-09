@@ -12,99 +12,116 @@ import { required } from '../validators.mjs';
 
 export default class StanzaGenerator extends Generator {
   async prompting() {
-    const args    = pick(this.options, ['id', 'label', 'definition', 'type', 'display', 'provider', 'license', 'author', 'address', 'timestamp']);
+    const args = pick(this.options, [
+      'id',
+      'label',
+      'definition',
+      'type',
+      'display',
+      'provider',
+      'license',
+      'author',
+      'address',
+      'timestamp',
+    ]);
     const storage = new MemoryStorage(args);
 
-    await this.prompt([
-      {
-        name:     'id',
-        message:  'stanza id (<togostanza-ID>):',
-        validate: required,
-        filter: (input) => kebabCase(input)
-      },
-      {
-        name:     'label',
-        default:  ({id}) => upperFirst(lowerCase(args.id || id)),
-        validate: required
-      },
-      {
-        name:    'definition',
-        message: 'definition (description):',
-      },
-      {
-        name: 'type',
-        type: 'list',
-        choices: [
-          'Stanza',
-          'NanoStanza',
-          {name: 'Other (free form)', value: null}
-        ]
-      },
-      {
-        name: 'type',
-        when: ({type}) => type === null,
-        askAnswered: true
-      },
-      {
-        name: 'display',
-        type: 'list',
-        choices: [
-          'Text',
-          'Numeral',
-          'Table',
-          'Chart',
-          'Tree',
-          'Graph',
-          'Map',
-          'Image',
-          {name: 'Other (free form)', value: null}
-        ],
-        pageSize: Infinity
-      },
-      {
-        name: 'display',
-        when: ({display}) => display === null,
-        askAnswered: true
-      },
-      {
-        name: 'provider'
-      },
-      {
-        name:    'license',
-        default: 'MIT' // TODO read package.json?
-      },
-      {
-        name:    'author',
-        default: this.user.git.name()
-      },
-      {
-        name:    'address',
-        default: this.user.git.email()
-      }
-    ], storage);
+    await this.prompt(
+      [
+        {
+          name: 'id',
+          message: 'stanza id (<togostanza-ID>):',
+          validate: required,
+          filter: (input) => kebabCase(input),
+        },
+        {
+          name: 'label',
+          default: ({ id }) => upperFirst(lowerCase(args.id || id)),
+          validate: required,
+        },
+        {
+          name: 'definition',
+          message: 'definition (description):',
+        },
+        {
+          name: 'type',
+          type: 'list',
+          choices: [
+            'Stanza',
+            'NanoStanza',
+            { name: 'Other (free form)', value: null },
+          ],
+        },
+        {
+          name: 'type',
+          when: ({ type }) => type === null,
+          askAnswered: true,
+        },
+        {
+          name: 'display',
+          type: 'list',
+          choices: [
+            'Text',
+            'Numeral',
+            'Table',
+            'Chart',
+            'Tree',
+            'Graph',
+            'Map',
+            'Image',
+            { name: 'Other (free form)', value: null },
+          ],
+          pageSize: Infinity,
+        },
+        {
+          name: 'display',
+          when: ({ display }) => display === null,
+          askAnswered: true,
+        },
+        {
+          name: 'provider',
+        },
+        {
+          name: 'license',
+          default: 'MIT', // TODO read package.json?
+        },
+        {
+          name: 'author',
+          default: this.user.git.name(),
+        },
+        {
+          name: 'address',
+          default: this.user.git.email(),
+        },
+      ],
+      storage
+    );
 
-    this.params = {...storage.data, id: kebabCase(storage.data.id)};
+    this.params = { ...storage.data, id: kebabCase(storage.data.id) };
   }
 
   writing() {
-    this.writeDestinationJSON(this._stanzaDestinationPath('metadata.json'), metadataJSON(this.params));
+    this.writeDestinationJSON(
+      this._stanzaDestinationPath('metadata.json'),
+      metadataJSON(this.params)
+    );
 
     const pascalCase = (str) => upperFirst(camelCase(str));
 
-    const templateParams = {...this.params, pascalCase};
+    const templateParams = { ...this.params, pascalCase };
 
     const copyOptions = {
       processDestinationPath: (fullPath) => {
         const relativePath = fullPath.slice(this.destinationRoot().length + 1);
-        const dotted       = relativePath.replace(/(?<=^|\/)_/g, '.');
+        const dotted = relativePath.replace(/(?<=^|\/)_/g, '.');
 
         return this.destinationPath(this._stanzaDestinationPath(dotted));
       },
 
       globOptions: {
-        dot: true
-      }
-    }
+        dot: true,
+      },
+    };
 
     this.renderTemplate('**/*', '.', templateParams, null, copyOptions);
   }
@@ -112,12 +129,23 @@ export default class StanzaGenerator extends Generator {
   _stanzaDestinationPath(...paths) {
     return path.join('stanzas', this.params.id, ...paths);
   }
-};
+}
 
-function metadataJSON({id, label, definition, type, display, provider, license, author, address, timestamp}) {
+function metadataJSON({
+  id,
+  label,
+  definition,
+  type,
+  display,
+  provider,
+  license,
+  author,
+  address,
+  timestamp,
+}) {
   return {
     '@context': {
-      stanza: 'http://togostanza.org/resource/stanza#'
+      stanza: 'http://togostanza.org/resource/stanza#',
     },
     '@id': id,
     'stanza:label': label,
@@ -137,8 +165,8 @@ function metadataJSON({id, label, definition, type, display, provider, license, 
         'stanza:type': 'string',
         'stanza:example': 'world',
         'stanza:description': 'who to say hello to',
-        'stanza:required': false
-      }
+        'stanza:required': false,
+      },
     ],
     'stanza:menu-placement': 'bottom-right',
     'stanza:style': [
@@ -146,21 +174,17 @@ function metadataJSON({id, label, definition, type, display, provider, license, 
         'stanza:key': '--greeting-color',
         'stanza:type': 'color',
         'stanza:default': '#eb7900',
-        'stanza:description': 'text color of greeting'
+        'stanza:description': 'text color of greeting',
       },
       {
         'stanza:key': '--greeting-align',
         'stanza:type': 'single-choice',
-        'stanza:choice': [
-          'left',
-          'center',
-          'right'
-        ],
+        'stanza:choice': ['left', 'center', 'right'],
         'stanza:default': 'center',
-        'stanza:description': 'text align of greeting'
+        'stanza:description': 'text align of greeting',
       },
     ],
     'stanza:incomingEvent': [],
-    'stanza:outgoingEvent': []
+    'stanza:outgoingEvent': [],
   };
 }

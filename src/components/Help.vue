@@ -6,7 +6,8 @@ th {
   width: 1%;
 }
 
-th, td {
+th,
+td {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
@@ -14,15 +15,25 @@ th, td {
 
 <template>
   <Layout containerClass="container-fluid">
-    <h1 class="display-4">{{metadata['stanza:label']}}</h1>
-    <p class="lead">{{metadata['stanza:definition']}}</p>
+    <h1 class="display-4">{{ metadata['stanza:label'] }}</h1>
+    <p class="lead">{{ metadata['stanza:definition'] }}</p>
 
     <div class="row">
       <div class="col-lg-6">
         <nav class="nav nav-tabs" role="tablist">
-          <a class="nav-link active" href="#overview" data-bs-toggle="tab" role="tab">Overview</a>
-          <a class="nav-link" href="#customize" data-bs-toggle="tab" role="tab">Customize</a>
-          <a class="nav-link" href="#event" data-bs-toggle="tab" role="tab">Event</a>
+          <a
+            class="nav-link active"
+            href="#overview"
+            data-bs-toggle="tab"
+            role="tab"
+            >Overview</a
+          >
+          <a class="nav-link" href="#customize" data-bs-toggle="tab" role="tab"
+            >Customize</a
+          >
+          <a class="nav-link" href="#event" data-bs-toggle="tab" role="tab"
+            >Event</a
+          >
         </nav>
 
         <div class="tab-content mt-3">
@@ -31,17 +42,17 @@ th, td {
               <tbody>
                 <tr>
                   <th>Display</th>
-                  <td>{{metadata['stanza:display'] || '-'}}</td>
+                  <td>{{ metadata['stanza:display'] || '-' }}</td>
                 </tr>
 
                 <tr>
                   <th>Type</th>
-                  <td>{{metadata['stanza:type'] || '-'}}</td>
+                  <td>{{ metadata['stanza:type'] || '-' }}</td>
                 </tr>
 
                 <tr>
                   <th>Provider</th>
-                  <td>{{metadata['stanza:provider'] || '-'}}</td>
+                  <td>{{ metadata['stanza:provider'] || '-' }}</td>
                 </tr>
 
                 <tr>
@@ -49,10 +60,13 @@ th, td {
 
                   <td>
                     <address class="mb-0">
-                      {{metadata['stanza:author'] || '-'}}
+                      {{ metadata['stanza:author'] || '-' }}
 
                       <template v-if="metadata['stanza:address']">
-                        &lt;<a :href="`mailto:${metadata['stanza:address']}`">{{metadata['stanza:address']}}</a>&gt;
+                        &lt;<a :href="`mailto:${metadata['stanza:address']}`">{{
+                          metadata['stanza:address']
+                        }}</a
+                        >&gt;
                       </template>
                     </address>
                   </td>
@@ -62,33 +76,39 @@ th, td {
                   <th>Contributors</th>
 
                   <td>
-                    <template v-if="metadata['stanza:contributor'] && metadata['stanza:contributor'].length > 0">
+                    <template
+                      v-if="
+                        metadata['stanza:contributor'] &&
+                        metadata['stanza:contributor'].length > 0
+                      "
+                    >
                       <ul class="list-unstyled mb-0">
-                        <li v-for="contributor in metadata['stanza:contributor']" :key="contributor">
-                          {{contributor}}
+                        <li
+                          v-for="contributor in metadata['stanza:contributor']"
+                          :key="contributor"
+                        >
+                          {{ contributor }}
                         </li>
                       </ul>
                     </template>
 
-                    <template v-else>
-                      -
-                    </template>
+                    <template v-else> - </template>
                   </td>
                 </tr>
 
                 <tr>
                   <th>License</th>
-                  <td>{{metadata['stanza:license'] || '-'}}</td>
+                  <td>{{ metadata['stanza:license'] || '-' }}</td>
                 </tr>
 
                 <tr>
                   <th>Created</th>
-                  <td>{{metadata['stanza:created'] || '-'}}</td>
+                  <td>{{ metadata['stanza:created'] || '-' }}</td>
                 </tr>
 
                 <tr>
                   <th>Updated</th>
-                  <td>{{metadata['stanza:updated'] || '-'}}</td>
+                  <td>{{ metadata['stanza:updated'] || '-' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -104,8 +124,18 @@ th, td {
             <section>
               <h2 class="my-3">Parameters</h2>
 
-              <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3">
-                <div v-for="{param, input} in paramFields" :key="param['stanza:key']" class="col">
+              <div
+                class="
+                  row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2
+                  gx-4
+                  gy-3
+                "
+              >
+                <div
+                  v-for="{ param, input } in paramFields"
+                  :key="param['stanza:key']"
+                  class="col"
+                >
                   <FormField
                     :input="input"
                     :name="param['stanza:key']"
@@ -121,20 +151,36 @@ th, td {
                     :input="menuPlacement"
                     name="togostanza-menu-placement"
                     type="single-choice"
-                    :choices="['top-left', 'top-right', 'bottom-left', 'bottom-right', 'none']"
+                    :choices="[
+                      'top-left',
+                      'top-right',
+                      'bottom-left',
+                      'bottom-right',
+                      'none',
+                    ]"
                     :help-text="'Placement of the information icon which links to this page.'"
                   ></FormField>
                 </div>
               </div>
             </section>
 
-            <hr class="mt-4 mb-3">
+            <hr class="mt-4 mb-3" />
 
             <section>
               <h2 class="my-3">Styles</h2>
 
-              <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3">
-                <div v-for="{style, input} in styleFields" :key="style['stanza:key']" class="col">
+              <div
+                class="
+                  row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2
+                  gx-4
+                  gy-3
+                "
+              >
+                <div
+                  v-for="{ style, input } in styleFields"
+                  :key="style['stanza:key']"
+                  class="col"
+                >
                   <FormField
                     :input="input"
                     :name="style['stanza:key']"
@@ -155,9 +201,13 @@ th, td {
             <h2 class="my-3">Outgoing Events</h2>
 
             <div class="row row-cols-2">
-              <div v-for="{name, description} in outgoingEvents" :key="name" class="col">
-                <div>{{name}}</div>
-                <div class="text-muted">{{description}}</div>
+              <div
+                v-for="{ name, description } in outgoingEvents"
+                :key="name"
+                class="col"
+              >
+                <div>{{ name }}</div>
+                <div class="text-muted">{{ description }}</div>
               </div>
             </div>
 
@@ -168,9 +218,13 @@ th, td {
             <h2 class="my-3">Incoming Events</h2>
 
             <div class="row row-cols-2">
-              <div v-for="{name, description} in incomingEvents" :key="name" class="col">
-                <div>{{name}}</div>
-                <div class="text-muted">{{description}}</div>
+              <div
+                v-for="{ name, description } in incomingEvents"
+                :key="name"
+                class="col"
+              >
+                <div>{{ name }}</div>
+                <div class="text-muted">{{ description }}</div>
               </div>
             </div>
 
@@ -182,9 +236,13 @@ th, td {
       </div>
 
       <div class="col-lg-6">
-        <hr class="d-lg-none mb-4">
+        <hr class="d-lg-none mb-4" />
 
-        <StanzaPreviewer :metadata="metadata" :params="params" :styleVars="styleVars"></StanzaPreviewer>
+        <StanzaPreviewer
+          :metadata="metadata"
+          :params="params"
+          :styleVars="styleVars"
+        ></StanzaPreviewer>
       </div>
     </div>
   </Layout>
@@ -203,76 +261,83 @@ export default defineComponent({
   components: {
     FormField,
     Layout,
-    StanzaPreviewer
+    StanzaPreviewer,
   },
 
   props: ['metadata', 'readme'],
 
-  setup({metadata, readme}) {
+  setup({ metadata, readme }) {
     const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
       return {
         param,
-        input: useInput(param['stanza:example'], param['stanza:type'], false)
+        input: useInput(param['stanza:example'], param['stanza:type'], false),
       };
     });
 
-    const menuPlacement = useInput(metadata['stanza:menu-placement'] || 'bottom-right', 'string');
+    const menuPlacement = useInput(
+      metadata['stanza:menu-placement'] || 'bottom-right',
+      'string'
+    );
 
     const params = computed(() => {
       return [
-        ...paramFields.map(({param, input}) => {
+        ...paramFields.map(({ param, input }) => {
           return {
             name: param['stanza:key'],
             type: param['stanza:type'],
-            input
+            input,
           };
         }),
         {
-          name:  'togostanza-menu-placement',
-          input: menuPlacement
-        }
-      ].filter(({input}) => (
-        !input.isDefault.value
-      )).map(({name, input, type}) => {
-        return {
-          name,
-          type,
-          value: input.valueStr.value
-        };
-      });
+          name: 'togostanza-menu-placement',
+          input: menuPlacement,
+        },
+      ]
+        .filter(({ input }) => !input.isDefault.value)
+        .map(({ name, input, type }) => {
+          return {
+            name,
+            type,
+            value: input.valueStr.value,
+          };
+        });
     });
 
     const styleFields = (metadata['stanza:style'] || []).map((style) => {
       return {
         style,
-        input: useInput(style['stanza:default'], style['stanza:type'])
+        input: useInput(style['stanza:default'], style['stanza:type']),
       };
     });
 
     const styleVars = computed(() => {
-      return styleFields.filter(({input}) => (
-        !input.isDefault.value
-      )).map(({style, input}) => {
+      return styleFields
+        .filter(({ input }) => !input.isDefault.value)
+        .map(({ style, input }) => {
+          return {
+            name: style['stanza:key'],
+            value: input.valueStr.value,
+          };
+        });
+    });
+
+    const outgoingEvents = (metadata['stanza:outgoingEvent'] || []).map(
+      (event) => {
         return {
-          name:  style['stanza:key'],
-          value: input.valueStr.value
+          name: event['stanza:key'],
+          description: event['stanza:description'],
         };
-      });
-    });
+      }
+    );
 
-    const outgoingEvents = (metadata['stanza:outgoingEvent'] || []).map((event) => {
-      return {
-        name:        event['stanza:key'],
-        description: event['stanza:description']
-      };
-    });
-
-    const incomingEvents = (metadata['stanza:incomingEvent'] || []).map((event) => {
-      return {
-        name:        event['stanza:key'],
-        description: event['stanza:description']
-      };
-    });
+    const incomingEvents = (metadata['stanza:incomingEvent'] || []).map(
+      (event) => {
+        return {
+          name: event['stanza:key'],
+          description: event['stanza:description'],
+        };
+      }
+    );
 
     return {
       metadata,
@@ -283,23 +348,27 @@ export default defineComponent({
       styleFields,
       styleVars,
       outgoingEvents,
-      incomingEvents
+      incomingEvents,
     };
-  }
+  },
 });
 
 function useInput(initValue, type, hasDefault = true) {
   const initValueStr = stringify(initValue, type);
-  const valueStr     = ref(initValueStr);
-  const valueParsed  = computed(() => parse(valueStr.value, type));
-  const isDefault    = computed(() => hasDefault && (valueStr.value === initValueStr));
+  const valueStr = ref(initValueStr);
+  const valueParsed = computed(() => parse(valueStr.value, type));
+  const isDefault = computed(
+    () => hasDefault && valueStr.value === initValueStr
+  );
 
   function setValueStr(newValStr) {
     valueStr.value = newValStr;
   }
 
   function resetToDefault() {
-    if (!hasDefault) { return; }
+    if (!hasDefault) {
+      return;
+    }
 
     this.setValueStr(initValueStr);
   }
@@ -310,25 +379,30 @@ function useInput(initValue, type, hasDefault = true) {
     setValueStr,
     hasDefault,
     isDefault,
-    resetToDefault
+    resetToDefault,
   };
 }
 
 function stringify(value, type) {
-  if (value === null || value === undefined) { return null; }
+  if (value === null || value === undefined) {
+    return null;
+  }
 
   switch (type) {
     case 'boolean':
     case 'number':
     case 'json':
       return JSON.stringify(value);
-    default: // value is a string (event if type is not a string. e.g. date)
+    default:
+      // value is a string (event if type is not a string. e.g. date)
       return value;
   }
 }
 
 function parse(valueStr, type) {
-  if (valueStr === null || valueStr === undefined) { return null; }
+  if (valueStr === null || valueStr === undefined) {
+    return null;
+  }
 
   switch (type) {
     case 'boolean':
