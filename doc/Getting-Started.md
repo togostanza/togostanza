@@ -226,7 +226,6 @@ stanzas/hello
   "stanza:label": "Hello",
   "stanza:definition": "My description.",
   "stanza:type": "Stanza",
-  "stanza:display": "Text",
   "stanza:provider": "",
   "stanza:license": "MIT",
   "stanza:author": "Stanza Togo",

@@ -41,11 +41,6 @@ td {
             <table class="table table-borderless border mb-1">
               <tbody>
                 <tr>
-                  <th>Display</th>
-                  <td>{{ metadata['stanza:display'] || '-' }}</td>
-                </tr>
-
-                <tr>
                   <th>Type</th>
                   <td>{{ metadata['stanza:type'] || '-' }}</td>
                 </tr>
