@@ -19,7 +19,6 @@ const command = new commander.Command()
   .option('--type <type>', 'type')
   .option('--license <license>', 'license')
   .option('--author <author>', 'author')
-  .option('--address <address>', 'address')
   .option(
     '--timestamp <date>',
     'timestamp',

@@ -63,7 +63,6 @@ describe('generate stanza', () => {
         '--type',       'TYPE',
         '--license',    'LICENSE',
         '--author',     'AUTHOR',
-        '--address',    'ADDRESS',
         '--timestamp',  '2020-10-05'
       ]);
 
@@ -82,7 +81,6 @@ describe('generate stanza', () => {
         '--type',       'TYPE',
         '--license',    'LICENSE',
         '--author',     'AUTHOR',
-        '--address',    'ADDRESS',
         '--timestamp',  '2020-10-05'
       ]);
 
@@ -158,7 +156,6 @@ describe('build', () => {
         '--type',       'TYPE',
         '--license',    'LICENSE',
         '--author',     'AUTHOR',
-        '--address',    'ADDRESS',
         '--timestamp',  '2020-10-05'
       ]);
 

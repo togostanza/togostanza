@@ -51,13 +51,6 @@ td {
                   <td>
                     <address class="mb-0">
                       {{ metadata['stanza:author'] || '-' }}
-
-                      <template v-if="metadata['stanza:address']">
-                        &lt;<a :href="`mailto:${metadata['stanza:address']}`">{{
-                          metadata['stanza:address']
-                        }}</a
-                        >&gt;
-                      </template>
                     </address>
                   </td>
                 </tr>

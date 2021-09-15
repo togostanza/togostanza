@@ -19,7 +19,6 @@ export default class StanzaGenerator extends Generator {
       'type',
       'license',
       'author',
-      'address',
       'timestamp',
     ]);
     const storage = new MemoryStorage(args);
@@ -62,10 +61,6 @@ export default class StanzaGenerator extends Generator {
         {
           name: 'author',
           default: this.user.git.name(),
-        },
-        {
-          name: 'address',
-          default: this.user.git.email(),
         },
       ],
       storage
@@ -112,7 +107,6 @@ function metadataJSON({
   type,
   license,
   author,
-  address,
   timestamp,
 }) {
   return {
@@ -125,7 +119,6 @@ function metadataJSON({
     'stanza:type': type,
     'stanza:license': license,
     'stanza:author': author,
-    'stanza:address': address,
     'stanza:contributor': [],
     'stanza:created': timestamp,
     'stanza:updated': timestamp,

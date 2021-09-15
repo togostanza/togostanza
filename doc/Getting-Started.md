@@ -237,7 +237,6 @@ stanzas/hello
   "stanza:type": "Stanza",
   "stanza:license": "MIT",
   "stanza:author": "Stanza Togo",
-  "stanza:address": "togostanza@example.com",
   "stanza:contributor": [],
   "stanza:created": "2020-10-08",
   "stanza:updated": "2020-10-08",

@@ -34,7 +34,6 @@ This command prompts you to enter the parameters interactively, but you can supp
 - `--type <type>`
 - `--license <license>`
 - `--author <author>`
-- `--address <address>`
 - `--timestamp <date>`
 
 ### togostanza init
@@ -99,7 +98,6 @@ Also, the togostanza generate stanza command generates files and directory struc
 | `stanza:type`           | Type of the stanza, e.g. Stanza, MetaStanza, NanoStanza.                                                                                     |
 | `stanza:license`        | License for this stanza.                                                                                                                     |
 | `stanza:author`         | Name of the stanza author.                                                                                                                   |
-| `stanza:address`        | Email address of the stanza author.                                                                                                          |
 | `stanza:contributor`    | List of names who have contributed to this stanza.                                                                                           |
 | `stanza:created`        | Date the stanza was created.                                                                                                                 |
 | `stanza:updated`        | Date the stanza was updated.                                                                                                                 |
