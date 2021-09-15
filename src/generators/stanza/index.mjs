@@ -17,7 +17,6 @@ export default class StanzaGenerator extends Generator {
       'label',
       'definition',
       'type',
-      'provider',
       'license',
       'author',
       'address',
@@ -55,9 +54,6 @@ export default class StanzaGenerator extends Generator {
           name: 'type',
           when: ({ type }) => type === null,
           askAnswered: true,
-        },
-        {
-          name: 'provider',
         },
         {
           name: 'license',
@@ -114,7 +110,6 @@ function metadataJSON({
   label,
   definition,
   type,
-  provider,
   license,
   author,
   address,
@@ -128,7 +123,6 @@ function metadataJSON({
     'stanza:label': label,
     'stanza:definition': definition,
     'stanza:type': type,
-    'stanza:provider': provider,
     'stanza:license': license,
     'stanza:author': author,
     'stanza:address': address,

@@ -235,7 +235,6 @@ stanzas/hello
   "stanza:label": "Hello",
   "stanza:definition": "My description.",
   "stanza:type": "Stanza",
-  "stanza:provider": "",
   "stanza:license": "MIT",
   "stanza:author": "Stanza Togo",
   "stanza:address": "togostanza@example.com",

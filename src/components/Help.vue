@@ -46,11 +46,6 @@ td {
                 </tr>
 
                 <tr>
-                  <th>Provider</th>
-                  <td>{{ metadata['stanza:provider'] || '-' }}</td>
-                </tr>
-
-                <tr>
                   <th>Author</th>
 
                   <td>
