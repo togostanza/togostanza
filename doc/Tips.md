@@ -57,3 +57,23 @@ export default function config(environment) {
 ```
 
 Note that this feature is highly experimental and may change in future versions.
+
+## Requesting a forced update of stanzas
+
+You can request stanzas to re-render from the page where the stanzas are embedded as follows:
+
+1. Find the stanza element
+
+Query the stanza element to update like this:
+
+```
+const stanza = document.getElementsByTagName('togostanza-barchart')[0];
+```
+
+2. Request re-render
+
+Call `render()` method of the stanza:
+
+```
+stanza.render()
+```
