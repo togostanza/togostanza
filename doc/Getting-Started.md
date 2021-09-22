@@ -234,7 +234,6 @@ stanzas/hello
   "@id": "hello",
   "stanza:label": "Hello",
   "stanza:definition": "My description.",
-  "stanza:type": "Stanza",
   "stanza:license": "MIT",
   "stanza:author": "Stanza Togo",
   "stanza:contributor": [],

@@ -16,7 +16,6 @@ const command = new commander.Command()
   .description('generate a stanza')
   .option('--label <label>', 'label')
   .option('--definition <definition>', 'definition')
-  .option('--type <type>', 'type')
   .option('--license <license>', 'license')
   .option('--author <author>', 'author')
   .option(

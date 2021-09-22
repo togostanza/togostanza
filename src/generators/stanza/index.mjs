@@ -16,7 +16,6 @@ export default class StanzaGenerator extends Generator {
       'id',
       'label',
       'definition',
-      'type',
       'license',
       'author',
       'timestamp',
@@ -39,20 +38,6 @@ export default class StanzaGenerator extends Generator {
         {
           name: 'definition',
           message: 'definition (description):',
-        },
-        {
-          name: 'type',
-          type: 'list',
-          choices: [
-            'Stanza',
-            'NanoStanza',
-            { name: 'Other (free form)', value: null },
-          ],
-        },
-        {
-          name: 'type',
-          when: ({ type }) => type === null,
-          askAnswered: true,
         },
         {
           name: 'license',
@@ -104,7 +89,6 @@ function metadataJSON({
   id,
   label,
   definition,
-  type,
   license,
   author,
   timestamp,
@@ -116,7 +100,6 @@ function metadataJSON({
     '@id': id,
     'stanza:label': label,
     'stanza:definition': definition,
-    'stanza:type': type,
     'stanza:license': license,
     'stanza:author': author,
     'stanza:contributor': [],

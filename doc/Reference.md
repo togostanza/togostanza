@@ -31,7 +31,6 @@ This command prompts you to enter the parameters interactively, but you can supp
 
 - `--label <label>`
 - `--definition <definition>`
-- `--type <type>`
 - `--license <license>`
 - `--author <author>`
 - `--timestamp <date>`
@@ -95,7 +94,6 @@ Also, the togostanza generate stanza command generates files and directory struc
 | `@id`                   | Identifier of the stanza. Used as the name of the stanza element (`<togostanza-{{id}}>`) and the name of the generated JavaScript file, etc. |
 | `stanza:label`          | Human-readable stanza name. Used for the list of stanzas and help pages in the repository.                                                   |
 | `stanza:definition`     | Brief description of the stanza. Used for the list of stanzas and stanza pages in the repository.                                            |
-| `stanza:type`           | Type of the stanza, e.g. Stanza, MetaStanza, NanoStanza.                                                                                     |
 | `stanza:license`        | License for this stanza.                                                                                                                     |
 | `stanza:author`         | Name of the stanza author.                                                                                                                   |
 | `stanza:contributor`    | List of names who have contributed to this stanza.                                                                                           |
