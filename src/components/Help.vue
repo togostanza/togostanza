@@ -41,28 +41,11 @@ td {
             <table class="table table-borderless border mb-1">
               <tbody>
                 <tr>
-                  <th>Type</th>
-                  <td>{{ metadata['stanza:type'] || '-' }}</td>
-                </tr>
-
-                <tr>
-                  <th>Provider</th>
-                  <td>{{ metadata['stanza:provider'] || '-' }}</td>
-                </tr>
-
-                <tr>
                   <th>Author</th>
 
                   <td>
                     <address class="mb-0">
                       {{ metadata['stanza:author'] || '-' }}
-
-                      <template v-if="metadata['stanza:address']">
-                        &lt;<a :href="`mailto:${metadata['stanza:address']}`">{{
-                          metadata['stanza:address']
-                        }}</a
-                        >&gt;
-                      </template>
                     </address>
                   </td>
                 </tr>

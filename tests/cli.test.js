@@ -60,11 +60,8 @@ describe('generate stanza', () => {
       const {output, status} = togostanza(['generate', 'stanza', 'hello',
         '--label',      'LABEL',
         '--definition', 'DEFINITION',
-        '--type',       'TYPE',
-        '--provider',   'PROVIDER',
         '--license',    'LICENSE',
         '--author',     'AUTHOR',
-        '--address',    'ADDRESS',
         '--timestamp',  '2020-10-05'
       ]);
 
@@ -80,11 +77,8 @@ describe('generate stanza', () => {
       const {output, status} = togostanza(['generate', 'stanza', 'helloWorld',
         '--label',      'LABEL',
         '--definition', 'DEFINITION',
-        '--type',       'TYPE',
-        '--provider',   'PROVIDER',
         '--license',    'LICENSE',
         '--author',     'AUTHOR',
-        '--address',    'ADDRESS',
         '--timestamp',  '2020-10-05'
       ]);
 
@@ -157,11 +151,8 @@ describe('build', () => {
       const generateStanza = togostanza(['generate', 'stanza', 'hello',
         '--label',      'LABEL',
         '--definition', 'DEFINITION',
-        '--type',       'TYPE',
-        '--provider',   'PROVIDER',
         '--license',    'LICENSE',
         '--author',     'AUTHOR',
-        '--address',    'ADDRESS',
         '--timestamp',  '2020-10-05'
       ]);
 
