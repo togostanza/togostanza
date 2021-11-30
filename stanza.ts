@@ -168,7 +168,7 @@ export default class Stanza {
     template: string;
     parameters: Record<string, any>;
     endpoint: string;
-    method: string;
+    method?: string;
   }): Promise<any> {
     const sparql = this.templates[template](parameters);
     const payload = new URLSearchParams();
