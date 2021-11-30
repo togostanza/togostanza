@@ -84,7 +84,7 @@ export default class Stanza {
   }: {
     template: string;
     parameters: Record<string, any>;
-    selector: string;
+    selector?: string;
   }): void {
     const template = this.templates[templateName];
 
