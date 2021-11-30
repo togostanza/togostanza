@@ -1,5 +1,5 @@
 import path from 'path';
-import { promises as fs } from 'fs';
+import { promises as fs, existsSync} from 'fs';
 
 import walkSync from 'walk-sync';
 
@@ -57,6 +57,14 @@ export default class StanzaRepository {
 
         filepath(...paths) {
           return path.join(stanzaDir, ...paths);
+        },
+
+        isTypeScriptStanza() {
+          return existsSync(this.filepath('index.ts'));
+        },
+
+        indexJsTsPath() {
+          return this.filepath(this.isTypeScriptStanza() ? 'index.ts' : 'index.js');
         }
       };
     });

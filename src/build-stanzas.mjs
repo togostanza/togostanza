@@ -15,8 +15,7 @@ import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 import { rollup } from 'rollup';
 import replace from '@rollup/plugin-replace';
 import JSON5 from 'json5';
-import typescript from "@rollup/plugin-typescript";
-
+import typescript from 'rollup-plugin-typescript2';
 import StanzaRepository from './stanza-repository.mjs';
 import { handlebarsTemplate, packagePath } from './util.mjs';
 
@@ -214,7 +213,7 @@ async function virtualModules(stanza, repositoryDir) {
 
 function aliasEntries(stanza) {
   return [
-    {find: `-stanza/${stanza.id}/js`,       replacement: stanza.filepath('index.js')},
+    {find: `-stanza/${stanza.id}/js`,       replacement: stanza.indexJsTsPath()}, // TODO
     {find: `-stanza/${stanza.id}/metadata`, replacement: stanza.filepath('metadata.json')}
   ];
 }
