@@ -1,8 +1,38 @@
 import debounce from 'lodash.debounce';
-import HandlebarsRuntime from 'handlebars/runtime.js';
+import HandlebarsRuntime from 'handlebars/runtime';
+import type { TemplateDelegate } from 'handlebars';
+
+type Metadata = Record<string, any>;
+
+type MenuItem = {
+  type: 'item';
+  label: string;
+  handler: () => void;
+};
+
+type MenuDivider = {
+  type: 'divider';
+};
+
+type MenuDefinitionItem = MenuItem | MenuDivider;
+export type MenuDefinition = Array<MenuDefinitionItem>;
+type MenuDefinitionFn = () => MenuDefinition;
+type MenuElement = HTMLElement & { menuDefinition: MenuDefinitionFn };
 
 export default class Stanza {
-  constructor(element, metadata, templates, url) {
+  element: HTMLElement;
+  metadata: Metadata;
+  renderDebounced: () => void;
+  url: string;
+  menuElement: MenuElement;
+  templates: Record<string, TemplateDelegate>;
+
+  constructor(
+    element: HTMLElement,
+    metadata: Metadata,
+    templates: Array<[string, TemplateSpecification]>,
+    url: string
+  ) {
     this.element = element;
     this.metadata = metadata;
 
@@ -20,13 +50,15 @@ export default class Stanza {
     main.style.overflow = 'auto';
     bbox.appendChild(main);
 
-    this.menuElement = document.createElement('togostanza--menu');
+    this.menuElement = document.createElement(
+      'togostanza--menu'
+    ) as MenuElement;
     this.menuElement.setAttribute('href', url.replace(/\.js$/, '.html'));
     this.menuElement.menuDefinition = this.menu.bind(this);
 
     bbox.appendChild(this.menuElement);
 
-    element.shadowRoot.appendChild(bbox);
+    element.shadowRoot?.appendChild(bbox);
 
     this.url = url;
 
@@ -35,15 +67,25 @@ export default class Stanza {
     }, 50);
   }
 
-  get root() {
-    return this.element.shadowRoot;
+  get root(): ShadowRoot {
+    return this.element.shadowRoot!;
   }
 
-  menu() {
+  render() {}
+
+  menu(): MenuDefinition {
     return [];
   }
 
-  renderTemplate({ template: templateName, parameters, selector }) {
+  renderTemplate({
+    template: templateName,
+    parameters,
+    selector,
+  }: {
+    template: string;
+    parameters: Record<string, any>;
+    selector: string;
+  }): void {
     const template = this.templates[templateName];
 
     if (!template) {
@@ -55,14 +97,18 @@ export default class Stanza {
     }
 
     const html = template(parameters);
-    this.root.querySelector(selector || 'main').innerHTML = html;
+    const main = this.root?.querySelector(selector || 'main');
+    if (!main) {
+      return;
+    }
+    main.innerHTML = html;
   }
 
-  get params() {
+  get params(): Record<string, any> {
     const attributes = this.element.attributes;
 
     return Object.fromEntries(
-      this.metadata['stanza:parameter'].map((param) => {
+      this.metadata['stanza:parameter'].map((param: Record<string, any>) => {
         const key = param['stanza:key'];
         const type = param['stanza:type'];
 
@@ -98,7 +144,7 @@ export default class Stanza {
     );
   }
 
-  importWebFontCSS(cssUrl) {
+  importWebFontCSS(cssUrl: string): void {
     const el = document.createElement('link');
 
     el.rel = 'stylesheet';
@@ -106,14 +152,24 @@ export default class Stanza {
     el.href = new URL(cssUrl, this.url).href;
 
     document.head.appendChild(el);
-    this.root.appendChild(el.cloneNode());
+    this.root?.appendChild(el.cloneNode());
   }
 
-  handleAttributeChange() {
+  handleAttributeChange(name: string, oldValue: string, newValue: string) {
     this.renderDebounced();
   }
 
-  async query({ template, parameters, endpoint, method }) {
+  async query({
+    template,
+    parameters,
+    endpoint,
+    method,
+  }: {
+    template: string;
+    parameters: Record<string, any>;
+    endpoint: string;
+    method: string;
+  }): Promise<any> {
     const sparql = this.templates[template](parameters);
     const payload = new URLSearchParams();
 
