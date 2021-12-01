@@ -162,7 +162,10 @@ export default class MenuElement extends LitElement {
     switch (item.type) {
       case 'item':
         return html`<li>
-          <a class="menu-item" @click="${this._handlerForMenuItem(item)}"
+          <a
+            class="menu-item"
+            href="#"
+            @click="${this._handlerForMenuItem(item)}"
             >${item.label}</a
           >
         </li>`;
