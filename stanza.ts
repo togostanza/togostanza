@@ -71,7 +71,7 @@ export default class Stanza {
     return this.element.shadowRoot!;
   }
 
-  render() {}
+  async render(): Promise<void> {}
 
   menu(): MenuDefinition {
     return [];
