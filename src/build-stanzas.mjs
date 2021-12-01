@@ -14,7 +14,8 @@ import virtual from '@rollup/plugin-virtual';
 import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 import { rollup } from 'rollup';
 import replace from '@rollup/plugin-replace';
-
+import JSON5 from 'json5';
+import typescript from 'rollup-plugin-typescript2';
 import StanzaRepository from './stanza-repository.mjs';
 import { handlebarsTemplate, packagePath } from './util.mjs';
 
@@ -74,6 +75,13 @@ export default class BuildStanzas extends BroccoliPlugin {
     const buildConfig         = await readBuildConfig(this.repositoryDir, this.environment);
     const customRollupPlugins = buildConfig?.rollup?.plugins || [];
 
+    const tsconfig          = await readTsconfig(this.repositoryDir);
+    const typescriptPlugins = [];
+    if (tsconfig) {
+      console.log("tsconfig.json found; TypeScript support enabled")
+      typescriptPlugins.push(typescript(tsconfig?.compileOptions));
+    }
+
     const bundle = await rollup({
       input: stanzas.map(({id}) => `${id}.js`),
 
@@ -102,6 +110,8 @@ export default class BuildStanzas extends BroccoliPlugin {
           },
           preventAssignment: true,
         }),
+
+        ...typescriptPlugins,
 
         ...customRollupPlugins,
 
@@ -203,7 +213,7 @@ async function virtualModules(stanza, repositoryDir) {
 
 function aliasEntries(stanza) {
   return [
-    {find: `-stanza/${stanza.id}/js`,       replacement: stanza.filepath('index.js')},
+    {find: `-stanza/${stanza.id}/js`,       replacement: stanza.indexJsTsPath()}, // TODO
     {find: `-stanza/${stanza.id}/metadata`, replacement: stanza.filepath('metadata.json')}
   ];
 }
@@ -215,6 +225,19 @@ async function readBuildConfig(repositoryDir, environment) {
     return initConfig(environment);
   } catch (e) {
     if (e.code === 'ERR_MODULE_NOT_FOUND') {
+      return null;
+    } else {
+      throw e;
+    }
+  }
+}
+
+async function readTsconfig(repositoryDir) {
+  try {
+    const tsconfig = await fs.readFileSync(path.join(repositoryDir, 'tsconfig.json'));
+    return JSON5.parse(tsconfig);
+  } catch (e) {
+    if (e.code === 'ENOENT') {
       return null;
     } else {
       throw e;
