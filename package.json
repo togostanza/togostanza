@@ -20,6 +20,7 @@
     "@rollup/plugin-replace": "^3.0.0",
     "@rollup/plugin-url": "^6.0.0",
     "@rollup/plugin-virtual": "^2.0.3",
+    "@types/lodash.debounce": "^4.0.6",
     "@vue/compiler-sfc": "^3.1.4",
     "bootstrap": "^5.0.2",
     "broccoli": "^3.4.2",
@@ -68,7 +69,6 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
-    "@types/lodash.debounce": "^4.0.6",
     "fixturify": "^2.1.0",
     "jest": "^27.0.6"
   },
