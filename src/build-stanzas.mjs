@@ -78,7 +78,7 @@ export default class BuildStanzas extends BroccoliPlugin {
     const tsconfig          = await readTsconfig(this.repositoryDir);
     const typescriptPlugins = [];
     if (tsconfig) {
-      console.log("tsconfig.json found; activating TypeScript support...")
+      console.log("tsconfig.json found; TypeScript support enabled")
       typescriptPlugins.push(typescript(tsconfig?.compileOptions));
     }
 
