@@ -2,17 +2,24 @@ import debounce from 'lodash.debounce';
 import HandlebarsRuntime from 'handlebars/runtime';
 import type { TemplateDelegate } from 'handlebars';
 
-type Metadata = Record<string, any>;
+interface StanzaParameterDefinition {
+  'stanza:key': string;
+  'stanza:type': string;
+}
 
-type MenuItem = {
+interface Metadata {
+  'stanza:parameter': Array<StanzaParameterDefinition>;
+}
+
+interface MenuItem {
   type: 'item';
   label: string;
   handler: () => void;
-};
+}
 
-type MenuDivider = {
+interface MenuDivider {
   type: 'divider';
-};
+}
 
 type MenuDefinitionItem = MenuItem | MenuDivider;
 export type MenuDefinition = Array<MenuDefinitionItem>;
@@ -108,39 +115,41 @@ export default class Stanza {
     const attributes = this.element.attributes;
 
     return Object.fromEntries(
-      this.metadata['stanza:parameter'].map((param: Record<string, any>) => {
-        const key = param['stanza:key'];
-        const type = param['stanza:type'];
+      this.metadata['stanza:parameter'].map(
+        (param: StanzaParameterDefinition) => {
+          const key = param['stanza:key'];
+          const type = param['stanza:type'];
 
-        if (type === 'boolean') {
-          return [key, attributes.hasOwnProperty(key)];
+          if (type === 'boolean') {
+            return [key, attributes.hasOwnProperty(key)];
+          }
+
+          const valueStr = attributes.getNamedItem(key)?.value;
+
+          if (valueStr === null || valueStr === undefined) {
+            return [key, valueStr];
+          }
+
+          let value;
+
+          switch (type) {
+            case 'number':
+              value = Number(valueStr);
+              break;
+            case 'date':
+            case 'datetime':
+              value = new Date(valueStr);
+              break;
+            case 'json':
+              value = JSON.parse(valueStr);
+              break;
+            default:
+              value = valueStr;
+          }
+
+          return [key, value];
         }
-
-        const valueStr = attributes[key]?.value;
-
-        if (valueStr === null || valueStr === undefined) {
-          return [key, valueStr];
-        }
-
-        let value;
-
-        switch (type) {
-          case 'number':
-            value = Number(valueStr);
-            break;
-          case 'date':
-          case 'datetime':
-            value = new Date(valueStr);
-            break;
-          case 'json':
-            value = JSON.parse(valueStr);
-            break;
-          default:
-            value = valueStr;
-        }
-
-        return [key, value];
-      })
+      )
     );
   }
 
