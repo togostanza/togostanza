@@ -213,7 +213,7 @@ async function virtualModules(stanza, repositoryDir) {
 
 function aliasEntries(stanza) {
   return [
-    {find: `-stanza/${stanza.id}/js`,       replacement: stanza.indexJsTsPath()}, // TODO
+    {find: `-stanza/${stanza.id}/js`,       replacement: stanza.stanzaEntryPointPath()},
     {find: `-stanza/${stanza.id}/metadata`, replacement: stanza.filepath('metadata.json')}
   ];
 }

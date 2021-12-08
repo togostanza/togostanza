@@ -59,13 +59,9 @@ export default class StanzaRepository {
           return path.join(stanzaDir, ...paths);
         },
 
-        isTypeScriptStanza() {
-          return existsSync(this.filepath('index.ts'));
+        stanzaEntryPointPath() {
+          return ['index.tsx', 'index.ts', 'index.js'].map(name => this.filepath(name)).find(existsSync);
         },
-
-        indexJsTsPath() {
-          return this.filepath(this.isTypeScriptStanza() ? 'index.ts' : 'index.js');
-        }
       };
     });
   }
