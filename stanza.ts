@@ -90,7 +90,7 @@ export default class Stanza {
     selector,
   }: {
     template: string;
-    parameters: Record<string, any>;
+    parameters: any;
     selector?: string;
   }): void {
     const template = this.templates[templateName];
@@ -175,7 +175,7 @@ export default class Stanza {
     method,
   }: {
     template: string;
-    parameters: Record<string, any>;
+    parameters: any;
     endpoint: string;
     method?: string;
   }): Promise<any> {
