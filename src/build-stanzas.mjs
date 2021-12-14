@@ -24,7 +24,7 @@ export default class BuildStanzas extends BroccoliPlugin {
     super([repositoryDir], options);
 
     this.repositoryDir = repositoryDir;
-    this.environment   = options.environment;
+    this.environment = options.environment;
   }
 
   async build() {
@@ -33,38 +33,40 @@ export default class BuildStanzas extends BroccoliPlugin {
     await Promise.all([
       this.buildStanzas(stanzas),
       this.copyMetadata(stanzas),
-      this.copyAssets(stanzas)
+      this.copyAssets(stanzas),
     ]);
   }
 
   async buildStanzas(stanzas) {
-    if (stanzas.length === 0) { return; }
+    if (stanzas.length === 0) {
+      return;
+    }
 
     for (const stanza of stanzas) {
       try {
         const sourcePath = stanza.filepath('style.scss');
-        const destPath   = path.join(this.outputPath, `${stanza.id}.css`);
+        const destPath = path.join(this.outputPath, `${stanza.id}.css`);
 
         if (!fs.existsSync(sourcePath)) {
           fs.writeFileSync(destPath, '');
           continue;
         }
 
-        const {repositoryDir} = this;
+        const { repositoryDir } = this;
 
-        const css = sass.renderSync({
-          file: sourcePath,
+        const css = sass
+          .renderSync({
+            file: sourcePath,
 
-          importer(url) {
-            return {
-              file: url.replace(/^@/, repositoryDir)
-            };
-          },
+            importer(url) {
+              return {
+                file: url.replace(/^@/, repositoryDir),
+              };
+            },
 
-          includePaths: [
-            path.join(repositoryDir, 'node_modules')
-          ]
-        }).css.toString();
+            includePaths: [path.join(repositoryDir, 'node_modules')],
+          })
+          .css.toString();
 
         fs.writeFileSync(destPath, css);
       } catch (e) {
@@ -72,36 +74,44 @@ export default class BuildStanzas extends BroccoliPlugin {
       }
     }
 
-    const buildConfig         = await readBuildConfig(this.repositoryDir, this.environment);
+    const buildConfig = await readBuildConfig(
+      this.repositoryDir,
+      this.environment
+    );
     const customRollupPlugins = buildConfig?.rollup?.plugins || [];
 
-    const tsconfig          = await readTsconfig(this.repositoryDir);
+    const tsconfig = await readTsconfig(this.repositoryDir);
     const typescriptPlugins = [];
     if (tsconfig) {
-      console.log("tsconfig.json found; TypeScript support enabled")
+      console.log('tsconfig.json found; TypeScript support enabled');
       typescriptPlugins.push(typescript(tsconfig?.compileOptions));
     }
 
     const bundle = await rollup({
-      input: stanzas.map(({id}) => `${id}.js`),
+      input: stanzas.map(({ id }) => `${id}.js`),
 
       plugins: [
         virtual(
           Object.fromEntries(
             await Promise.all(
-              stanzas.map(stanza => virtualModules(stanza, this.repositoryDir))
-            ).then(ary => ary.flat(1))
+              stanzas.map((stanza) =>
+                virtualModules(stanza, this.repositoryDir)
+              )
+            ).then((ary) => ary.flat(1))
           )
         ),
 
         alias({
           entries: [
-            {find: '-togostanza/stanza-element', replacement: path.join(packagePath, 'src', 'stanza-element.mjs')},
-            {find: /^@\/stanzas\/([^/]+)$/,      replacement: '$1.js'},
-            {find: '@',                          replacement: this.repositoryDir},
+            {
+              find: '-togostanza/stanza-element',
+              replacement: path.join(packagePath, 'src', 'stanza-element.mjs'),
+            },
+            { find: /^@\/stanzas\/([^/]+)$/, replacement: '$1.js' },
+            { find: '@', replacement: this.repositoryDir },
 
-            ...stanzas.flatMap(aliasEntries)
-          ]
+            ...stanzas.flatMap(aliasEntries),
+          ],
         }),
 
         replace({
@@ -120,33 +130,37 @@ export default class BuildStanzas extends BroccoliPlugin {
         json(),
 
         url({
-          limit: Infinity
+          limit: Infinity,
         }),
       ],
 
       external(id) {
-        return /^https?:\/\//.test(id)
+        return /^https?:\/\//.test(id);
       },
 
       onwarn(warn) {
         // suppress circular dependency warnings
         // https://github.com/d3/d3-selection/issues/229
-        if (warn.code === 'CIRCULAR_DEPENDENCY') { return; }
+        if (warn.code === 'CIRCULAR_DEPENDENCY') {
+          return;
+        }
 
         // suppress 'this' keyword is equivalent to 'undefined' warnings
         // https://github.com/rollup/rollup/issues/1518
-        if (warn.code === 'THIS_IS_UNDEFINED') { return; }
+        if (warn.code === 'THIS_IS_UNDEFINED') {
+          return;
+        }
 
         defaultOnWarn(warn);
-      }
+      },
     });
 
     await bundle.write({
-      format:    'esm',
-      dir:       this.outputPath,
+      format: 'esm',
+      dir: this.outputPath,
       sourcemap: true,
 
-      entryFileNames({facadeModuleId}) {
+      entryFileNames({ facadeModuleId }) {
         return facadeModuleId.replace(/^\x00virtual:/, '');
       },
     });
@@ -154,10 +168,12 @@ export default class BuildStanzas extends BroccoliPlugin {
 
   async copyMetadata(stanzas) {
     return await Promise.all(
-      stanzas.map((stanza) => fs.copy(
-        stanza.filepath('metadata.json'),
-        path.join(this.outputPath, stanza.id, 'metadata.json')
-      ))
+      stanzas.map((stanza) =>
+        fs.copy(
+          stanza.filepath('metadata.json'),
+          path.join(this.outputPath, stanza.id, 'metadata.json')
+        )
+      )
     );
   }
 
@@ -175,22 +191,30 @@ export default class BuildStanzas extends BroccoliPlugin {
     }
 
     return await Promise.all([
-      fs.copy(
-        path.join(this.repositoryDir, 'assets'),
-        path.join(this.outputPath, 'assets'),
-        {filter}
-      ).catch(ignoreMissing),
+      fs
+        .copy(
+          path.join(this.repositoryDir, 'assets'),
+          path.join(this.outputPath, 'assets'),
+          { filter }
+        )
+        .catch(ignoreMissing),
 
-      ...stanzas.map((stanza) => fs.copy(
-        stanza.filepath('assets'),
-        path.join(this.outputPath, stanza.id, 'assets'),
-        {filter}
-      ).catch(ignoreMissing))
+      ...stanzas.map((stanza) =>
+        fs
+          .copy(
+            stanza.filepath('assets'),
+            path.join(this.outputPath, stanza.id, 'assets'),
+            { filter }
+          )
+          .catch(ignoreMissing)
+      ),
     ]);
   }
 }
 
-const entrypointTemplate = handlebarsTemplate('entrypoint.js.hbs', {noEscape: true});
+const entrypointTemplate = handlebarsTemplate('entrypoint.js.hbs', {
+  noEscape: true,
+});
 
 async function virtualModules(stanza, repositoryDir) {
   const entrypoint = entrypointTemplate({
@@ -199,28 +223,38 @@ async function virtualModules(stanza, repositoryDir) {
 
   const templates = outdent`
     export default [
-      ${(await stanza.templates).map(({name, spec}) => {
-        return `[${JSON.stringify(name)}, ${spec}]`
-      }).join(',\n')}
+      ${(await stanza.templates)
+        .map(({ name, spec }) => {
+          return `[${JSON.stringify(name)}, ${spec}]`;
+        })
+        .join(',\n')}
     ];
   `;
 
   return [
-    [`${stanza.id}.js`,                entrypoint],
-    [`-stanza/${stanza.id}/templates`, templates]
+    [`${stanza.id}.js`, entrypoint],
+    [`-stanza/${stanza.id}/templates`, templates],
   ];
 }
 
 function aliasEntries(stanza) {
   return [
-    {find: `-stanza/${stanza.id}/js`,       replacement: stanza.stanzaEntryPointPath()},
-    {find: `-stanza/${stanza.id}/metadata`, replacement: stanza.filepath('metadata.json')}
+    {
+      find: `-stanza/${stanza.id}/js`,
+      replacement: stanza.stanzaEntryPointPath(),
+    },
+    {
+      find: `-stanza/${stanza.id}/metadata`,
+      replacement: stanza.filepath('metadata.json'),
+    },
   ];
 }
 
 async function readBuildConfig(repositoryDir, environment) {
   try {
-    const {default: initConfig} = await import(path.join(repositoryDir, 'togostanza-build.mjs'));
+    const { default: initConfig } = await import(
+      path.join(repositoryDir, 'togostanza-build.mjs')
+    );
 
     return initConfig(environment);
   } catch (e) {
@@ -234,7 +268,9 @@ async function readBuildConfig(repositoryDir, environment) {
 
 async function readTsconfig(repositoryDir) {
   try {
-    const tsconfig = await fs.readFileSync(path.join(repositoryDir, 'tsconfig.json'));
+    const tsconfig = await fs.readFileSync(
+      path.join(repositoryDir, 'tsconfig.json')
+    );
     return JSON5.parse(tsconfig);
   } catch (e) {
     if (e.code === 'ENOENT') {
