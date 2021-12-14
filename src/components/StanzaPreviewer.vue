@@ -15,12 +15,14 @@
   <div class="overflow-auto p-3 bg-light">
     <div v-html="styleSnippet"></div>
 
-    <component :is="tagName" v-bind="props"></component>
+    <div ref="stanzaContainer">
+      <component :is="tagName" v-bind="props"></component>
+    </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, ref, watch } from 'vue';
 
 import CopyButton from './CopyButton.vue';
 import styleSnippetTemplate from './style-snippet.html.hbs';
@@ -72,12 +74,20 @@ export default defineComponent({
         .join('\n');
     });
 
+    const stanzaContainer = ref();
+
+    watch(styleSnippet, () => {
+      const stanzaElement = stanzaContainer.value.childNodes[0];
+      stanzaElement.render();
+    });
+
     return {
       tagName,
       props: stanzaProps,
       styleSnippet,
       stanzaSnippet,
       combinedSnippet,
+      stanzaContainer,
     };
   },
 });
