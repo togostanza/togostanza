@@ -125,6 +125,14 @@ The easiest way to develop stanzas in React is to specify `"jsx": "react"` in `t
 }
 ```
 
+Add `react`, `react-dom` and `lodash.camelcase` to `dependencies` of `package.json`:
+
+```json
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "lodash.camelcase": "^4.3.0",
+```
+
 To build React stanzas, use the following `index.tsx` as entry points, respectively. If you want to create a `hello-react` stanza, you can use the following:
 
 ```tsx
