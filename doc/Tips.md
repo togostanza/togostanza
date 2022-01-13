@@ -125,7 +125,7 @@ The easiest way to develop stanzas in React is to specify `"jsx": "react"` in `t
 }
 ```
 
-Add `react`, `react-dom` and `lodash.camelcase` to `dependencies` of `package.json`:
+Add the following packages to `dependencies` of `package.json`:
 
 ```json
     "react": "^17.0.2",
@@ -205,4 +205,110 @@ The final directory layout will look like this (only the essential files are sho
 │       ├── index.tsx
 │       └── metadata.json
 └── tsconfig.json
+```
+
+## Building stanzas with Vue.js
+
+Add the following packages to `dependencies` of `package.json`:
+
+```json
+    "vue": "^3.2.26",
+    "@vue/compiler-sfc": "^3.2.26",
+    "rollup-plugin-vue": "^6.0.0",
+    "@rollup/plugin-replace": "^3.0.0",
+```
+
+Place `togostanza-build.mjs` with the following content in the root of the stanza repository:
+
+```js
+import vue from "rollup-plugin-vue";
+import replace from "@rollup/plugin-replace";
+
+export default function config(environment) {
+  return {
+    rollup: {
+      plugins: [
+        vue(),
+        replace({
+          values: {
+            "process.env.NODE_ENV": JSON.stringify(environment),
+            __VUE_OPTIONS_API__: "false",
+            __VUE_PROD_DEVTOOLS__: "false",
+          },
+          preventAssignment: true,
+        }),
+      ],
+    },
+  };
+}
+```
+
+For the stanza endpoint `index.js`, place a file like the following:
+
+```js
+import Stanza from "togostanza/stanza";
+import { createApp, h } from "vue";
+import App from "./App.vue";
+
+export default class PaginationTable extends Stanza {
+  async render() {
+    const main = this.root.querySelector("main");
+    const self = this;
+    this._app = createApp({
+      render() {
+        return h(App, self.params);
+      },
+    });
+    this._component = this._app.mount(main);
+  }
+
+  handleAttributeChange(name) {
+    this._component?.$forceUpdate();
+  }
+}
+```
+
+Add `App.vue` as the main component:
+
+```vue
+<template>
+  <div>
+    <p>
+      Hello <i>{{ sayTo }}</i>
+    </p>
+    <p>{{ count }} time(s) clicked</p>
+    <button @click="handleClick">Click this</button>
+  </div>
+</template>
+
+<script>
+import { defineComponent, ref } from "vue";
+
+export default defineComponent({
+  props: ["sayTo"],
+
+  setup(props) {
+    const count = ref(0);
+    const handleClick = () => {
+      count.value++;
+    };
+
+    return {
+      count,
+      handleClick,
+    };
+  },
+});
+</script>
+```
+
+The final directory layout will look like this (only the essential files are shown):
+
+```
+├── stanzas
+│   └── hello-vue
+│       ├── App.vue
+│       ├── index.js
+│       └── metadata.json
+└── togostanza-build.mjs
 ```
