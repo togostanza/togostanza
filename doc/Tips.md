@@ -77,3 +77,124 @@ Call `render()` method of the stanza:
 ```
 stanza.render()
 ```
+
+
+## Using TypeScript
+
+You can also use TypeScript to create Stanza. TypeScript support is not enabled by default. By placing `tsconfig.json` in the root of the stanza repository, TypeScript support is activated.
+
+Depending on your project, `tsconfig.json` will be different, but for example, create a file like the following:
+
+```json
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "moduleResolution": "node",
+    "noResolve": false,
+    "noEmit": false,
+    "noEmitHelpers": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  }
+}
+```
+
+When writing Stanza, TypeScript files should have a suffix of `.ts`. For example, instead of `index.js`, use `index.ts`.
+
+
+## Building Stanzas with React
+
+The easiest way to develop stanzas in React is to specify `"jsx": "react"` in `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "jsx": "react",
+    "moduleResolution": "node",
+    "noResolve": false,
+    "noEmit": false,
+    "noEmitHelpers": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  }
+}
+```
+
+To build React stanzas, use the following `index.tsx` as entry points, respectively. If you want to create a `hello-react` stanza, you can use the following:
+
+```tsx
+import React from "react";
+import ReactDOM from "react-dom";
+import camelCase from "lodash.camelcase";
+import Stanza from "togostanza/stanza";
+import App from "./App";
+
+function toCamelCase(params: Record<string, unknown>) {
+  const camelCaseParams: Record<string, unknown> = {};
+  Object.entries(params).forEach(([key, value]) => {
+    camelCaseParams[camelCase(key)] = value;
+  });
+  return camelCaseParams;
+}
+
+export default class HelloReact extends Stanza {
+  async render() {
+    const props = toCamelCase(this.params);
+    ReactDOM.render(
+      <App {...(props as any)} />,
+      this.root.querySelector("main")
+    );
+  }
+
+  handleAttributeChange() {
+    const props = toCamelCase(this.params);
+    ReactDOM.render(
+      <App {...(props as any)} />,
+      this.root.querySelector("main")
+    );
+  }
+}
+```
+
+Write the contents of Stanza as React Component in `App.tsx`. The parameters passed to Stanza can be retrieved as props of the App component. An example is shown below:
+
+```tsx
+import React, { useState } from "react";
+
+const App = ({ sayTo }: { sayTo: string }) => {
+  const [count, setCount] = useState(0);
+  const increment = () => setCount((prev) => prev + 1);
+
+  const handleClick = () => {
+    increment();
+  };
+
+  return (
+    <div>
+      <p>
+        Hello <i>{sayTo}</i>
+      </p>
+      <p>{count} time(s) clicked</p>
+      <button onClick={handleClick}>Click this</button>
+    </div>
+  );
+};
+
+export default App;
+```
+
+The final directory layout will look like this (only the essential files are shown):
+
+```
+├── stanzas
+│   └── hello-react
+│       ├── App.tsx
+│       ├── index.tsx
+│       └── metadata.json
+└── tsconfig.json
+```
