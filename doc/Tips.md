@@ -312,3 +312,98 @@ The final directory layout will look like this (only the essential files are sho
 │       └── metadata.json
 └── togostanza-build.mjs
 ```
+
+
+## Building stanzas with Svelte
+
+Add the following packages to `dependencies` of `package.json`:
+
+```json
+    "rollup-plugin-svelte": "^7.1.0",
+    "svelte": "^3.43.1",
+    "lodash.camelcase": "^4.3.0",
+```
+
+Place `togostanza-build.mjs` with the following content in the root of the stanza repository:
+
+```js
+import svelte from "rollup-plugin-svelte";
+
+export default function config(environment) {
+  return {
+    rollup: {
+      plugins: [
+        svelte({
+          emitCss: false,
+        }),
+      ],
+    },
+  };
+}
+```
+
+To build Svelte stanzas, use the following `index.js` as entry points, respectively. If you want to create a `hello-svelte` stanza, you can use the following:
+
+```js
+import Stanza from "togostanza/stanza";
+import camelCase from "lodash.camelcase";
+
+import App from "./App.svelte";
+
+function toCamelCase(params) {
+  const camelCaseParams = {};
+  Object.entries(params).forEach(([key, value]) => {
+    camelCaseParams[camelCase(key)] = value;
+  });
+  return camelCaseParams;
+}
+
+export default class HelloSvelte extends Stanza {
+  async render() {
+    this.app = new App({
+      target: this.root.querySelector("main"),
+      props: toCamelCase(this.params),
+    });
+  }
+
+  handleAttributeChange() {
+    this.app?.$set(toCamelCase(this.params));
+  }
+}
+```
+
+And, add `App.svelte` as the main component:
+
+```svelte
+<script>
+  export let sayTo;
+  let counter = 0;
+
+  function handleClick() {
+    counter += 1;
+  }
+</script>
+
+<h1>Hello, {sayTo}!</h1>
+<p class="greetings">Hello, {sayTo}.</p>
+
+<p>clicked {counter} time(s)</p>
+<button on:click={handleClick}>Click me</button>
+
+<style>
+  p.greetings {
+    color: purple;
+  }
+</style>
+```
+
+The final directory layout will look like this (only the essential files are shown):
+
+```
+├── stanzas
+│   └── hello-svelte
+│       ├── App.svelte
+│       ├── index.js
+│       └── metadata.json
+└── togostanza-build.mjs
+```
