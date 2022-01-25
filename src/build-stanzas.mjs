@@ -124,7 +124,7 @@ export default class BuildStanzas extends BroccoliPlugin {
 
         ...customRollupPlugins,
 
-        nodeResolve(),
+        nodeResolve({ browser: true }),
         commonjs(),
         json(),
 
