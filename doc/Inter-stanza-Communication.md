@@ -106,11 +106,11 @@ Again, note that even in the case of using `togostanza-event--map`, events that 
 
 Corresponding to dispatching events, there is also a way to receive events by defining an event handler in the stanza. This method gives you more control of event handling. However, at the same time, this method is a bit complicated, so it is recommended to use `togostanza--event-map` if it is sufficient for your needs.
 
-Suppose the `baz` stanza receives an event. First, list the events being received in `incomingEvents` in `metadata.json` of the `baz` stanza:
+Suppose the `baz` stanza receives an event. First, list the events being received in `stanza:incomingEvent` in `metadata.json` of the `baz` stanza:
 
 ```json
 ...
-    "incomingEvents": [
+    "stanza:incomingEvent": [
         {
             "stanza:key": "valueChanged",
             "stanza:description": "event used to notify a change of the value. payload is something like {value: 42}"
