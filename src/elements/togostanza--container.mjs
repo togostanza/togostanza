@@ -4,15 +4,26 @@ export default class ContainerElement extends HTMLElement {
   dataSourceUrls = {};
 
   connectedCallback() {
-    setTimeout(() => {
-      // wait until stanzas ready
-      const stanzaElements = Array.from(this.querySelectorAll('*')).filter(
-        (el) => el.tagName.startsWith('TOGOSTANZA-') && 'stanzaInstance' in el
-      );
-      connectStanzasWithAttributes(this, stanzaElements);
-      connectStanzasWithHandler(stanzaElements);
-      connectDataSource(this);
-    }, 0);
+    const stanzaElements = Array.from(this.querySelectorAll('*')).filter(
+      (el) =>
+        el.tagName.startsWith('TOGOSTANZA-') &&
+        !el.tagName.startsWith('TOGOSTANZA--')
+    );
+
+    let tries = 0;
+    const connectStanzasWhenReady = () => {
+      const ready = stanzaElements.every((el) => 'stanzaInstance' in el);
+      if (ready) {
+        connectStanzasWithAttributes(this, stanzaElements);
+        connectStanzasWithHandler(stanzaElements);
+        connectDataSource(this);
+        return;
+      }
+
+      tries++;
+      setTimeout(connectStanzasWhenReady, 2 ** Math.min(tries, 11));
+    };
+    connectStanzasWhenReady();
   }
 
   disconnectedCallback() {
