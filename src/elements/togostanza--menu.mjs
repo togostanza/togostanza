@@ -158,6 +158,20 @@ export default class MenuElement extends LitElement {
     };
   }
 
+  async _copyHTMLSnippetToClipboard() {
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = this.stanzaInstance.url;
+    script.async = true;
+    const html = [script.outerHTML, this.stanzaInstance.element.outerHTML].join(
+      ' '
+    );
+
+    await navigator.clipboard.writeText(html);
+
+    this._hideMenu();
+  }
+
   _renderMenuItem(item) {
     switch (item.type) {
       case 'item':
@@ -186,6 +200,14 @@ export default class MenuElement extends LitElement {
       <ul class="menu">
         ${menuDefinition.map((item) => this._renderMenuItem(item))}
         ${menuDefinition.length > 0 ? html`<li class="divider"></li>` : ''}
+        <li>
+          <a
+            class="menu-item"
+            href="#"
+            @click="${this._copyHTMLSnippetToClipboard}"
+            >Copy HTML snippet to clipboard</a
+          >
+        </li>
         <li>
           <a
             class="menu-item"

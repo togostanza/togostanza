@@ -24,7 +24,7 @@ interface MenuDivider {
 type MenuDefinitionItem = MenuItem | MenuDivider;
 export type MenuDefinition = Array<MenuDefinitionItem>;
 type MenuDefinitionFn = () => MenuDefinition;
-type MenuElement = HTMLElement & { menuDefinition: MenuDefinitionFn };
+type MenuElement = HTMLElement & { menuDefinition: MenuDefinitionFn, stanzaInstance: Stanza };
 
 export default class Stanza {
   element: HTMLElement;
@@ -62,6 +62,7 @@ export default class Stanza {
     ) as MenuElement;
     this.menuElement.setAttribute('href', url.replace(/\.js$/, '.html'));
     this.menuElement.menuDefinition = this.menu.bind(this);
+    this.menuElement.stanzaInstance = this;
 
     bbox.appendChild(this.menuElement);
 
