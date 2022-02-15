@@ -1,8 +1,8 @@
-import commander from 'commander';
+import { Command } from 'commander';
 
 import stanza from './generate/stanza.mjs';
 
-const command = new commander.Command()
+const command = new Command()
   .command('generate')
   .alias('g')
   .description('generate codes from templates')

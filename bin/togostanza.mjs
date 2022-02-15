@@ -3,7 +3,7 @@
 import path from 'path';
 import { readFileSync } from 'fs';
 
-import commander from 'commander';
+import { program } from 'commander';
 
 import build from '../src/commands/build.mjs';
 import generate from '../src/commands/generate.mjs';
@@ -12,8 +12,9 @@ import serve from '../src/commands/serve.mjs';
 import upgrade from '../src/commands/upgrade.mjs';
 import { packagePath } from '../src/util.mjs';
 
-const {program} = commander;
-const {version} = JSON.parse(readFileSync(path.join(packagePath, 'package.json')));
+const { version } = JSON.parse(
+  readFileSync(path.join(packagePath, 'package.json'))
+);
 
 program.version(version);
 

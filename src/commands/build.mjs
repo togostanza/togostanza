@@ -2,17 +2,17 @@ import path from 'path';
 
 import TreeSync from 'tree-sync';
 import broccoli from 'broccoli';
-import commander from 'commander';
+import { Command } from 'commander';
 
 import { composeTree, runWatcher } from './-build-internal.mjs';
 import { ensureTogoStanzaIsLocallyInstalled } from '../util.mjs';
 
-const command = new commander.Command()
+const command = new Command()
   .command('build')
   .alias('b')
   .description('build stanzas for deployment')
   .option('-o, --output-path <dir>', 'output directory', './dist')
-  .action(async ({outputPath}) => {
+  .action(async ({ outputPath }) => {
     await build(outputPath);
   });
 
@@ -23,7 +23,9 @@ async function build(outputPath) {
 
   ensureTogoStanzaIsLocallyInstalled(repositoryDir);
 
-  const builder    = new broccoli.Builder(composeTree(repositoryDir, {environment: 'production'}));
+  const builder = new broccoli.Builder(
+    composeTree(repositoryDir, { environment: 'production' })
+  );
   const outputTree = new TreeSync(builder.outputPath, outputPath);
 
   let statusCode;
@@ -40,7 +42,7 @@ async function build(outputPath) {
       statusCode = 1;
 
       watcher.quit();
-    }
+    },
   });
 
   process.exit(statusCode);

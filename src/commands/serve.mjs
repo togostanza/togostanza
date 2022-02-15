@@ -3,19 +3,18 @@ import path from 'path';
 import MergeTrees from 'broccoli-merge-trees';
 import UI from 'console-ui';
 import broccoli from 'broccoli';
-import commander from 'commander';
-import resolve from 'resolve';
+import { Command } from 'commander';
 
 import PreviewServer from '../preview-server.mjs';
 import { composeTree, runWatcher } from './-build-internal.mjs';
 import { ensureTogoStanzaIsLocallyInstalled } from '../util.mjs';
 
-const command = new commander.Command()
+const command = new Command()
   .command('serve')
   .alias('s')
   .description('serve the repository locally')
   .option('-p, --port <port>', 'server port', (v) => Number(v), 8080)
-  .action(async ({port}) => {
+  .action(async ({ port }) => {
     await serve(port);
   });
 
@@ -26,15 +25,15 @@ async function serve(port) {
 
   ensureTogoStanzaIsLocallyInstalled(repositoryDir);
 
-  const ui   = new UI();
-  const tree = composeTree(repositoryDir, {environment: 'development'});
+  const ui = new UI();
+  const tree = composeTree(repositoryDir, { environment: 'development' });
 
   const server = new MergeTrees([
     tree,
 
     new PreviewServer(tree, (server) => {
       server.listen(port);
-    })
+    }),
   ]);
 
   const builder = new broccoli.Builder(server);
@@ -43,9 +42,9 @@ async function serve(port) {
 
   await runWatcher(repositoryDir, builder, {
     onReady(watcher) {
-      process.on('SIGINT',  () => watcher.quit());
+      process.on('SIGINT', () => watcher.quit());
       process.on('SIGTERM', () => watcher.quit());
-    }
+    },
   });
 
   process.exit(0); // force terminate as we may have pending promises

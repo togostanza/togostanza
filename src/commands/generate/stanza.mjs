@@ -1,7 +1,7 @@
 import path from 'path';
 import { promisify } from 'util';
 
-import commander from 'commander';
+import { Command } from 'commander';
 import fecha from 'fecha';
 import yeoman from 'yeoman-environment';
 
@@ -11,7 +11,7 @@ import {
   packagePath,
 } from '../../util.mjs';
 
-const command = new commander.Command()
+const command = new Command()
   .command('stanza [id]')
   .description('generate a stanza')
   .option('--label <label>', 'label')
