@@ -39,6 +39,14 @@ export default class BuildPages extends BroccoliPlugin {
       stanzas.map(({ metadata }) => metadata)
     );
 
+    allMetadata.sort((a, b) => {
+      const la = a['stanza:label'];
+      const lb = b['stanza:label'];
+      if (la < lb) return -1;
+      if (la > lb) return 1;
+      return 0;
+    });
+
     const bundle = await rollup({
       input: [
         path.join(packagePath, 'src', 'index-app.js'),
