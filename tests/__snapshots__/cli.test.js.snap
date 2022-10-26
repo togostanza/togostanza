@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`build simple 1`] = `
-Array [
+[
   null,
   "",
   "   create stanzas/hello/metadata.json
@@ -15,7 +15,7 @@ Array [
 `;
 
 exports[`build simple 2`] = `
-Array [
+[
   "-togostanza/",
   "-togostanza/Layout-HASH.js",
   "-togostanza/Layout-HASH.js.map",
@@ -38,7 +38,7 @@ Array [
 `;
 
 exports[`generate stanza non-interactive 1`] = `
-Array [
+[
   null,
   "",
   "   create stanzas/hello/metadata.json
@@ -52,14 +52,14 @@ Array [
 `;
 
 exports[`generate stanza non-interactive 2`] = `
-Object {
-  "stanzas": Object {
-    "hello": Object {
+{
+  "stanzas": {
+    "hello": {
       "README.md": "# LABEL
 
 Stanza description goes here. Edit \`stanzas/hello/README.md\` to update.
 ",
-      "assets": Object {
+      "assets": {
         ".keep": "",
       },
       "index.js": "import Stanza from 'togostanza/stanza';
@@ -78,48 +78,48 @@ export default class Hello extends Stanza {
 }
 ",
       "metadata.json": "{
-  \\"@context\\": {
-    \\"stanza\\": \\"http://togostanza.org/resource/stanza#\\"
+  "@context": {
+    "stanza": "http://togostanza.org/resource/stanza#"
   },
-  \\"@id\\": \\"hello\\",
-  \\"stanza:label\\": \\"LABEL\\",
-  \\"stanza:definition\\": \\"DEFINITION\\",
-  \\"stanza:license\\": \\"LICENSE\\",
-  \\"stanza:author\\": \\"AUTHOR\\",
-  \\"stanza:contributor\\": [],
-  \\"stanza:created\\": \\"2020-10-05\\",
-  \\"stanza:updated\\": \\"2020-10-05\\",
-  \\"stanza:parameter\\": [
+  "@id": "hello",
+  "stanza:label": "LABEL",
+  "stanza:definition": "DEFINITION",
+  "stanza:license": "LICENSE",
+  "stanza:author": "AUTHOR",
+  "stanza:contributor": [],
+  "stanza:created": "2020-10-05",
+  "stanza:updated": "2020-10-05",
+  "stanza:parameter": [
     {
-      \\"stanza:key\\": \\"say-to\\",
-      \\"stanza:type\\": \\"string\\",
-      \\"stanza:example\\": \\"world\\",
-      \\"stanza:description\\": \\"who to say hello to\\",
-      \\"stanza:required\\": false
+      "stanza:key": "say-to",
+      "stanza:type": "string",
+      "stanza:example": "world",
+      "stanza:description": "who to say hello to",
+      "stanza:required": false
     }
   ],
-  \\"stanza:menu-placement\\": \\"bottom-right\\",
-  \\"stanza:style\\": [
+  "stanza:menu-placement": "bottom-right",
+  "stanza:style": [
     {
-      \\"stanza:key\\": \\"--greeting-color\\",
-      \\"stanza:type\\": \\"color\\",
-      \\"stanza:default\\": \\"#eb7900\\",
-      \\"stanza:description\\": \\"text color of greeting\\"
+      "stanza:key": "--greeting-color",
+      "stanza:type": "color",
+      "stanza:default": "#eb7900",
+      "stanza:description": "text color of greeting"
     },
     {
-      \\"stanza:key\\": \\"--greeting-align\\",
-      \\"stanza:type\\": \\"single-choice\\",
-      \\"stanza:choice\\": [
-        \\"left\\",
-        \\"center\\",
-        \\"right\\"
+      "stanza:key": "--greeting-align",
+      "stanza:type": "single-choice",
+      "stanza:choice": [
+        "left",
+        "center",
+        "right"
       ],
-      \\"stanza:default\\": \\"center\\",
-      \\"stanza:description\\": \\"text align of greeting\\"
+      "stanza:default": "center",
+      "stanza:description": "text align of greeting"
     }
   ],
-  \\"stanza:incomingEvent\\": [],
-  \\"stanza:outgoingEvent\\": []
+  "stanza:incomingEvent": [],
+  "stanza:outgoingEvent": []
 }
 ",
       "style.scss": "// Load the repository-wide global style here. The actual file is located at ../common.scss for details.
@@ -138,8 +138,8 @@ p.greeting {
   text-align: var(--greeting-align);
 }
 ",
-      "templates": Object {
-        "stanza.html.hbs": "<p class=\\"greeting\\">{{greeting}}</p>
+      "templates": {
+        "stanza.html.hbs": "<p class="greeting">{{greeting}}</p>
 ",
       },
     },
@@ -148,7 +148,7 @@ p.greeting {
 `;
 
 exports[`generate stanza with camelCaseId 1`] = `
-Array [
+[
   null,
   "",
   "   create stanzas/hello-world/metadata.json
@@ -162,14 +162,14 @@ Array [
 `;
 
 exports[`generate stanza with camelCaseId 2`] = `
-Object {
-  "stanzas": Object {
-    "hello-world": Object {
+{
+  "stanzas": {
+    "hello-world": {
       "README.md": "# LABEL
 
 Stanza description goes here. Edit \`stanzas/hello-world/README.md\` to update.
 ",
-      "assets": Object {
+      "assets": {
         ".keep": "",
       },
       "index.js": "import Stanza from 'togostanza/stanza';
@@ -188,48 +188,48 @@ export default class HelloWorld extends Stanza {
 }
 ",
       "metadata.json": "{
-  \\"@context\\": {
-    \\"stanza\\": \\"http://togostanza.org/resource/stanza#\\"
+  "@context": {
+    "stanza": "http://togostanza.org/resource/stanza#"
   },
-  \\"@id\\": \\"hello-world\\",
-  \\"stanza:label\\": \\"LABEL\\",
-  \\"stanza:definition\\": \\"DEFINITION\\",
-  \\"stanza:license\\": \\"LICENSE\\",
-  \\"stanza:author\\": \\"AUTHOR\\",
-  \\"stanza:contributor\\": [],
-  \\"stanza:created\\": \\"2020-10-05\\",
-  \\"stanza:updated\\": \\"2020-10-05\\",
-  \\"stanza:parameter\\": [
+  "@id": "hello-world",
+  "stanza:label": "LABEL",
+  "stanza:definition": "DEFINITION",
+  "stanza:license": "LICENSE",
+  "stanza:author": "AUTHOR",
+  "stanza:contributor": [],
+  "stanza:created": "2020-10-05",
+  "stanza:updated": "2020-10-05",
+  "stanza:parameter": [
     {
-      \\"stanza:key\\": \\"say-to\\",
-      \\"stanza:type\\": \\"string\\",
-      \\"stanza:example\\": \\"world\\",
-      \\"stanza:description\\": \\"who to say hello to\\",
-      \\"stanza:required\\": false
+      "stanza:key": "say-to",
+      "stanza:type": "string",
+      "stanza:example": "world",
+      "stanza:description": "who to say hello to",
+      "stanza:required": false
     }
   ],
-  \\"stanza:menu-placement\\": \\"bottom-right\\",
-  \\"stanza:style\\": [
+  "stanza:menu-placement": "bottom-right",
+  "stanza:style": [
     {
-      \\"stanza:key\\": \\"--greeting-color\\",
-      \\"stanza:type\\": \\"color\\",
-      \\"stanza:default\\": \\"#eb7900\\",
-      \\"stanza:description\\": \\"text color of greeting\\"
+      "stanza:key": "--greeting-color",
+      "stanza:type": "color",
+      "stanza:default": "#eb7900",
+      "stanza:description": "text color of greeting"
     },
     {
-      \\"stanza:key\\": \\"--greeting-align\\",
-      \\"stanza:type\\": \\"single-choice\\",
-      \\"stanza:choice\\": [
-        \\"left\\",
-        \\"center\\",
-        \\"right\\"
+      "stanza:key": "--greeting-align",
+      "stanza:type": "single-choice",
+      "stanza:choice": [
+        "left",
+        "center",
+        "right"
       ],
-      \\"stanza:default\\": \\"center\\",
-      \\"stanza:description\\": \\"text align of greeting\\"
+      "stanza:default": "center",
+      "stanza:description": "text align of greeting"
     }
   ],
-  \\"stanza:incomingEvent\\": [],
-  \\"stanza:outgoingEvent\\": []
+  "stanza:incomingEvent": [],
+  "stanza:outgoingEvent": []
 }
 ",
       "style.scss": "// Load the repository-wide global style here. The actual file is located at ../common.scss for details.
@@ -248,8 +248,8 @@ p.greeting {
   text-align: var(--greeting-align);
 }
 ",
-      "templates": Object {
-        "stanza.html.hbs": "<p class=\\"greeting\\">{{greeting}}</p>
+      "templates": {
+        "stanza.html.hbs": "<p class="greeting">{{greeting}}</p>
 ",
       },
     },
@@ -258,7 +258,7 @@ p.greeting {
 `;
 
 exports[`init non-interactive ({"packageManager": "npm"}) 1`] = `
-Array [
+[
   null,
   "",
   "   create package.json
@@ -298,10 +298,10 @@ Build stanzas for deployment:
 `;
 
 exports[`init non-interactive ({"packageManager": "npm"}) 2`] = `
-Object {
-  "some-repo": Object {
-    ".github": Object {
-      "workflows": Object {
+{
+  "some-repo": {
+    ".github": {
+      "workflows": {
         "publish.yml": "name: Publish GitHub Pages
 
 on:
@@ -352,7 +352,7 @@ Describe about the repository here. These contents will help the repository user
 - Who maintains this repository?
 - ...
 ",
-    "assets": Object {
+    "assets": {
       ".keep": "",
     },
     "common.scss": "/*
@@ -367,21 +367,21 @@ h1 {
 
 */
 ",
-    "lib": Object {
+    "lib": {
       ".keep": "",
     },
     "package.json": "{
-  \\"name\\": \\"some-repo\\",
-  \\"version\\": \\"0.0.1\\",
-  \\"license\\": \\"MIT\\",
-  \\"repository\\": \\"https://github.com/ursm/some-repo.git\\",
-  \\"dependencies\\": {
-    \\"togostanza\\": \\"^3.0.0-beta.41\\"
+  "name": "some-repo",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": "https://github.com/ursm/some-repo.git",
+  "dependencies": {
+    "togostanza": "^3.0.0-beta.41"
   },
-  \\"engines\\": {
-    \\"node\\": \\">=14\\"
+  "engines": {
+    "node": ">=14"
   },
-  \\"private\\": true
+  "private": true
 }
 ",
   },
@@ -389,7 +389,7 @@ h1 {
 `;
 
 exports[`init non-interactive ({"packageManager": "yarn"}) 1`] = `
-Array [
+[
   null,
   "",
   "   create package.json
@@ -429,10 +429,10 @@ Build stanzas for deployment:
 `;
 
 exports[`init non-interactive ({"packageManager": "yarn"}) 2`] = `
-Object {
-  "some-repo": Object {
-    ".github": Object {
-      "workflows": Object {
+{
+  "some-repo": {
+    ".github": {
+      "workflows": {
         "publish.yml": "name: Publish GitHub Pages
 
 on:
@@ -483,7 +483,7 @@ Describe about the repository here. These contents will help the repository user
 - Who maintains this repository?
 - ...
 ",
-    "assets": Object {
+    "assets": {
       ".keep": "",
     },
     "common.scss": "/*
@@ -498,21 +498,21 @@ h1 {
 
 */
 ",
-    "lib": Object {
+    "lib": {
       ".keep": "",
     },
     "package.json": "{
-  \\"name\\": \\"some-repo\\",
-  \\"version\\": \\"0.0.1\\",
-  \\"license\\": \\"MIT\\",
-  \\"repository\\": \\"https://github.com/ursm/some-repo.git\\",
-  \\"dependencies\\": {
-    \\"togostanza\\": \\"^3.0.0-beta.41\\"
+  "name": "some-repo",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": "https://github.com/ursm/some-repo.git",
+  "dependencies": {
+    "togostanza": "^3.0.0-beta.41"
   },
-  \\"engines\\": {
-    \\"node\\": \\">=14\\"
+  "engines": {
+    "node": ">=14"
   },
-  \\"private\\": true
+  "private": true
 }
 ",
   },
@@ -520,7 +520,7 @@ h1 {
 `;
 
 exports[`init with scp-like repository url 1`] = `
-Array [
+[
   null,
   "",
   "   create package.json
@@ -560,10 +560,10 @@ Build stanzas for deployment:
 `;
 
 exports[`init with scp-like repository url 2`] = `
-Object {
-  "some-repo": Object {
-    ".github": Object {
-      "workflows": Object {
+{
+  "some-repo": {
+    ".github": {
+      "workflows": {
         "publish.yml": "name: Publish GitHub Pages
 
 on:
@@ -614,7 +614,7 @@ Describe about the repository here. These contents will help the repository user
 - Who maintains this repository?
 - ...
 ",
-    "assets": Object {
+    "assets": {
       ".keep": "",
     },
     "common.scss": "/*
@@ -629,21 +629,21 @@ h1 {
 
 */
 ",
-    "lib": Object {
+    "lib": {
       ".keep": "",
     },
     "package.json": "{
-  \\"name\\": \\"some-repo\\",
-  \\"version\\": \\"0.0.1\\",
-  \\"license\\": \\"MIT\\",
-  \\"repository\\": \\"https://github.com/ursm/some-repo.git\\",
-  \\"dependencies\\": {
-    \\"togostanza\\": \\"^3.0.0-beta.41\\"
+  "name": "some-repo",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": "https://github.com/ursm/some-repo.git",
+  "dependencies": {
+    "togostanza": "^3.0.0-beta.41"
   },
-  \\"engines\\": {
-    \\"node\\": \\">=14\\"
+  "engines": {
+    "node": ">=14"
   },
-  \\"private\\": true
+  "private": true
 }
 ",
   },
@@ -667,9 +667,9 @@ Results:
 exports[`upgrade move stanza into stanzas/ 2`] = `""`;
 
 exports[`upgrade move stanza into stanzas/ 3`] = `
-Object {
-  "stanzas": Object {
-    "hello": Object {
+{
+  "stanzas": {
+    "hello": {
       "metadata.json": "{}",
     },
   },
