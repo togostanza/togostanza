@@ -142,14 +142,14 @@ export default class Stanza {
 
           switch (type) {
             case 'number':
-              value = Number(valueStr);
+              value = valueStr ? Number(valueStr) : undefined;
               break;
             case 'date':
             case 'datetime':
-              value = new Date(valueStr);
+              value = valueStr ? new Date(valueStr) : undefined;
               break;
             case 'json':
-              value = JSON.parse(valueStr);
+              value = valueStr ? JSON.parse(valueStr) : undefined;
               break;
             default:
               value = valueStr;
