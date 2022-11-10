@@ -105,22 +105,64 @@ td {
               <div
                 class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3"
               >
-                <div v-for="[a, ta] in paramTree" :key="a">
-                  <h1>{{ a }}</h1>
-                </div>
-                <div
-                  v-for="{ param, input } in paramFields"
-                  :key="param['stanza:key']"
-                  class="col"
-                >
-                  <FormField
-                    :input="input"
-                    :name="param['stanza:key']"
-                    :type="param['stanza:type']"
-                    :choices="param['stanza:choice']"
-                    :required="param['stanza:required']"
-                    :help-text="param['stanza:description']"
-                  ></FormField>
+                <div v-for="[a, ta] in paramTree.entries()" :key="a">
+                  <h3>{{ a }}</h3>
+                  <div
+                    v-for="{ param, input } in searchParams(paramFields, [a])"
+                    :key="param['stanza:key']"
+                    class="col"
+                  >
+                    <FormField
+                      :input="input"
+                      :name="param['stanza:key']"
+                      :type="param['stanza:type']"
+                      :choices="param['stanza:choice']"
+                      :required="param['stanza:required']"
+                      :help-text="param['stanza:description']"
+                    ></FormField>
+                  </div>
+
+                  <div v-for="[b, tb] in ta.entries()" :key="b">
+                    <h4>{{ b }}</h4>
+                    <div
+                      v-for="{ param, input } in searchParams(paramFields, [
+                        a,
+                        b,
+                      ])"
+                      :key="param['stanza:key']"
+                      class="col"
+                    >
+                      <FormField
+                        :input="input"
+                        :name="param['stanza:key']"
+                        :type="param['stanza:type']"
+                        :choices="param['stanza:choice']"
+                        :required="param['stanza:required']"
+                        :help-text="param['stanza:description']"
+                      ></FormField>
+                    </div>
+                    <div v-for="[c, _tc] in tb.entries()" :key="c">
+                      <h5>{{ c }}</h5>
+                      <div
+                        v-for="{ param, input } in searchParams(paramFields, [
+                          a,
+                          b,
+                          c,
+                        ])"
+                        :key="param['stanza:key']"
+                        class="col"
+                      >
+                        <FormField
+                          :input="input"
+                          :name="param['stanza:key']"
+                          :type="param['stanza:type']"
+                          :choices="param['stanza:choice']"
+                          :required="param['stanza:required']"
+                          :help-text="param['stanza:description']"
+                        ></FormField>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="col">
@@ -254,6 +296,13 @@ function buildParameterTree(stanzaParameter) {
   return tree;
 }
 
+function searchParams(paramFields, keyArray) {
+  return paramFields.filter((param) => {
+    const k = param.param['stanza:key'].split('-', 3);
+    return JSON.stringify(k) === JSON.stringify(keyArray);
+  });
+}
+
 export default defineComponent({
   components: {
     FormField,
@@ -273,7 +322,6 @@ export default defineComponent({
     });
 
     const paramTree = buildParameterTree(stanzaParameter);
-
     const menuPlacement = useInput(
       metadata['stanza:menu-placement'] || 'bottom-right',
       'string'
@@ -344,6 +392,7 @@ export default defineComponent({
       readme,
       paramFields,
       paramTree,
+      searchParams,
       menuPlacement,
       params,
       styleFields,
