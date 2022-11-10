@@ -103,12 +103,11 @@ td {
               <h2 class="my-3">Parameters</h2>
 
               <div
-                class="
-                  row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2
-                  gx-4
-                  gy-3
-                "
+                class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3"
               >
+                <div v-for="[a, ta] in paramTree" :key="a">
+                  <h1>{{ a }}</h1>
+                </div>
                 <div
                   v-for="{ param, input } in paramFields"
                   :key="param['stanza:key']"
@@ -148,11 +147,7 @@ td {
               <h2 class="my-3">Styles</h2>
 
               <div
-                class="
-                  row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2
-                  gx-4
-                  gy-3
-                "
+                class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3"
               >
                 <div
                   v-for="{ style, input } in styleFields"
@@ -235,6 +230,30 @@ import FormField from './FormField.vue';
 import Layout from './Layout.vue';
 import StanzaPreviewer from './StanzaPreviewer.vue';
 
+function buildParameterTree(stanzaParameter) {
+  const tree = new Map();
+
+  for (const param of stanzaParameter) {
+    const key = param['stanza:key'];
+    const k = key.split('-', 3);
+
+    const a = tree.get(k[0]) || new Map();
+    tree.set(k[0], a);
+
+    if (k[1]) {
+      const b = a.get(k[1]) || new Map();
+      a.set(k[1], b);
+
+      if (k[2]) {
+        const c = b.get(k[2]) || new Map();
+        b.set(k[2], c);
+      }
+    }
+  }
+
+  return tree;
+}
+
 export default defineComponent({
   components: {
     FormField,
@@ -245,12 +264,15 @@ export default defineComponent({
   props: ['metadata', 'readme'],
 
   setup({ metadata, readme }) {
-    const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
+    const stanzaParameter = metadata['stanza:parameter'] || [];
+    const paramFields = stanzaParameter.map((param) => {
       return {
         param,
         input: useInput(param['stanza:example'], param['stanza:type'], false),
       };
     });
+
+    const paramTree = buildParameterTree(stanzaParameter);
 
     const menuPlacement = useInput(
       metadata['stanza:menu-placement'] || 'bottom-right',
@@ -321,6 +343,7 @@ export default defineComponent({
       metadata,
       readme,
       paramFields,
+      paramTree,
       menuPlacement,
       params,
       styleFields,
