@@ -102,52 +102,44 @@ td {
             <section>
               <h2 class="my-3">Parameters</h2>
 
-              <div
-                class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3"
-              >
-                <div v-for="[a, ta] in paramTree.entries()" :key="a">
-                  <h3>{{ a }}</h3>
-                  <div
-                    v-for="{ param, input } in searchParams(paramFields, [a])"
-                    :key="param['stanza:key']"
-                    class="col"
+              <div class="d-flex align-items-start">
+                <div
+                  class="nav flex-column nav-pills me-3"
+                  id="v-pills-tab"
+                  role="tablist"
+                  aria-orientation="vertical"
+                >
+                  <button
+                    v-for="(a, i) in [...paramTree.keys(), 'togostanza']"
+                    :key="a"
+                    :class="`nav-link` + (i === 0 ? ' active' : '')"
+                    data-bs-toggle="pill"
+                    :data-bs-target="`#v-pills-${a}`"
+                    type="button"
+                    role="tab"
                   >
-                    <FormField
-                      :input="input"
-                      :name="param['stanza:key']"
-                      :type="param['stanza:type']"
-                      :choices="param['stanza:choice']"
-                      :required="param['stanza:required']"
-                      :help-text="param['stanza:description']"
-                    ></FormField>
-                  </div>
+                    {{ a }}
+                  </button>
+                </div>
 
-                  <div v-for="[b, tb] in ta.entries()" :key="b">
-                    <h4>{{ b }}</h4>
+                <div class="tab-content flex-grow-1" id="v-pills-tabContent">
+                  <template
+                    v-for="([a, ta], i) in [
+                      ...paramTree.entries(),
+                      ['togostanza', new Map()],
+                    ]"
+                    :key="a"
+                  >
                     <div
-                      v-for="{ param, input } in searchParams(paramFields, [
-                        a,
-                        b,
-                      ])"
-                      :key="param['stanza:key']"
-                      class="col"
+                      :class="`tab-pane fade` + (i === 0 ? ' show active' : '')"
+                      :id="`v-pills-${a}`"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-home-tab"
+                      tabindex="0"
                     >
-                      <FormField
-                        :input="input"
-                        :name="param['stanza:key']"
-                        :type="param['stanza:type']"
-                        :choices="param['stanza:choice']"
-                        :required="param['stanza:required']"
-                        :help-text="param['stanza:description']"
-                      ></FormField>
-                    </div>
-                    <div v-for="[c, _tc] in tb.entries()" :key="c">
-                      <h5>{{ c }}</h5>
                       <div
                         v-for="{ param, input } in searchParams(paramFields, [
                           a,
-                          b,
-                          c,
                         ])"
                         :key="param['stanza:key']"
                         class="col"
@@ -161,24 +153,64 @@ td {
                           :help-text="param['stanza:description']"
                         ></FormField>
                       </div>
-                    </div>
-                  </div>
-                </div>
 
-                <div class="col">
-                  <FormField
-                    :input="menuPlacement"
-                    name="togostanza-menu-placement"
-                    type="single-choice"
-                    :choices="[
-                      'top-left',
-                      'top-right',
-                      'bottom-left',
-                      'bottom-right',
-                      'none',
-                    ]"
-                    :help-text="'Placement of the information icon which links to this page.'"
-                  ></FormField>
+                      <template v-for="[b, tb] in ta.entries()" :key="b">
+                        <h3>{{ b }}</h3>
+                        <div
+                          v-for="{ param, input } in searchParams(paramFields, [
+                            a,
+                            b,
+                          ])"
+                          :key="param['stanza:key']"
+                        >
+                          <FormField
+                            :input="input"
+                            :name="param['stanza:key']"
+                            :type="param['stanza:type']"
+                            :choices="param['stanza:choice']"
+                            :required="param['stanza:required']"
+                            :help-text="param['stanza:description']"
+                          ></FormField>
+                        </div>
+                        <template v-for="c in tb.keys()" :key="c">
+                          <h4>{{ c }}</h4>
+                          <div
+                            v-for="{ param, input } in searchParams(
+                              paramFields,
+                              [a, b, c]
+                            )"
+                            :key="param['stanza:key']"
+                            class="col"
+                          >
+                            <FormField
+                              :input="input"
+                              :name="param['stanza:key']"
+                              :type="param['stanza:type']"
+                              :choices="param['stanza:choice']"
+                              :required="param['stanza:required']"
+                              :help-text="param['stanza:description']"
+                            ></FormField>
+                          </div>
+                        </template>
+                      </template>
+
+                      <div v-if="a === 'togostanza'">
+                        <FormField
+                          :input="menuPlacement"
+                          name="togostanza-menu-placement"
+                          type="single-choice"
+                          :choices="[
+                            'top-left',
+                            'top-right',
+                            'bottom-left',
+                            'bottom-right',
+                            'none',
+                          ]"
+                          :help-text="'Placement of the information icon which links to this page.'"
+                        ></FormField>
+                      </div>
+                    </div>
+                  </template>
                 </div>
               </div>
             </section>
