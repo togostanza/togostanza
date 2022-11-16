@@ -134,7 +134,7 @@ td {
                     :key="a"
                   >
                     <div
-                      :class="`tab-pane fade` + (i === 0 ? ' show active' : '')"
+                      :class="`tab-pane` + (i === 0 ? ' show active' : '')"
                       :id="`v-pills-${a}`"
                       role="tabpanel"
                       aria-labelledby="v-pills-home-tab"
