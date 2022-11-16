@@ -112,17 +112,39 @@ td {
                   role="tablist"
                   aria-orientation="vertical"
                 >
-                  <button
-                    v-for="(a, i) in [...paramTree.keys(), 'togostanza']"
+                  <template
+                    v-for="([a, ta], i) in [
+                      ...paramTree.entries(),
+                      ['togostanza', new Map()],
+                    ]"
                     :key="a"
-                    :class="`nav-link` + (i === 0 ? ' active' : '')"
-                    data-bs-toggle="pill"
-                    :data-bs-target="`#v-pills-${a}`"
-                    type="button"
-                    role="tab"
                   >
-                    {{ a }}
-                  </button>
+                    <button
+                      :class="
+                        `nav-link text-start` + (i === 0 ? ' active' : '')
+                      "
+                      data-bs-toggle="pill"
+                      :data-bs-target="`#v-pills-${a}`"
+                      type="button"
+                      role="tab"
+                    >
+                      {{ a }}
+                    </button>
+                    <template v-for="[b, i] in ta.entries()" :key="b">
+                      <button
+                        :class="
+                          `nav-link text-start ps-4` +
+                          (i === 0 ? ' active' : '')
+                        "
+                        data-bs-toggle="pill"
+                        :data-bs-target="`#v-pills-${a}-${b}`"
+                        type="button"
+                        role="tab"
+                      >
+                        {{ b }}
+                      </button>
+                    </template>
+                  </template>
                 </div>
 
                 <div class="tab-content flex-grow-1" id="v-pills-tabContent">
