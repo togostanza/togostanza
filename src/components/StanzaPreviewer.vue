@@ -1,5 +1,13 @@
 <template>
-  <div class="bg-dark">
+  <div class="overflow-auto p-3 bg-light">
+    <div v-html="styleSnippet"></div>
+
+    <div ref="stanzaContainer">
+      <component :is="tagName" v-bind="props"></component>
+    </div>
+  </div>
+
+  <div class="bg-dark mt-3">
     <div class="text-end p-2">
       <CopyButton
         :value="combinedSnippet"
@@ -10,14 +18,6 @@
     <pre
       class="overflow-auto p-3 pt-0 text-white"
     ><code>{{combinedSnippet}}</code></pre>
-  </div>
-
-  <div class="overflow-auto p-3 bg-light">
-    <div v-html="styleSnippet"></div>
-
-    <div ref="stanzaContainer">
-      <component :is="tagName" v-bind="props"></component>
-    </div>
   </div>
 </template>
 
