@@ -23,21 +23,21 @@ td {
         <nav class="nav nav-tabs" role="tablist">
           <a
             class="nav-link active"
-            href="#overview"
+            href="#customize"
             data-bs-toggle="tab"
             role="tab"
-            >Overview</a
-          >
-          <a class="nav-link" href="#customize" data-bs-toggle="tab" role="tab"
             >Customize</a
           >
           <a class="nav-link" href="#event" data-bs-toggle="tab" role="tab"
             >Event</a
           >
+          <a class="nav-link" href="#about" data-bs-toggle="tab" role="tab"
+            >About</a
+          >
         </nav>
 
         <div class="tab-content mt-3">
-          <div class="tab-pane active px-lg-5" id="overview" role="tabpanel">
+          <div class="tab-pane px-lg-5" id="about" role="tabpanel">
             <table class="table table-borderless border mb-1">
               <tbody>
                 <tr>
@@ -98,7 +98,7 @@ td {
             <div v-html="readme" class="mt-4"></div>
           </div>
 
-          <div class="tab-pane" id="customize" role="tabpanel">
+          <div class="tab-pane active" id="customize" role="tabpanel">
             <section>
               <h2 class="my-3">Parameters</h2>
 
