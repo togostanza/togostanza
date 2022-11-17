@@ -408,10 +408,6 @@ export default defineComponent({
             input,
           };
         }),
-        {
-          name: 'togostanza-menu-placement',
-          input: menuPlacement,
-        },
       ]
         .filter(({ input }) => !input.isDefault.value)
         .map(({ name, input, type }) => {
