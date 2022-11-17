@@ -163,9 +163,11 @@ td {
                       tabindex="0"
                     >
                       <div
-                        v-for="{ param, input } in searchParams(paramFields, [
-                          a,
-                        ])"
+                        v-for="{ param, input } in searchParams(
+                          paramFields,
+                          parameterPlacement,
+                          [a]
+                        )"
                         :key="param['stanza:key']"
                         class="col"
                       >
@@ -179,7 +181,51 @@ td {
                         ></FormField>
                       </div>
 
-                      <template v-for="[b, tb] in ta.entries()" :key="b">
+                      <div v-if="a === 'togostanza'">
+                        <FormField
+                          :input="menuPlacement"
+                          name="togostanza-menu-placement"
+                          type="single-choice"
+                          :choices="[
+                            'top-left',
+                            'top-right',
+                            'bottom-left',
+                            'bottom-right',
+                            'none',
+                          ]"
+                          :help-text="'Placement of the information icon which links to this page.'"
+                        ></FormField>
+                      </div>
+                    </div>
+                    <template v-for="[b, tb] in ta.entries()" :key="b">
+                      <div
+                        class="tab-pane"
+                        :id="`v-pills-${a}-${b}`"
+                        role="tabpanel"
+                        aria-labelledby="v-pills-home-tab"
+                        tabindex="0"
+                      >
+                        <div
+                          v-for="{ param, input } in searchParams(
+                            paramFields,
+                            parameterPlacement,
+                            [a, b]
+                          )"
+                          :key="param['stanza:key']"
+                        >
+                          <FormField
+                            :input="input"
+                            :name="param['stanza:key']"
+                            :type="param['stanza:type']"
+                            :choices="param['stanza:choice']"
+                            :required="param['stanza:required']"
+                            :help-text="param['stanza:description']"
+                          ></FormField>
+                        </div>
+                      </div>
+                    </template>
+
+                    <!-- <template v-for="[b, tb] in ta.entries()" :key="b">
                         <h3>{{ b }}</h3>
                         <div
                           v-for="{ param, input } in searchParams(paramFields, [
@@ -217,24 +263,7 @@ td {
                             ></FormField>
                           </div>
                         </template>
-                      </template>
-
-                      <div v-if="a === 'togostanza'">
-                        <FormField
-                          :input="menuPlacement"
-                          name="togostanza-menu-placement"
-                          type="single-choice"
-                          :choices="[
-                            'top-left',
-                            'top-right',
-                            'bottom-left',
-                            'bottom-right',
-                            'none',
-                          ]"
-                          :help-text="'Placement of the information icon which links to this page.'"
-                        ></FormField>
-                      </div>
-                    </div>
+                      </template> -->
                   </template>
                 </div>
               </div>
@@ -334,7 +363,9 @@ function buildParameterTree(stanzaParameter) {
 
   for (const param of stanzaParameter) {
     const key = param['stanza:key'];
-    const k = key.split('-', 3);
+    const tmp = key.split('-', 3);
+    const k = tmp.slice(0, Math.max(tmp.length - 1, 1));
+    console.log(k);
 
     const a = tree.get(k[0]) || new Map();
     tree.set(k[0], a);
@@ -342,21 +373,46 @@ function buildParameterTree(stanzaParameter) {
     if (k[1]) {
       const b = a.get(k[1]) || new Map();
       a.set(k[1], b);
-
-      if (k[2]) {
-        const c = b.get(k[2]) || new Map();
-        b.set(k[2], c);
-      }
     }
   }
 
   return tree;
 }
 
-function searchParams(paramFields, keyArray) {
+function computeParameterPlacement(tree, stanzaParameter) {
+  const placement = new Map();
+  for (const param of stanzaParameter) {
+    const key = param['stanza:key'];
+    const k = key.split('-', 3);
+    let max = 0;
+    let argmax = null;
+    for (const [a, ta] in tree.entries()) {
+      for (const b in ta.keys()) {
+        let score = 0;
+        if (k[0] === a) {
+          if (k[1] === b) {
+            score = 2;
+          } else {
+            score = 1;
+          }
+        }
+      }
+      if (score >= max) {
+        max = score;
+        argmax = [a, b];
+      }
+    }
+    placement.set(key, argmax);
+  }
+
+  return placement;
+}
+
+function searchParams(paramFields, parameterPlacement, keyArray) {
   return paramFields.filter((param) => {
-    const k = param.param['stanza:key'].split('-', 3);
-    return JSON.stringify(k) === JSON.stringify(keyArray);
+    const path = parameterPlacement.get(param.param['stanza:key']);
+
+    return JSON.stringify(path) === JSON.stringify(keyArray);
   });
 }
 
@@ -379,6 +435,10 @@ export default defineComponent({
     });
 
     const paramTree = buildParameterTree(stanzaParameter);
+    const parameterPlacement = computeParameterPlacement(
+      paramTree,
+      stanzaParameter
+    );
     const menuPlacement = useInput(
       metadata['stanza:menu-placement'] || 'bottom-right',
       'string'
@@ -449,6 +509,7 @@ export default defineComponent({
       readme,
       paramFields,
       paramTree,
+      parameterPlacement,
       searchParams,
       menuPlacement,
       params,
