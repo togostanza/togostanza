@@ -119,7 +119,9 @@ td {
                     <button
                       :class="
                         `nav-link text-start` +
-                        (i === 0 ? ' active' : '') +
+                        (a === firstActiveParamFiledGroupPath
+                          ? ' active'
+                          : '') +
                         (paramFieldGroups.has(a) ? '' : ' disabled')
                       "
                       data-bs-toggle="pill"
@@ -133,7 +135,9 @@ td {
                       <button
                         :class="
                           `nav-link text-start ps-4` +
-                          (i === 0 ? ' active' : '')
+                          (`${a}-${b}` === firstActiveParamFiledGroupPath
+                            ? ' active'
+                            : '')
                         "
                         data-bs-toggle="pill"
                         :data-bs-target="`#v-pills-${a}-${b}`"
@@ -152,7 +156,12 @@ td {
                     :key="a"
                   >
                     <div
-                      :class="`tab-pane` + (i === 0 ? ' show active' : '')"
+                      :class="
+                        `tab-pane` +
+                        (a === firstActiveParamFiledGroupPath
+                          ? ' show active'
+                          : '')
+                      "
                       :id="`v-pills-${a}`"
                       role="tabpanel"
                       aria-labelledby="v-pills-home-tab"
@@ -175,7 +184,12 @@ td {
                     </div>
                     <template v-for="[b, tb] in ta.entries()" :key="b">
                       <div
-                        class="tab-pane"
+                        :class="
+                          'tab-pane' +
+                          (`${a}-${b}` === firstActiveParamFiledGroupPath
+                            ? ' active'
+                            : '')
+                        "
                         :id="`v-pills-${a}-${b}`"
                         role="tabpanel"
                         aria-labelledby="v-pills-home-tab"
@@ -399,6 +413,8 @@ export default defineComponent({
 
     const paramFieldGroups = buildParamFieldGroups(paramTree, paramFields);
 
+    const firstActiveParamFiledGroupPath = paramFieldGroups.keys().next().value;
+
     const params = computed(() => {
       return [
         ...paramFields.map(({ param, input }) => {
@@ -460,6 +476,7 @@ export default defineComponent({
       readme,
       paramTree,
       paramFieldGroups,
+      firstActiveParamFiledGroupPath,
       menuPlacement,
       params,
       styleFields,
