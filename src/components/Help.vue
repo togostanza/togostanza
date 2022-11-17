@@ -170,7 +170,7 @@ td {
                       <div
                         v-for="{ param, input } in paramFieldGroups.get(a)"
                         :key="param['stanza:key']"
-                        class="col"
+                        class="col mb-2"
                       >
                         <FormField
                           :input="input"
@@ -200,6 +200,7 @@ td {
                             `${a}-${b}`
                           )"
                           :key="param['stanza:key']"
+                          class="col mb-2"
                         >
                           <FormField
                             :input="input"

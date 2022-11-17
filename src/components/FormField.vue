@@ -1,4 +1,13 @@
 <template>
+  <label class="form-label d-flex">
+    <span class="me-auto">
+      <span v-if="required" class="text-danger">*</span>
+      {{ name }}
+    </span>
+
+    <small class="text-muted">{{ type || 'string' }}</small>
+  </label>
+
   <div class="input-group">
     <template v-if="formType === 'single-choice'">
       <select
@@ -48,32 +57,19 @@
     </button>
   </div>
 
-  <label class="form-label d-flex">
-    <span class="me-auto">
-      <small class="form-text text-muted" v-if="formType !== 'boolean'">
-        <span v-if="required" class="text-danger">*</span>
-        {{ helpText }}
-      </small>
-    </span>
-
-    <small class="text-muted">
-      <span class="font-monospace">{{ name }}</span>
-      <span class="ms-1 badge bg-secondary">{{ type || 'string' }}</span></small
-    >
-  </label>
+  <small class="form-text text-muted" v-if="formType !== 'boolean'">
+    {{ helpText }}
+  </small>
 </template>
 
 <script>
 import { computed, defineComponent } from 'vue';
-
 export default defineComponent({
   props: ['choices', 'helpText', 'input', 'name', 'required', 'type'],
-
   setup(props) {
     const formType = computed(() => {
       return props.type === 'datetime' ? 'datetime-local' : props.type;
     });
-
     return { ...props, formType };
   },
 });
