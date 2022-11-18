@@ -151,10 +151,7 @@ td {
                 </div>
 
                 <div class="tab-content flex-grow-1" id="v-pills-tabContent">
-                  <template
-                    v-for="([a, ta], i) in paramTree.entries()"
-                    :key="a"
-                  >
+                  <template v-for="[a, ta] in paramTree.entries()" :key="a">
                     <div
                       :class="
                         `tab-pane` +
@@ -182,7 +179,7 @@ td {
                         ></FormField>
                       </div>
                     </div>
-                    <template v-for="[b, tb] in ta.entries()" :key="b">
+                    <template v-for="b in ta.keys()" :key="b">
                       <div
                         :class="
                           'tab-pane' +
