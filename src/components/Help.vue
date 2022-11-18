@@ -23,21 +23,24 @@ td {
         <nav class="nav nav-tabs" role="tablist">
           <a
             class="nav-link active"
-            href="#overview"
+            href="#parameters"
             data-bs-toggle="tab"
             role="tab"
-            >Overview</a
+            >Parameters</a
           >
-          <a class="nav-link" href="#customize" data-bs-toggle="tab" role="tab"
-            >Customize</a
+          <a class="nav-link" href="#styles" data-bs-toggle="tab" role="tab"
+            >Styles</a
           >
-          <a class="nav-link" href="#event" data-bs-toggle="tab" role="tab"
-            >Event</a
+          <a class="nav-link" href="#events" data-bs-toggle="tab" role="tab"
+            >Events</a
+          >
+          <a class="nav-link" href="#about" data-bs-toggle="tab" role="tab"
+            >About</a
           >
         </nav>
 
         <div class="tab-content mt-3">
-          <div class="tab-pane active px-lg-5" id="overview" role="tabpanel">
+          <div class="tab-pane px-lg-5" id="about" role="tabpanel">
             <table class="table table-borderless border mb-1">
               <tbody>
                 <tr>
@@ -98,84 +101,137 @@ td {
             <div v-html="readme" class="mt-4"></div>
           </div>
 
-          <div class="tab-pane" id="customize" role="tabpanel">
-            <section>
-              <h2 class="my-3">Parameters</h2>
-
+          <div class="tab-pane active" id="parameters" role="tabpanel">
+            <div class="d-flex align-items-start">
               <div
-                class="
-                  row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2
-                  gx-4
-                  gy-3
-                "
+                class="nav flex-column nav-pills me-3"
+                id="v-pills-tab"
+                role="tablist"
+                aria-orientation="vertical"
               >
-                <div
-                  v-for="{ param, input } in paramFields"
-                  :key="param['stanza:key']"
-                  class="col"
-                >
-                  <FormField
-                    :input="input"
-                    :name="param['stanza:key']"
-                    :type="param['stanza:type']"
-                    :choices="param['stanza:choice']"
-                    :required="param['stanza:required']"
-                    :help-text="param['stanza:description']"
-                  ></FormField>
-                </div>
-
-                <div class="col">
-                  <FormField
-                    :input="menuPlacement"
-                    name="togostanza-menu-placement"
-                    type="single-choice"
-                    :choices="[
-                      'top-left',
-                      'top-right',
-                      'bottom-left',
-                      'bottom-right',
-                      'none',
-                    ]"
-                    :help-text="'Placement of the information icon which links to this page.'"
-                  ></FormField>
-                </div>
-              </div>
-            </section>
-
-            <hr class="mt-4 mb-3" />
-
-            <section>
-              <h2 class="my-3">Styles</h2>
-
-              <div
-                class="
-                  row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2
-                  gx-4
-                  gy-3
-                "
-              >
-                <div
-                  v-for="{ style, input } in styleFields"
-                  :key="style['stanza:key']"
-                  class="col"
-                >
-                  <FormField
-                    :input="input"
-                    :name="style['stanza:key']"
-                    :type="style['stanza:type']"
-                    :choices="style['stanza:choice']"
-                    :help-text="style['stanza:description']"
-                  ></FormField>
-                </div>
+                <template v-for="([a, ta], i) in paramTree.entries()" :key="a">
+                  <button
+                    :class="
+                      `nav-link text-start` +
+                      (a === firstActiveParamFiledGroupPath ? ' active' : '') +
+                      (paramFieldGroups.has(a) ? '' : ' disabled')
+                    "
+                    data-bs-toggle="pill"
+                    :data-bs-target="`#v-pills-${a}`"
+                    type="button"
+                    role="tab"
+                  >
+                    {{ a }}
+                  </button>
+                  <template v-for="[b, i] in ta.entries()" :key="b">
+                    <button
+                      :class="
+                        `nav-link text-start ps-4` +
+                        (`${a}-${b}` === firstActiveParamFiledGroupPath
+                          ? ' active'
+                          : '')
+                      "
+                      data-bs-toggle="pill"
+                      :data-bs-target="`#v-pills-${a}-${b}`"
+                      type="button"
+                      role="tab"
+                    >
+                      {{ b }}
+                    </button>
+                  </template>
+                </template>
               </div>
 
-              <p v-if="styleFields.length === 0" class="fst-italic">
-                No styles defined.
-              </p>
-            </section>
+              <div class="tab-content flex-grow-1" id="v-pills-tabContent">
+                <template v-for="[a, ta] in paramTree.entries()" :key="a">
+                  <div
+                    :class="
+                      `tab-pane` +
+                      (a === firstActiveParamFiledGroupPath
+                        ? ' show active'
+                        : '')
+                    "
+                    :id="`v-pills-${a}`"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-home-tab"
+                    tabindex="0"
+                  >
+                    <div
+                      v-for="{ param, input } in paramFieldGroups.get(a)"
+                      :key="param['stanza:key']"
+                      class="col mb-2"
+                    >
+                      <FormField
+                        :input="input"
+                        :name="param['stanza:key']"
+                        :type="param['stanza:type']"
+                        :choices="param['stanza:choice']"
+                        :required="param['stanza:required']"
+                        :help-text="param['stanza:description']"
+                      ></FormField>
+                    </div>
+                  </div>
+                  <template v-for="b in ta.keys()" :key="b">
+                    <div
+                      :class="
+                        'tab-pane' +
+                        (`${a}-${b}` === firstActiveParamFiledGroupPath
+                          ? ' active'
+                          : '')
+                      "
+                      :id="`v-pills-${a}-${b}`"
+                      role="tabpanel"
+                      aria-labelledby="v-pills-home-tab"
+                      tabindex="0"
+                    >
+                      <div
+                        v-for="{ param, input } in paramFieldGroups.get(
+                          `${a}-${b}`
+                        )"
+                        :key="param['stanza:key']"
+                        class="col mb-2"
+                      >
+                        <FormField
+                          :input="input"
+                          :name="param['stanza:key']"
+                          :type="param['stanza:type']"
+                          :choices="param['stanza:choice']"
+                          :required="param['stanza:required']"
+                          :help-text="param['stanza:description']"
+                        ></FormField>
+                      </div>
+                    </div>
+                  </template>
+                </template>
+              </div>
+            </div>
           </div>
 
-          <div class="tab-pane" id="event" role="tabpanel">
+          <div class="tab-pane" id="styles" role="tabpanel">
+            <div
+              class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3"
+            >
+              <div
+                v-for="{ style, input } in styleFields"
+                :key="style['stanza:key']"
+                class="col"
+              >
+                <FormField
+                  :input="input"
+                  :name="style['stanza:key']"
+                  :type="style['stanza:type']"
+                  :choices="style['stanza:choice']"
+                  :help-text="style['stanza:description']"
+                ></FormField>
+              </div>
+            </div>
+
+            <p v-if="styleFields.length === 0" class="fst-italic">
+              No styles defined.
+            </p>
+          </div>
+
+          <div class="tab-pane" id="events" role="tabpanel">
             <h2 class="my-3">Outgoing Events</h2>
 
             <div class="row row-cols-2">
@@ -235,6 +291,70 @@ import FormField from './FormField.vue';
 import Layout from './Layout.vue';
 import StanzaPreviewer from './StanzaPreviewer.vue';
 
+function buildParameterTree(stanzaParameter) {
+  const tree = new Map();
+
+  for (const param of stanzaParameter) {
+    const key = param['stanza:key'];
+    const tmp = key.split('-', 3);
+    const k = tmp.slice(0, Math.max(tmp.length - 1, 1));
+
+    const a = tree.get(k[0]) || new Map();
+    tree.set(k[0], a);
+
+    if (k[1]) {
+      const b = a.get(k[1]) || new Map();
+      a.set(k[1], b);
+    }
+  }
+
+  return tree;
+}
+
+function commonPrefixLength(a, b) {
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) {
+    i++;
+  }
+  return i;
+}
+
+function buildParamFieldGroups(tree, paramFields) {
+  const placements = new Map();
+  for (const param of paramFields) {
+    const key = param.param['stanza:key'];
+    const k = key.split('-', 3);
+    let max = -1;
+    let argmaxPath = null;
+
+    const paths = [];
+    for (const [a, ta] of tree.entries()) {
+      paths.push([a]);
+      for (const b of ta.keys()) {
+        paths.push([a, b]);
+      }
+    }
+
+    for (const path of paths) {
+      const l = commonPrefixLength(k, path);
+      if (l > max) {
+        max = l;
+        argmaxPath = path;
+      }
+    }
+
+    const placementKey = argmaxPath.join('-');
+    const placement = placements.get(placementKey);
+    if (placement) {
+      placement.push(param);
+    } else {
+      placements.set(placementKey, [param]);
+    }
+  }
+
+  return placements;
+}
+
 export default defineComponent({
   components: {
     FormField,
@@ -245,17 +365,40 @@ export default defineComponent({
   props: ['metadata', 'readme'],
 
   setup({ metadata, readme }) {
-    const paramFields = (metadata['stanza:parameter'] || []).map((param) => {
+    const stanzaParameter = metadata['stanza:parameter'] || [];
+    const paramFields = stanzaParameter.map((param) => {
       return {
         param,
         input: useInput(param['stanza:example'], param['stanza:type'], false),
       };
     });
-
     const menuPlacement = useInput(
       metadata['stanza:menu-placement'] || 'bottom-right',
       'string'
     );
+    paramFields.push({
+      param: {
+        'stanza:key': 'togostanza-menu-placement',
+        'stanza:type': 'single-choice',
+        'stanza:choice': [
+          'top-left',
+          'top-right',
+          'bottom-left',
+          'bottom-right',
+          'none',
+        ],
+        'stanza:description':
+          'Placement of the information icon which links to this page.',
+      },
+      input: menuPlacement,
+    });
+
+    const paramTree = buildParameterTree(stanzaParameter);
+    paramTree.set('togostanza', new Map());
+
+    const paramFieldGroups = buildParamFieldGroups(paramTree, paramFields);
+
+    const firstActiveParamFiledGroupPath = paramFieldGroups.keys().next().value;
 
     const params = computed(() => {
       return [
@@ -266,10 +409,6 @@ export default defineComponent({
             input,
           };
         }),
-        {
-          name: 'togostanza-menu-placement',
-          input: menuPlacement,
-        },
       ]
         .filter(({ input }) => !input.isDefault.value)
         .map(({ name, input, type }) => {
@@ -320,7 +459,9 @@ export default defineComponent({
     return {
       metadata,
       readme,
-      paramFields,
+      paramTree,
+      paramFieldGroups,
+      firstActiveParamFiledGroupPath,
       menuPlacement,
       params,
       styleFields,
