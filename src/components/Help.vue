@@ -102,70 +102,92 @@ td {
           </div>
 
           <div class="tab-pane active" id="parameters" role="tabpanel">
-            <section>
-              <h2 class="my-3">Parameters</h2>
-
-              <div class="d-flex align-items-start">
-                <div
-                  class="nav flex-column nav-pills me-3"
-                  id="v-pills-tab"
-                  role="tablist"
-                  aria-orientation="vertical"
-                >
-                  <template
-                    v-for="([a, ta], i) in paramTree.entries()"
-                    :key="a"
+            <div class="d-flex align-items-start">
+              <div
+                class="nav flex-column nav-pills me-3"
+                id="v-pills-tab"
+                role="tablist"
+                aria-orientation="vertical"
+              >
+                <template v-for="([a, ta], i) in paramTree.entries()" :key="a">
+                  <button
+                    :class="
+                      `nav-link text-start` +
+                      (a === firstActiveParamFiledGroupPath ? ' active' : '') +
+                      (paramFieldGroups.has(a) ? '' : ' disabled')
+                    "
+                    data-bs-toggle="pill"
+                    :data-bs-target="`#v-pills-${a}`"
+                    type="button"
+                    role="tab"
                   >
+                    {{ a }}
+                  </button>
+                  <template v-for="[b, i] in ta.entries()" :key="b">
                     <button
                       :class="
-                        `nav-link text-start` +
-                        (a === firstActiveParamFiledGroupPath
+                        `nav-link text-start ps-4` +
+                        (`${a}-${b}` === firstActiveParamFiledGroupPath
                           ? ' active'
-                          : '') +
-                        (paramFieldGroups.has(a) ? '' : ' disabled')
+                          : '')
                       "
                       data-bs-toggle="pill"
-                      :data-bs-target="`#v-pills-${a}`"
+                      :data-bs-target="`#v-pills-${a}-${b}`"
                       type="button"
                       role="tab"
                     >
-                      {{ a }}
+                      {{ b }}
                     </button>
-                    <template v-for="[b, i] in ta.entries()" :key="b">
-                      <button
-                        :class="
-                          `nav-link text-start ps-4` +
-                          (`${a}-${b}` === firstActiveParamFiledGroupPath
-                            ? ' active'
-                            : '')
-                        "
-                        data-bs-toggle="pill"
-                        :data-bs-target="`#v-pills-${a}-${b}`"
-                        type="button"
-                        role="tab"
-                      >
-                        {{ b }}
-                      </button>
-                    </template>
                   </template>
-                </div>
+                </template>
+              </div>
 
-                <div class="tab-content flex-grow-1" id="v-pills-tabContent">
-                  <template v-for="[a, ta] in paramTree.entries()" :key="a">
+              <div class="tab-content flex-grow-1" id="v-pills-tabContent">
+                <template v-for="[a, ta] in paramTree.entries()" :key="a">
+                  <div
+                    :class="
+                      `tab-pane` +
+                      (a === firstActiveParamFiledGroupPath
+                        ? ' show active'
+                        : '')
+                    "
+                    :id="`v-pills-${a}`"
+                    role="tabpanel"
+                    aria-labelledby="v-pills-home-tab"
+                    tabindex="0"
+                  >
+                    <div
+                      v-for="{ param, input } in paramFieldGroups.get(a)"
+                      :key="param['stanza:key']"
+                      class="col mb-2"
+                    >
+                      <FormField
+                        :input="input"
+                        :name="param['stanza:key']"
+                        :type="param['stanza:type']"
+                        :choices="param['stanza:choice']"
+                        :required="param['stanza:required']"
+                        :help-text="param['stanza:description']"
+                      ></FormField>
+                    </div>
+                  </div>
+                  <template v-for="b in ta.keys()" :key="b">
                     <div
                       :class="
-                        `tab-pane` +
-                        (a === firstActiveParamFiledGroupPath
-                          ? ' show active'
+                        'tab-pane' +
+                        (`${a}-${b}` === firstActiveParamFiledGroupPath
+                          ? ' active'
                           : '')
                       "
-                      :id="`v-pills-${a}`"
+                      :id="`v-pills-${a}-${b}`"
                       role="tabpanel"
                       aria-labelledby="v-pills-home-tab"
                       tabindex="0"
                     >
                       <div
-                        v-for="{ param, input } in paramFieldGroups.get(a)"
+                        v-for="{ param, input } in paramFieldGroups.get(
+                          `${a}-${b}`
+                        )"
                         :key="param['stanza:key']"
                         class="col mb-2"
                       >
@@ -179,69 +201,34 @@ td {
                         ></FormField>
                       </div>
                     </div>
-                    <template v-for="b in ta.keys()" :key="b">
-                      <div
-                        :class="
-                          'tab-pane' +
-                          (`${a}-${b}` === firstActiveParamFiledGroupPath
-                            ? ' active'
-                            : '')
-                        "
-                        :id="`v-pills-${a}-${b}`"
-                        role="tabpanel"
-                        aria-labelledby="v-pills-home-tab"
-                        tabindex="0"
-                      >
-                        <div
-                          v-for="{ param, input } in paramFieldGroups.get(
-                            `${a}-${b}`
-                          )"
-                          :key="param['stanza:key']"
-                          class="col mb-2"
-                        >
-                          <FormField
-                            :input="input"
-                            :name="param['stanza:key']"
-                            :type="param['stanza:type']"
-                            :choices="param['stanza:choice']"
-                            :required="param['stanza:required']"
-                            :help-text="param['stanza:description']"
-                          ></FormField>
-                        </div>
-                      </div>
-                    </template>
                   </template>
-                </div>
+                </template>
               </div>
-            </section>
+            </div>
           </div>
 
           <div class="tab-pane" id="styles" role="tabpanel">
-            <section>
-              <h2 class="my-3">Styles</h2>
-
+            <div
+              class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3"
+            >
               <div
-                class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3"
+                v-for="{ style, input } in styleFields"
+                :key="style['stanza:key']"
+                class="col"
               >
-                <div
-                  v-for="{ style, input } in styleFields"
-                  :key="style['stanza:key']"
-                  class="col"
-                >
-                  <FormField
-                    :input="input"
-                    :name="style['stanza:key']"
-                    :type="style['stanza:type']"
-                    :choices="style['stanza:choice']"
-                    :help-text="style['stanza:description']"
-                  ></FormField>
-                </div>
+                <FormField
+                  :input="input"
+                  :name="style['stanza:key']"
+                  :type="style['stanza:type']"
+                  :choices="style['stanza:choice']"
+                  :help-text="style['stanza:description']"
+                ></FormField>
               </div>
+            </div>
 
-              <p v-if="styleFields.length === 0" class="fst-italic">
-                No styles defined.
-              </p>
-            </section>
+            <p v-if="styleFields.length === 0" class="fst-italic">
+              No styles defined.
+            </p>
           </div>
 
           <div class="tab-pane" id="events" role="tabpanel">
