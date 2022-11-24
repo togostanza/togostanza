@@ -166,14 +166,14 @@ export default class BuildStanzas extends BroccoliPlugin {
   }
 
   async copyMetadata(stanzas) {
-    return await Promise.all(
-      stanzas.map((stanza) =>
-        fs.copy(
-          stanza.filepath('metadata.json'),
-          path.join(this.outputPath, stanza.id, 'metadata.json')
-        )
-      )
-    );
+    for await (const stanza of stanzas) {
+      const metadata = await stanza.metadata();
+      await fs.mkdirp(path.join(this.outputPath, stanza.id));
+      await fs.writeFile(
+        path.join(this.outputPath, stanza.id, 'metadata.json'),
+        JSON.stringify(metadata)
+      );
+    }
   }
 
   async copyAssets(stanzas) {
@@ -244,7 +244,7 @@ function aliasEntries(stanza) {
     },
     {
       find: `-stanza/${stanza.id}/metadata`,
-      replacement: stanza.filepath('metadata.json'),
+      replacement: stanza.filepath('metadata.json'), // TODO fix?
     },
   ];
 }
