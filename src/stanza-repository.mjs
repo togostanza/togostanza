@@ -21,8 +21,9 @@ export default class StanzaRepository {
         id: path.basename(stanzaDir),
         scriptPath: path.join(stanzaDir, 'index.js'),
 
-        get metadata() {
-          return fs.readFile(metadataPath).then(JSON.parse);
+        async metadata() {
+          const json = await fs.readFile(metadataPath);
+          return JSON.parse(json);
         },
 
         get readme() {

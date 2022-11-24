@@ -36,7 +36,7 @@ export default class BuildPages extends BroccoliPlugin {
 
   async buildVueApps(stanzas) {
     const allMetadata = await Promise.all(
-      stanzas.map(({ metadata }) => metadata)
+      stanzas.map(({ metadata }) => metadata())
     );
 
     allMetadata.sort((a, b) => {
@@ -119,7 +119,7 @@ export default class BuildPages extends BroccoliPlugin {
 
     await Promise.all(
       stanzas.map(async (stanza) => {
-        const metadata = await stanza.metadata;
+        const metadata = await stanza.metadata();
         const readme = await stanza.readme;
 
         this.output.writeFileSync(
