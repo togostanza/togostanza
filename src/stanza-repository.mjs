@@ -1,5 +1,5 @@
 import path from 'path';
-import { promises as fs, existsSync} from 'fs';
+import { promises as fs, existsSync } from 'fs';
 
 import walkSync from 'walk-sync';
 
@@ -12,13 +12,13 @@ export default class StanzaRepository {
 
   get allStanzas() {
     return walkSync(this.rootPath, {
-      globs:           ['stanzas/*/metadata.json'],
-      includeBasePath: true
+      globs: ['stanzas/*/metadata.json'],
+      includeBasePath: true,
     }).map((metadataPath) => {
       const stanzaDir = path.dirname(metadataPath);
 
       return {
-        id:         path.basename(stanzaDir),
+        id: path.basename(stanzaDir),
         scriptPath: path.join(stanzaDir, 'index.js'),
 
         get metadata() {
@@ -26,33 +26,40 @@ export default class StanzaRepository {
         },
 
         get readme() {
-          return fs.readFile(path.join(stanzaDir, 'README.md'), 'utf8').catch((e) => {
-            if (e.code === 'ENOENT') {
-              return null;
-            } else {
-              throw e;
-            }
-          });
+          return fs
+            .readFile(path.join(stanzaDir, 'README.md'), 'utf8')
+            .catch((e) => {
+              if (e.code === 'ENOENT') {
+                return null;
+              } else {
+                throw e;
+              }
+            });
         },
 
         get templates() {
           const paths = walkSync(stanzaDir, {
-            globs:           ['templates/*'],
-            includeBasePath: true
+            globs: ['templates/*'],
+            includeBasePath: true,
           });
 
-          return Promise.all(paths.map(async (templatePath) => {
-            const basename = path.basename(templatePath);
-            const isHTML   = /\.html(?:\.hbs)?$/.test(basename);
+          return Promise.all(
+            paths.map(async (templatePath) => {
+              const basename = path.basename(templatePath);
+              const isHTML = /\.html(?:\.hbs)?$/.test(basename);
 
-            return {
-              name: basename,
+              return {
+                name: basename,
 
-              spec: Handlebars.precompile(await fs.readFile(templatePath, 'utf8'), {
-                noEscape: !isHTML
-              })
-            };
-          }));
+                spec: Handlebars.precompile(
+                  await fs.readFile(templatePath, 'utf8'),
+                  {
+                    noEscape: !isHTML,
+                  }
+                ),
+              };
+            })
+          );
         },
 
         filepath(...paths) {
@@ -60,7 +67,9 @@ export default class StanzaRepository {
         },
 
         stanzaEntryPointPath() {
-          return ['index.tsx', 'index.ts', 'index.js'].map(name => this.filepath(name)).find(existsSync);
+          return ['index.tsx', 'index.ts', 'index.js']
+            .map((name) => this.filepath(name))
+            .find(existsSync);
         },
       };
     });
