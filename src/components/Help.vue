@@ -126,7 +126,7 @@ td {
                   <template v-for="[b, i] in ta.entries()" :key="b">
                     <button
                       :class="
-                        `nav-link text-start ps-4` +
+                        `nav-link text-start` +
                         (`${a}-${b}` === firstActiveParamFiledGroupPath
                           ? ' active'
                           : '')
@@ -135,6 +135,7 @@ td {
                       :data-bs-target="`#v-pills-${a}-${b}`"
                       type="button"
                       role="tab"
+                      style="padding-left: 2rem"
                     >
                       {{ b }}
                     </button>
