@@ -24,16 +24,20 @@ export default class StanzaRepository {
         async metadata() {
           const json = await fs.readFile(metadataPath);
           const metadata = JSON.parse(json);
-          const parameterInclude = metadata[`stanza:parameter-include`] || [];
-          const params = [];
-          for await (const includePath of parameterInclude) {
-            const include = await fs.readFile(
-              path.join(stanzaDir, includePath)
-            );
-            params.push(...JSON.parse(include));
+          const parameters = [];
+          for await (const parameter of metadata['stanza:parameter']) {
+            if (parameter['stanza:include']) {
+              const includePath = path.join(
+                stanzaDir,
+                parameter['stanza:include']
+              );
+              const include = await fs.readFile(includePath);
+              parameters.push(...JSON.parse(include));
+            } else {
+              parameters.push(parameter);
+            }
           }
-          params.push(...(metadata[`stanza:parameter`] || []));
-          metadata[`stanza:parameter`] = params;
+          metadata['stanza:parameter'] = parameters;
 
           return metadata;
         },
