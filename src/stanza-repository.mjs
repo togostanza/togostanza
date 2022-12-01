@@ -2,6 +2,7 @@ import path from 'path';
 import { promises as fs, existsSync } from 'fs';
 
 import walkSync from 'walk-sync';
+import resolve from 'resolve/sync.js';
 
 import { Handlebars } from './util.mjs';
 
@@ -26,13 +27,11 @@ export default class StanzaRepository {
           const metadata = JSON.parse(json);
           const parameters = [];
           for await (const parameter of metadata['stanza:parameter']) {
-            if (parameter['stanza:include']) {
-              const includePath = path.join(
-                stanzaDir,
-                parameter['stanza:include']
-              );
-              const include = await fs.readFile(includePath);
-              parameters.push(...JSON.parse(include));
+            const include = parameter['stanza:include'];
+            if (include) {
+              const includePath = resolve(include, { basedir: stanzaDir });
+              const paramsToInclude = await fs.readFile(includePath);
+              parameters.push(...JSON.parse(paramsToInclude));
             } else {
               parameters.push(parameter);
             }
