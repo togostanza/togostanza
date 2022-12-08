@@ -2,17 +2,18 @@
 import FormField from './FormField.vue';
 
 const { paramFieldGroups } = defineProps({
-  paramTree: {
-    type: Object,
-    required: true,
-  },
   paramFieldGroups: {
-    type: Object,
+    type: Array,
     required: true,
   },
 });
 
-const firstActiveParamFieldGroupPath = paramFieldGroups.keys().next().value;
+// paramFieldGroups:
+//   [['data', [ParamField, ParamField, ...]], ['axis', undefined], ...]
+
+const firstActiveParamFieldGroupPath = paramFieldGroups
+  .find(([_, parameters]) => parameters && parameters.length > 0)[0]
+  .join('-');
 </script>
 
 <template>
@@ -23,52 +24,47 @@ const firstActiveParamFieldGroupPath = paramFieldGroups.keys().next().value;
       role="tablist"
       aria-orientation="vertical"
     >
-      <template v-for="[a, ta] in paramTree.entries()" :key="a">
+      <template
+        v-for="[path, params] in paramFieldGroups"
+        :key="path.join('-')"
+      >
         <button
           :class="
             `nav-link text-start` +
-            (a === firstActiveParamFieldGroupPath ? ' active' : '') +
-            (paramFieldGroups.has(a) ? '' : ' disabled')
+            (path.join('-') === firstActiveParamFieldGroupPath
+              ? ' active'
+              : '') +
+            (params ? '' : ' disabled')
           "
           data-bs-toggle="pill"
-          :data-bs-target="`#v-pills-${a}`"
+          :data-bs-target="`#v-pills-${path.join('-')}`"
           type="button"
           role="tab"
+          :style="{ 'padding-left': `${path.length * 2}rem` }"
         >
-          {{ a }}
+          {{ path[path.length - 1] }}
         </button>
-        <template v-for="b in ta.keys()" :key="b">
-          <button
-            :class="
-              `nav-link text-start` +
-              (`${a}-${b}` === firstActiveParamFieldGroupPath ? ' active' : '')
-            "
-            data-bs-toggle="pill"
-            :data-bs-target="`#v-pills-${a}-${b}`"
-            type="button"
-            role="tab"
-            style="padding-left: 2rem"
-          >
-            {{ b }}
-          </button>
-        </template>
       </template>
     </div>
-
     <div class="tab-content flex-grow-1" id="v-pills-tabContent">
-      <template v-for="[a, ta] in paramTree.entries()" :key="a">
+      <template
+        v-for="[path, params] in paramFieldGroups"
+        :key="path.join('-')"
+      >
         <div
           :class="
             `tab-pane` +
-            (a === firstActiveParamFieldGroupPath ? ' show active' : '')
+            (path.join('-') === firstActiveParamFieldGroupPath
+              ? ' show active'
+              : '')
           "
-          :id="`v-pills-${a}`"
+          :id="`v-pills-${path.join('-')}`"
           role="tabpanel"
           aria-labelledby="v-pills-home-tab"
           tabindex="0"
         >
           <div
-            v-for="{ param, input } in paramFieldGroups.get(a)"
+            v-for="{ param, input } in params"
             :key="param['stanza:key']"
             class="col mb-2"
           >
@@ -82,33 +78,6 @@ const firstActiveParamFieldGroupPath = paramFieldGroups.keys().next().value;
             ></FormField>
           </div>
         </div>
-        <template v-for="b in ta.keys()" :key="b">
-          <div
-            :class="
-              'tab-pane' +
-              (`${a}-${b}` === firstActiveParamFieldGroupPath ? ' active' : '')
-            "
-            :id="`v-pills-${a}-${b}`"
-            role="tabpanel"
-            aria-labelledby="v-pills-home-tab"
-            tabindex="0"
-          >
-            <div
-              v-for="{ param, input } in paramFieldGroups.get(`${a}-${b}`)"
-              :key="param['stanza:key']"
-              class="col mb-2"
-            >
-              <FormField
-                :input="input"
-                :name="param['stanza:key']"
-                :type="param['stanza:type']"
-                :choices="param['stanza:choice']"
-                :required="param['stanza:required']"
-                :help-text="param['stanza:description']"
-              ></FormField>
-            </div>
-          </div>
-        </template>
       </template>
     </div>
   </div>

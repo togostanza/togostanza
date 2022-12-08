@@ -30,10 +30,7 @@
           </div>
 
           <div class="tab-pane active" id="parameters" role="tabpanel">
-            <HelpParametersPane
-              :paramTree="paramTree"
-              :paramFieldGroups="paramFieldGroups"
-            />
+            <HelpParametersPane :paramFieldGroups="paramFieldGroups" />
           </div>
 
           <div class="tab-pane" id="styles" role="tabpanel">
@@ -101,6 +98,7 @@ function commonPrefixLength(a, b) {
 }
 
 function buildParamFieldGroups(tree, paramFields) {
+  // Given a hierarchy `tree` to be displayed, compute at which level each parameter should appear.
   const placements = new Map();
   for (const param of paramFields) {
     const key = param.param['stanza:key'];
@@ -133,7 +131,18 @@ function buildParamFieldGroups(tree, paramFields) {
     }
   }
 
-  return placements;
+  // Compose a list containing a hierarchy with no parameters
+  // (Note that placements only contains hierarchies with parameters)
+  const results = [];
+  for (const [a, ta] of tree.entries()) {
+    results.push([[a], placements.get(a)]);
+    for (const b of ta.keys()) {
+      const key = [a, b].join('-');
+      results.push([[a, b], placements.get(key)]);
+    }
+  }
+
+  return results;
 }
 
 export default defineComponent({
