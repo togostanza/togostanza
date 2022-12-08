@@ -1,6 +1,6 @@
 import path from 'path';
 
-import * as commonmark from 'commonmark';
+import { marked } from 'marked';
 import BroccoliPlugin from 'broccoli-plugin';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
@@ -139,8 +139,20 @@ function renderMarkdown(md) {
     return '';
   }
 
-  const parser = new commonmark.Parser();
-  const renderer = new commonmark.HtmlRenderer();
+  let renderer = new marked.Renderer();
 
-  return renderer.render(parser.parse(md));
+  renderer.table = function (header, body) {
+    if (body) body = `<tbody>${body}</tbody>`;
+
+    return (
+      '<table class="table">\n' +
+      '<thead>\n' +
+      header +
+      '</thead>\n' +
+      body +
+      '</table>\n'
+    );
+  };
+
+  return marked(md, { renderer });
 }
