@@ -61,7 +61,6 @@ import { defineComponent, ref, computed } from 'vue';
 
 import 'bootstrap/js/dist/tab.js';
 
-import FormField from './FormField.vue';
 import Layout from './Layout.vue';
 import StanzaPreviewer from './StanzaPreviewer.vue';
 import HelpAboutPane from './HelpAboutPane.vue';
@@ -150,7 +149,6 @@ function buildParamFieldGroups(paramFields) {
 
 export default defineComponent({
   components: {
-    FormField,
     Layout,
     StanzaPreviewer,
     HelpAboutPane,
