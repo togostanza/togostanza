@@ -1,18 +1,3 @@
-<style scoped>
-th {
-  background-color: var(--bs-light);
-  text-align: center;
-  white-space: nowrap;
-  width: 1%;
-}
-
-th,
-td {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-</style>
-
 <template>
   <Layout containerClass="container-fluid">
     <h1 class="display-4">{{ metadata['stanza:label'] }}</h1>
@@ -41,64 +26,7 @@ td {
 
         <div class="tab-content mt-3">
           <div class="tab-pane px-lg-5" id="about" role="tabpanel">
-            <table class="table table-borderless border mb-1">
-              <tbody>
-                <tr>
-                  <th>Author</th>
-
-                  <td>
-                    <address class="mb-0">
-                      {{ metadata['stanza:author'] || '-' }}
-                    </address>
-                  </td>
-                </tr>
-
-                <tr>
-                  <th>Contributors</th>
-
-                  <td>
-                    <template
-                      v-if="
-                        metadata['stanza:contributor'] &&
-                        metadata['stanza:contributor'].length > 0
-                      "
-                    >
-                      <ul class="list-unstyled mb-0">
-                        <li
-                          v-for="contributor in metadata['stanza:contributor']"
-                          :key="contributor"
-                        >
-                          {{ contributor }}
-                        </li>
-                      </ul>
-                    </template>
-
-                    <template v-else> - </template>
-                  </td>
-                </tr>
-
-                <tr>
-                  <th>License</th>
-                  <td>{{ metadata['stanza:license'] || '-' }}</td>
-                </tr>
-
-                <tr>
-                  <th>Created</th>
-                  <td>{{ metadata['stanza:created'] || '-' }}</td>
-                </tr>
-
-                <tr>
-                  <th>Updated</th>
-                  <td>{{ metadata['stanza:updated'] || '-' }}</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="text-end">
-              <a :href="`./${metadata['@id']}/metadata.json`">Download JSON</a>
-            </div>
-
-            <div v-html="readme" class="mt-4"></div>
+            <HelpAboutPane :metadata="metadata" :readme="readme" />
           </div>
 
           <div class="tab-pane active" id="parameters" role="tabpanel">
@@ -291,6 +219,7 @@ import 'bootstrap/js/dist/tab.js';
 import FormField from './FormField.vue';
 import Layout from './Layout.vue';
 import StanzaPreviewer from './StanzaPreviewer.vue';
+import HelpAboutPane from './HelpAboutPane.vue';
 
 function buildParameterTree(stanzaParameter) {
   const tree = new Map();
@@ -361,6 +290,7 @@ export default defineComponent({
     FormField,
     Layout,
     StanzaPreviewer,
+    HelpAboutPane,
   },
 
   props: ['metadata', 'readme'],
