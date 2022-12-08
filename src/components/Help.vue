@@ -38,27 +38,7 @@
           </div>
 
           <div class="tab-pane" id="styles" role="tabpanel">
-            <div
-              class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3"
-            >
-              <div
-                v-for="{ style, input } in styleFields"
-                :key="style['stanza:key']"
-                class="col"
-              >
-                <FormField
-                  :input="input"
-                  :name="style['stanza:key']"
-                  :type="style['stanza:type']"
-                  :choices="style['stanza:choice']"
-                  :help-text="style['stanza:description']"
-                ></FormField>
-              </div>
-            </div>
-
-            <p v-if="styleFields.length === 0" class="fst-italic">
-              No styles defined.
-            </p>
+            <HelpStylesPane :styleFields="styleFields" />
           </div>
 
           <div class="tab-pane" id="events" role="tabpanel">
@@ -122,6 +102,7 @@ import Layout from './Layout.vue';
 import StanzaPreviewer from './StanzaPreviewer.vue';
 import HelpAboutPane from './HelpAboutPane.vue';
 import HelpParametersPane from './HelpParametersPane.vue';
+import HelpStylesPane from './HelpStylesPane.vue';
 
 function buildParameterTree(stanzaParameter) {
   const tree = new Map();
@@ -194,6 +175,7 @@ export default defineComponent({
     StanzaPreviewer,
     HelpAboutPane,
     HelpParametersPane,
+    HelpStylesPane,
   },
 
   props: ['metadata', 'readme'],
