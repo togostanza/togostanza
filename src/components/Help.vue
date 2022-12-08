@@ -33,7 +33,6 @@
             <HelpParametersPane
               :paramTree="paramTree"
               :paramFieldGroups="paramFieldGroups"
-              :firstActiveParamFieldGroupPath="firstActiveParamFieldGroupPath"
             />
           </div>
 
@@ -184,8 +183,6 @@ export default defineComponent({
 
     const paramFieldGroups = buildParamFieldGroups(paramTree, paramFields);
 
-    const firstActiveParamFieldGroupPath = paramFieldGroups.keys().next().value;
-
     const params = computed(() => {
       return [
         ...paramFields.map(({ param, input }) => {
@@ -229,7 +226,6 @@ export default defineComponent({
       readme,
       paramTree,
       paramFieldGroups,
-      firstActiveParamFieldGroupPath,
       menuPlacement,
       params,
       styleFields,

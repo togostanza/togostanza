@@ -1,7 +1,7 @@
 <script setup>
 import FormField from './FormField.vue';
 
-defineProps({
+const { paramFieldGroups } = defineProps({
   paramTree: {
     type: Object,
     required: true,
@@ -10,11 +10,9 @@ defineProps({
     type: Object,
     required: true,
   },
-  firstActiveParamFieldGroupPath: {
-    type: String,
-    required: true,
-  },
 });
+
+const firstActiveParamFieldGroupPath = paramFieldGroups.keys().next().value;
 </script>
 
 <template>
