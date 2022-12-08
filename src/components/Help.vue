@@ -42,39 +42,7 @@
           </div>
 
           <div class="tab-pane" id="events" role="tabpanel">
-            <h2 class="my-3">Outgoing Events</h2>
-
-            <div class="row row-cols-2">
-              <div
-                v-for="{ name, description } in outgoingEvents"
-                :key="name"
-                class="col"
-              >
-                <div>{{ name }}</div>
-                <div class="text-muted">{{ description }}</div>
-              </div>
-            </div>
-
-            <p v-if="outgoingEvents.length === 0" class="fst-italic">
-              No events defined.
-            </p>
-
-            <h2 class="my-3">Incoming Events</h2>
-
-            <div class="row row-cols-2">
-              <div
-                v-for="{ name, description } in incomingEvents"
-                :key="name"
-                class="col"
-              >
-                <div>{{ name }}</div>
-                <div class="text-muted">{{ description }}</div>
-              </div>
-            </div>
-
-            <p v-if="incomingEvents.length === 0" class="fst-italic">
-              No events defined.
-            </p>
+            <HelpEventsPane :metadata="metadata" />
           </div>
         </div>
       </div>
@@ -103,6 +71,7 @@ import StanzaPreviewer from './StanzaPreviewer.vue';
 import HelpAboutPane from './HelpAboutPane.vue';
 import HelpParametersPane from './HelpParametersPane.vue';
 import HelpStylesPane from './HelpStylesPane.vue';
+import HelpEventsPane from './HelpEventsPane.vue';
 
 function buildParameterTree(stanzaParameter) {
   const tree = new Map();
@@ -176,6 +145,7 @@ export default defineComponent({
     HelpAboutPane,
     HelpParametersPane,
     HelpStylesPane,
+    HelpEventsPane,
   },
 
   props: ['metadata', 'readme'],
@@ -254,24 +224,6 @@ export default defineComponent({
         });
     });
 
-    const outgoingEvents = (metadata['stanza:outgoingEvent'] || []).map(
-      (event) => {
-        return {
-          name: event['stanza:key'],
-          description: event['stanza:description'],
-        };
-      }
-    );
-
-    const incomingEvents = (metadata['stanza:incomingEvent'] || []).map(
-      (event) => {
-        return {
-          name: event['stanza:key'],
-          description: event['stanza:description'],
-        };
-      }
-    );
-
     return {
       metadata,
       readme,
@@ -282,8 +234,6 @@ export default defineComponent({
       params,
       styleFields,
       styleVars,
-      outgoingEvents,
-      incomingEvents,
     };
   },
 });
