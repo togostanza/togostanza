@@ -71,9 +71,8 @@ import HelpEventsPane from './HelpEventsPane.vue';
 function buildParameterTree(paramFields) {
   const tree = new Map();
 
-  for (const param of paramFields) {
-    const key = param.param['stanza:key'];
-    const tmp = key.split('-', 3);
+  for (const paramField of paramFields) {
+    const tmp = paramField.key.split('-', 3);
     const k = tmp.slice(0, Math.max(tmp.length - 1, 1));
 
     const a = tree.get(k[0]) || new Map();
@@ -102,8 +101,8 @@ function buildParamFieldGroups(paramFields) {
 
   // Given a hierarchy `tree` to be displayed, compute at which level each parameter should appear.
   const placements = new Map();
-  for (const param of paramFields) {
-    const key = param.param['stanza:key'];
+  for (const paramField of paramFields) {
+    const key = paramField.key;
     const k = key.split('-', 3);
     let max = -1;
     let argmaxPath = null;
@@ -127,9 +126,9 @@ function buildParamFieldGroups(paramFields) {
     const placementKey = argmaxPath.join('-');
     const placement = placements.get(placementKey);
     if (placement) {
-      placement.push(param);
+      placement.push(paramField);
     } else {
-      placements.set(placementKey, [param]);
+      placements.set(placementKey, [paramField]);
     }
   }
 
@@ -163,6 +162,7 @@ export default defineComponent({
     const stanzaParameter = metadata['stanza:parameter'] || [];
     const paramFields = stanzaParameter.map((param) => {
       return {
+        key: param['stanza:key'],
         param,
         input: useInput(param['stanza:example'], param['stanza:type'], false),
       };
@@ -172,6 +172,7 @@ export default defineComponent({
       'string'
     );
     paramFields.push({
+      key: 'togostanza-menu-placement',
       param: {
         'stanza:key': 'togostanza-menu-placement',
         'stanza:type': 'single-choice',
