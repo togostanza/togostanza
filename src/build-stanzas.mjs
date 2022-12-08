@@ -29,11 +29,8 @@ export default class BuildStanzas extends BroccoliPlugin {
   async build() {
     const stanzas = new StanzaRepository(this.repositoryDir).allStanzas;
 
-    await Promise.all([
-      this.buildStanzas(stanzas),
-      this.copyMetadata(stanzas),
-      this.copyAssets(stanzas),
-    ]);
+    await this.buildMetadata(stanzas);
+    await Promise.all([this.buildStanzas(stanzas), this.copyAssets(stanzas)]);
   }
 
   async buildStanzas(stanzas) {
@@ -109,7 +106,7 @@ export default class BuildStanzas extends BroccoliPlugin {
             { find: /^@\/stanzas\/([^/]+)$/, replacement: '$1.js' },
             { find: '@', replacement: this.repositoryDir },
 
-            ...stanzas.flatMap(aliasEntries),
+            ...stanzas.flatMap((e) => aliasEntries(e, this.outputPath)),
           ],
         }),
 
@@ -165,15 +162,16 @@ export default class BuildStanzas extends BroccoliPlugin {
     });
   }
 
-  async copyMetadata(stanzas) {
-    return await Promise.all(
-      stanzas.map((stanza) =>
-        fs.copy(
-          stanza.filepath('metadata.json'),
-          path.join(this.outputPath, stanza.id, 'metadata.json')
-        )
-      )
-    );
+  async buildMetadata(stanzas) {
+    for await (const stanza of stanzas) {
+      const metadata = await stanza.metadata();
+
+      await fs.mkdirp(path.join(this.outputPath, stanza.id));
+      await fs.writeFile(
+        path.join(this.outputPath, stanza.id, 'metadata.json'),
+        JSON.stringify(metadata, null, 2)
+      );
+    }
   }
 
   async copyAssets(stanzas) {
@@ -236,7 +234,7 @@ async function virtualModules(stanza, repositoryDir) {
   ];
 }
 
-function aliasEntries(stanza) {
+function aliasEntries(stanza, outputPath) {
   return [
     {
       find: `-stanza/${stanza.id}/js`,
@@ -244,7 +242,7 @@ function aliasEntries(stanza) {
     },
     {
       find: `-stanza/${stanza.id}/metadata`,
-      replacement: stanza.filepath('metadata.json'),
+      replacement: path.join(outputPath, stanza.id, 'metadata.json'),
     },
   ];
 }
