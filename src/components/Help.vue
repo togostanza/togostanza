@@ -69,11 +69,11 @@ import HelpParametersPane from './HelpParametersPane.vue';
 import HelpStylesPane from './HelpStylesPane.vue';
 import HelpEventsPane from './HelpEventsPane.vue';
 
-function buildParameterTree(stanzaParameter) {
+function buildParameterTree(paramFields) {
   const tree = new Map();
 
-  for (const param of stanzaParameter) {
-    const key = param['stanza:key'];
+  for (const param of paramFields) {
+    const key = param.param['stanza:key'];
     const tmp = key.split('-', 3);
     const k = tmp.slice(0, Math.max(tmp.length - 1, 1));
 
@@ -97,7 +97,10 @@ function commonPrefixLength(a, b) {
   return i;
 }
 
-function buildParamFieldGroups(tree, paramFields) {
+function buildParamFieldGroups(paramFields) {
+  // Build a hierarchy of parameters
+  const tree = buildParameterTree(paramFields);
+
   // Given a hierarchy `tree` to be displayed, compute at which level each parameter should appear.
   const placements = new Map();
   for (const param of paramFields) {
@@ -187,10 +190,7 @@ export default defineComponent({
       input: menuPlacement,
     });
 
-    const paramTree = buildParameterTree(stanzaParameter);
-    paramTree.set('togostanza', new Map());
-
-    const paramFieldGroups = buildParamFieldGroups(paramTree, paramFields);
+    const paramFieldGroups = buildParamFieldGroups(paramFields);
 
     const params = computed(() => {
       return [
@@ -233,7 +233,6 @@ export default defineComponent({
     return {
       metadata,
       readme,
-      paramTree,
       paramFieldGroups,
       menuPlacement,
       params,
