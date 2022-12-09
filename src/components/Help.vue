@@ -1,18 +1,3 @@
-<style scoped>
-th {
-  background-color: var(--bs-light);
-  text-align: center;
-  white-space: nowrap;
-  width: 1%;
-}
-
-th,
-td {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-</style>
-
 <template>
   <Layout containerClass="container-fluid">
     <h1 class="display-4">{{ metadata['stanza:label'] }}</h1>
@@ -41,231 +26,19 @@ td {
 
         <div class="tab-content mt-3">
           <div class="tab-pane px-lg-5" id="about" role="tabpanel">
-            <table class="table table-borderless border mb-1">
-              <tbody>
-                <tr>
-                  <th>Author</th>
-
-                  <td>
-                    <address class="mb-0">
-                      {{ metadata['stanza:author'] || '-' }}
-                    </address>
-                  </td>
-                </tr>
-
-                <tr>
-                  <th>Contributors</th>
-
-                  <td>
-                    <template
-                      v-if="
-                        metadata['stanza:contributor'] &&
-                        metadata['stanza:contributor'].length > 0
-                      "
-                    >
-                      <ul class="list-unstyled mb-0">
-                        <li
-                          v-for="contributor in metadata['stanza:contributor']"
-                          :key="contributor"
-                        >
-                          {{ contributor }}
-                        </li>
-                      </ul>
-                    </template>
-
-                    <template v-else> - </template>
-                  </td>
-                </tr>
-
-                <tr>
-                  <th>License</th>
-                  <td>{{ metadata['stanza:license'] || '-' }}</td>
-                </tr>
-
-                <tr>
-                  <th>Created</th>
-                  <td>{{ metadata['stanza:created'] || '-' }}</td>
-                </tr>
-
-                <tr>
-                  <th>Updated</th>
-                  <td>{{ metadata['stanza:updated'] || '-' }}</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="text-end">
-              <a :href="`./${metadata['@id']}/metadata.json`">Download JSON</a>
-            </div>
-
-            <div v-html="readme" class="mt-4"></div>
+            <HelpAboutPane :metadata="metadata" :readme="readme" />
           </div>
 
           <div class="tab-pane active" id="parameters" role="tabpanel">
-            <div class="d-flex align-items-start">
-              <div
-                class="nav flex-column nav-pills me-3"
-                id="v-pills-tab"
-                role="tablist"
-                aria-orientation="vertical"
-              >
-                <template v-for="([a, ta], i) in paramTree.entries()" :key="a">
-                  <button
-                    :class="
-                      `nav-link text-start` +
-                      (a === firstActiveParamFiledGroupPath ? ' active' : '') +
-                      (paramFieldGroups.has(a) ? '' : ' disabled')
-                    "
-                    data-bs-toggle="pill"
-                    :data-bs-target="`#v-pills-${a}`"
-                    type="button"
-                    role="tab"
-                  >
-                    {{ a }}
-                  </button>
-                  <template v-for="[b, i] in ta.entries()" :key="b">
-                    <button
-                      :class="
-                        `nav-link text-start` +
-                        (`${a}-${b}` === firstActiveParamFiledGroupPath
-                          ? ' active'
-                          : '')
-                      "
-                      data-bs-toggle="pill"
-                      :data-bs-target="`#v-pills-${a}-${b}`"
-                      type="button"
-                      role="tab"
-                      style="padding-left: 2rem"
-                    >
-                      {{ b }}
-                    </button>
-                  </template>
-                </template>
-              </div>
-
-              <div class="tab-content flex-grow-1" id="v-pills-tabContent">
-                <template v-for="[a, ta] in paramTree.entries()" :key="a">
-                  <div
-                    :class="
-                      `tab-pane` +
-                      (a === firstActiveParamFiledGroupPath
-                        ? ' show active'
-                        : '')
-                    "
-                    :id="`v-pills-${a}`"
-                    role="tabpanel"
-                    aria-labelledby="v-pills-home-tab"
-                    tabindex="0"
-                  >
-                    <div
-                      v-for="{ param, input } in paramFieldGroups.get(a)"
-                      :key="param['stanza:key']"
-                      class="col mb-2"
-                    >
-                      <FormField
-                        :input="input"
-                        :name="param['stanza:key']"
-                        :type="param['stanza:type']"
-                        :choices="param['stanza:choice']"
-                        :required="param['stanza:required']"
-                        :help-text="param['stanza:description']"
-                      ></FormField>
-                    </div>
-                  </div>
-                  <template v-for="b in ta.keys()" :key="b">
-                    <div
-                      :class="
-                        'tab-pane' +
-                        (`${a}-${b}` === firstActiveParamFiledGroupPath
-                          ? ' active'
-                          : '')
-                      "
-                      :id="`v-pills-${a}-${b}`"
-                      role="tabpanel"
-                      aria-labelledby="v-pills-home-tab"
-                      tabindex="0"
-                    >
-                      <div
-                        v-for="{ param, input } in paramFieldGroups.get(
-                          `${a}-${b}`
-                        )"
-                        :key="param['stanza:key']"
-                        class="col mb-2"
-                      >
-                        <FormField
-                          :input="input"
-                          :name="param['stanza:key']"
-                          :type="param['stanza:type']"
-                          :choices="param['stanza:choice']"
-                          :required="param['stanza:required']"
-                          :help-text="param['stanza:description']"
-                        ></FormField>
-                      </div>
-                    </div>
-                  </template>
-                </template>
-              </div>
-            </div>
+            <HelpParametersPane :paramFieldGroups="paramFieldGroups" />
           </div>
 
           <div class="tab-pane" id="styles" role="tabpanel">
-            <div
-              class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3"
-            >
-              <div
-                v-for="{ style, input } in styleFields"
-                :key="style['stanza:key']"
-                class="col"
-              >
-                <FormField
-                  :input="input"
-                  :name="style['stanza:key']"
-                  :type="style['stanza:type']"
-                  :choices="style['stanza:choice']"
-                  :help-text="style['stanza:description']"
-                ></FormField>
-              </div>
-            </div>
-
-            <p v-if="styleFields.length === 0" class="fst-italic">
-              No styles defined.
-            </p>
+            <HelpStylesPane :styleFields="styleFields" />
           </div>
 
           <div class="tab-pane" id="events" role="tabpanel">
-            <h2 class="my-3">Outgoing Events</h2>
-
-            <div class="row row-cols-2">
-              <div
-                v-for="{ name, description } in outgoingEvents"
-                :key="name"
-                class="col"
-              >
-                <div>{{ name }}</div>
-                <div class="text-muted">{{ description }}</div>
-              </div>
-            </div>
-
-            <p v-if="outgoingEvents.length === 0" class="fst-italic">
-              No events defined.
-            </p>
-
-            <h2 class="my-3">Incoming Events</h2>
-
-            <div class="row row-cols-2">
-              <div
-                v-for="{ name, description } in incomingEvents"
-                :key="name"
-                class="col"
-              >
-                <div>{{ name }}</div>
-                <div class="text-muted">{{ description }}</div>
-              </div>
-            </div>
-
-            <p v-if="incomingEvents.length === 0" class="fst-italic">
-              No events defined.
-            </p>
+            <HelpEventsPane :metadata="metadata" />
           </div>
         </div>
       </div>
@@ -288,16 +61,18 @@ import { defineComponent, ref, computed } from 'vue';
 
 import 'bootstrap/js/dist/tab.js';
 
-import FormField from './FormField.vue';
 import Layout from './Layout.vue';
 import StanzaPreviewer from './StanzaPreviewer.vue';
+import HelpAboutPane from './HelpAboutPane.vue';
+import HelpParametersPane from './HelpParametersPane.vue';
+import HelpStylesPane from './HelpStylesPane.vue';
+import HelpEventsPane from './HelpEventsPane.vue';
 
-function buildParameterTree(stanzaParameter) {
+function buildParameterTree(paramFields) {
   const tree = new Map();
 
-  for (const param of stanzaParameter) {
-    const key = param['stanza:key'];
-    const tmp = key.split('-', 3);
+  for (const paramField of paramFields) {
+    const tmp = paramField.key.split('-', 3);
     const k = tmp.slice(0, Math.max(tmp.length - 1, 1));
 
     const a = tree.get(k[0]) || new Map();
@@ -320,10 +95,14 @@ function commonPrefixLength(a, b) {
   return i;
 }
 
-function buildParamFieldGroups(tree, paramFields) {
+function buildParamFieldGroups(paramFields) {
+  // Build a hierarchy of parameters
+  const tree = buildParameterTree(paramFields);
+
+  // Given a hierarchy `tree` to be displayed, compute at which level each parameter should appear.
   const placements = new Map();
-  for (const param of paramFields) {
-    const key = param.param['stanza:key'];
+  for (const paramField of paramFields) {
+    const key = paramField.key;
     const k = key.split('-', 3);
     let max = -1;
     let argmaxPath = null;
@@ -347,20 +126,34 @@ function buildParamFieldGroups(tree, paramFields) {
     const placementKey = argmaxPath.join('-');
     const placement = placements.get(placementKey);
     if (placement) {
-      placement.push(param);
+      placement.push(paramField);
     } else {
-      placements.set(placementKey, [param]);
+      placements.set(placementKey, [paramField]);
     }
   }
 
-  return placements;
+  // Compose a list containing a hierarchy with no parameters
+  // (Note that placements only contains hierarchies with parameters)
+  const results = [];
+  for (const [a, ta] of tree.entries()) {
+    results.push([[a], placements.get(a)]);
+    for (const b of ta.keys()) {
+      const key = [a, b].join('-');
+      results.push([[a, b], placements.get(key)]);
+    }
+  }
+
+  return results;
 }
 
 export default defineComponent({
   components: {
-    FormField,
     Layout,
     StanzaPreviewer,
+    HelpAboutPane,
+    HelpParametersPane,
+    HelpStylesPane,
+    HelpEventsPane,
   },
 
   props: ['metadata', 'readme'],
@@ -369,6 +162,7 @@ export default defineComponent({
     const stanzaParameter = metadata['stanza:parameter'] || [];
     const paramFields = stanzaParameter.map((param) => {
       return {
+        key: param['stanza:key'],
         param,
         input: useInput(param['stanza:example'], param['stanza:type'], false),
       };
@@ -378,6 +172,7 @@ export default defineComponent({
       'string'
     );
     paramFields.push({
+      key: 'togostanza-menu-placement',
       param: {
         'stanza:key': 'togostanza-menu-placement',
         'stanza:type': 'single-choice',
@@ -394,12 +189,7 @@ export default defineComponent({
       input: menuPlacement,
     });
 
-    const paramTree = buildParameterTree(stanzaParameter);
-    paramTree.set('togostanza', new Map());
-
-    const paramFieldGroups = buildParamFieldGroups(paramTree, paramFields);
-
-    const firstActiveParamFiledGroupPath = paramFieldGroups.keys().next().value;
+    const paramFieldGroups = buildParamFieldGroups(paramFields);
 
     const params = computed(() => {
       return [
@@ -439,36 +229,14 @@ export default defineComponent({
         });
     });
 
-    const outgoingEvents = (metadata['stanza:outgoingEvent'] || []).map(
-      (event) => {
-        return {
-          name: event['stanza:key'],
-          description: event['stanza:description'],
-        };
-      }
-    );
-
-    const incomingEvents = (metadata['stanza:incomingEvent'] || []).map(
-      (event) => {
-        return {
-          name: event['stanza:key'],
-          description: event['stanza:description'],
-        };
-      }
-    );
-
     return {
       metadata,
       readme,
-      paramTree,
       paramFieldGroups,
-      firstActiveParamFiledGroupPath,
       menuPlacement,
       params,
       styleFields,
       styleVars,
-      outgoingEvents,
-      incomingEvents,
     };
   },
 });
