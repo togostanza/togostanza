@@ -34,7 +34,7 @@
           </div>
 
           <div class="tab-pane" id="styles" role="tabpanel">
-            <HelpStylesPane :styleFields="styleFields" />
+            <HelpStylesPane :styleFieldGroups="styleFieldGroups" />
           </div>
 
           <div class="tab-pane" id="events" role="tabpanel">
@@ -213,10 +213,12 @@ export default defineComponent({
 
     const styleFields = (metadata['stanza:style'] || []).map((style) => {
       return {
+        key: style['stanza:key'].replace(/^--togostanza-/, ''),
         style,
         input: useInput(style['stanza:default'], style['stanza:type']),
       };
     });
+    const styleFieldGroups = buildParamFieldGroups(styleFields);
 
     const styleVars = computed(() => {
       return styleFields
@@ -235,7 +237,7 @@ export default defineComponent({
       paramFieldGroups,
       menuPlacement,
       params,
-      styleFields,
+      styleFieldGroups,
       styleVars,
     };
   },

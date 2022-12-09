@@ -1,32 +1,83 @@
 <script setup>
 import FormField from './FormField.vue';
 
-defineProps({
-  styleFields: {
-    type: Object,
+const { styleFieldGroups } = defineProps({
+  styleFieldGroups: {
+    type: Array,
     required: true,
   },
 });
+const first = styleFieldGroups.find(
+  ([_, styleField]) => styleField && styleField.length > 0
+);
+const firstActiveStyleFieldGroupPath = first ? first[0].join('-') : null;
 </script>
 
 <template>
-  <div
-    class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 gx-4 gy-3"
-  >
+  <p v-if="styleFieldGroups.length === 0" class="fst-italic">
+    No styles defined.
+  </p>
+  <div v-else class="d-flex align-items-start">
     <div
-      v-for="{ style, input } in styleFields"
-      :key="style['stanza:key']"
-      class="col"
+      class="nav flex-column nav-pills me-3"
+      id="styles-pills-tab"
+      role="tablist"
+      aria-orientation="vertical"
     >
-      <FormField
-        :input="input"
-        :name="style['stanza:key']"
-        :type="style['stanza:type']"
-        :choices="style['stanza:choice']"
-        :help-text="style['stanza:description']"
-      ></FormField>
+      <template
+        v-for="[path, styles] in styleFieldGroups"
+        :key="path.join('-')"
+      >
+        <button
+          :class="
+            `nav-link text-start` +
+            (path.join('-') === firstActiveStyleFieldGroupPath
+              ? ' active'
+              : '') +
+            (styles ? '' : ' disabled')
+          "
+          data-bs-toggle="pill"
+          :data-bs-target="`#styles-pills-${path.join('-')}`"
+          type="button"
+          role="tab"
+          :style="{ 'padding-left': `${path.length * 2}rem` }"
+        >
+          {{ path[path.length - 1] }}
+        </button>
+      </template>
+    </div>
+    <div class="tab-content flex-grow-1" id="styles-pills-tabContent">
+      <template
+        v-for="[path, styles] in styleFieldGroups"
+        :key="path.join('-')"
+      >
+        <div
+          :class="
+            `tab-pane` +
+            (path.join('-') === firstActiveStyleFieldGroupPath
+              ? ' show active'
+              : '')
+          "
+          :id="`styles-pills-${path.join('-')}`"
+          role="tabpanel"
+          tabindex="0"
+        >
+          <div
+            v-for="{ style, input } in styles"
+            :key="style['stanza:key']"
+            class="col mb-2"
+          >
+            <FormField
+              :input="input"
+              :name="style['stanza:key']"
+              :type="style['stanza:type']"
+              :choices="style['stanza:choice']"
+              :required="style['stanza:required']"
+              :help-text="style['stanza:description']"
+            ></FormField>
+          </div>
+        </div>
+      </template>
     </div>
   </div>
-
-  <p v-if="styleFields.length === 0" class="fst-italic">No styles defined.</p>
 </template>
