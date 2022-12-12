@@ -20,7 +20,7 @@ const firstActiveParamFieldGroupPath = paramFieldGroups
   <div class="d-flex align-items-start">
     <div
       class="nav flex-column nav-pills me-3"
-      id="v-pills-tab"
+      id="params-pills-tab"
       role="tablist"
       aria-orientation="vertical"
     >
@@ -37,7 +37,7 @@ const firstActiveParamFieldGroupPath = paramFieldGroups
             (params ? '' : ' disabled')
           "
           data-bs-toggle="pill"
-          :data-bs-target="`#v-pills-${path.join('-')}`"
+          :data-bs-target="`#params-pills-${path.join('-')}`"
           type="button"
           role="tab"
           :style="{ 'padding-left': `${path.length * 2}rem` }"
@@ -46,7 +46,7 @@ const firstActiveParamFieldGroupPath = paramFieldGroups
         </button>
       </template>
     </div>
-    <div class="tab-content flex-grow-1" id="v-pills-tabContent">
+    <div class="tab-content flex-grow-1" id="params-pills-tabContent">
       <template
         v-for="[path, params] in paramFieldGroups"
         :key="path.join('-')"
@@ -58,9 +58,9 @@ const firstActiveParamFieldGroupPath = paramFieldGroups
               ? ' show active'
               : '')
           "
-          :id="`v-pills-${path.join('-')}`"
+          :id="`params-pills-${path.join('-')}`"
           role="tabpanel"
-          aria-labelledby="v-pills-home-tab"
+          aria-labelledby="params-pills-home-tab"
           tabindex="0"
         >
           <div
