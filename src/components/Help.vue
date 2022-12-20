@@ -172,9 +172,9 @@ export default defineComponent({
       'string'
     );
     paramFields.push({
-      key: 'togostanza-menu-placement',
+      key: 'togostanza-menu_placement',
       param: {
-        'stanza:key': 'togostanza-menu-placement',
+        'stanza:key': 'togostanza-menu_placement',
         'stanza:type': 'single-choice',
         'stanza:choice': [
           'top-left',

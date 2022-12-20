@@ -45,7 +45,7 @@ export async function defineStanzaElement({
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-      if (name === 'togostanza-menu-placement') {
+      if (name === 'togostanza-menu_placement') {
         this.stanzaInstance.menuElement.setAttribute(
           'placement',
           newValue || metadata['stanza:menu-placement']
@@ -61,7 +61,7 @@ export async function defineStanzaElement({
 
   StanzaElement.observedAttributes = [
     ...paramKeys,
-    'togostanza-menu-placement',
+    'togostanza-menu_placement',
   ];
 
   customElements.define(`togostanza-${id}`, StanzaElement);
