@@ -33,7 +33,7 @@
       </div>
 
       <label class="input-group-text flex-fill bg-body" :for="name">
-        {{ helpText }}
+        {{ label }}
       </label>
     </template>
 
@@ -57,7 +57,7 @@
     </button>
   </div>
 
-  <small class="form-text text-muted" v-if="formType !== 'boolean'">
+  <small class="form-text text-muted">
     {{ helpText }}
   </small>
 </template>
@@ -65,7 +65,7 @@
 <script>
 import { computed, defineComponent } from 'vue';
 export default defineComponent({
-  props: ['choices', 'helpText', 'input', 'name', 'required', 'type'],
+  props: ['choices', 'helpText', 'input', 'name', 'required', 'type', 'label'],
   setup(props) {
     const formType = computed(() => {
       return props.type === 'datetime' ? 'datetime-local' : props.type;

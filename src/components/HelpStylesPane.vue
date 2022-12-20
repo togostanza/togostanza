@@ -74,6 +74,7 @@ const firstActiveStyleFieldGroupPath = first ? first[0].join('-') : null;
               :choices="style['stanza:choice']"
               :required="style['stanza:required']"
               :help-text="style['stanza:description']"
+              :label="style['stanza:label']"
             ></FormField>
           </div>
         </div>
