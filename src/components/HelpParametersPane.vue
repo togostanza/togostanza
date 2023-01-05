@@ -75,7 +75,7 @@ const firstActiveParamFieldGroupPath = paramFieldGroups
               :choices="param['stanza:choice']"
               :required="param['stanza:required']"
               :help-text="param['stanza:description']"
-              :label="params['stanza:label']"
+              :label="param['stanza:label']"
             ></FormField>
           </div>
         </div>
