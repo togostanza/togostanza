@@ -8,36 +8,48 @@
         <nav class="nav nav-tabs" role="tablist">
           <a
             class="nav-link active"
-            href="#parameters"
+            href="#tabpane-parameters"
             data-bs-toggle="tab"
             role="tab"
             >Parameters</a
           >
-          <a class="nav-link" href="#styles" data-bs-toggle="tab" role="tab"
+          <a
+            class="nav-link"
+            href="#tabpane-styles"
+            data-bs-toggle="tab"
+            role="tab"
             >Styles</a
           >
-          <a class="nav-link" href="#events" data-bs-toggle="tab" role="tab"
+          <a
+            class="nav-link"
+            href="#tabpane-events"
+            data-bs-toggle="tab"
+            role="tab"
             >Events</a
           >
-          <a class="nav-link" href="#about" data-bs-toggle="tab" role="tab"
+          <a
+            class="nav-link"
+            href="#tabpane-about"
+            data-bs-toggle="tab"
+            role="tab"
             >About</a
           >
         </nav>
 
         <div class="tab-content mt-3">
-          <div class="tab-pane px-lg-5" id="about" role="tabpanel">
+          <div class="tab-pane px-lg-5" id="tabpane-about" role="tabpanel">
             <HelpAboutPane :metadata="metadata" :readme="readme" />
           </div>
 
-          <div class="tab-pane active" id="parameters" role="tabpanel">
+          <div class="tab-pane active" id="tabpane-parameters" role="tabpanel">
             <HelpParametersPane :paramFieldGroups="paramFieldGroups" />
           </div>
 
-          <div class="tab-pane" id="styles" role="tabpanel">
+          <div class="tab-pane" id="tabpane-styles" role="tabpanel">
             <HelpStylesPane :styleFieldGroups="styleFieldGroups" />
           </div>
 
-          <div class="tab-pane" id="events" role="tabpanel">
+          <div class="tab-pane" id="tabpane-events" role="tabpanel">
             <HelpEventsPane :metadata="metadata" />
           </div>
         </div>
