@@ -11,6 +11,14 @@ const first = styleFieldGroups.find(
   ([_, styleField]) => styleField && styleField.length > 0
 );
 const firstActiveStyleFieldGroupPath = first ? first[0].join('-') : null;
+
+function removePathPrefix(name, path) {
+  const prefix = '--togostanza-' + path.join('-') + '-';
+  if (name.startsWith(prefix)) {
+    return name.slice(prefix.length);
+  }
+  return name;
+}
 </script>
 
 <template>
@@ -69,7 +77,7 @@ const firstActiveStyleFieldGroupPath = first ? first[0].join('-') : null;
           >
             <FormField
               :input="input"
-              :name="style['stanza:key']"
+              :name="removePathPrefix(style['stanza:key'], path)"
               :type="style['stanza:type']"
               :choices="style['stanza:choice']"
               :required="style['stanza:required']"
