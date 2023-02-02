@@ -1,5 +1,4 @@
 import path from 'path';
-import { promisify } from 'util';
 
 import { Command } from 'commander';
 import yeoman from 'yeoman-environment';
@@ -29,5 +28,5 @@ async function init(opts) {
     path.join(packagePath, 'src', 'generators', 'repository', 'index.mjs')
   );
 
-  await promisify(env.run.bind(env))('togostanza:repository', opts);
+  return env.run('togostanza:repository', opts);
 }

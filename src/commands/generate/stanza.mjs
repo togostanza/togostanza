@@ -1,5 +1,4 @@
 import path from 'path';
-import { promisify } from 'util';
 
 import { Command } from 'commander';
 import fecha from 'fecha';
@@ -42,5 +41,5 @@ async function generateStanza(opts) {
     path.join(packagePath, 'src', 'generators', 'stanza', 'index.mjs')
   );
 
-  await promisify(env.run.bind(env))('togostanza:stanza', opts);
+  return env.run('togostanza:stanza', opts);
 }
