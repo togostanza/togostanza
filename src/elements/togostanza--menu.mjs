@@ -1,5 +1,5 @@
 import { info } from '@primer/octicons';
-import { LitElement, css, html } from 'lit-element';
+import { LitElement, css, html } from 'lit';
 import { unsafeSVG } from 'lit-html/directives/unsafe-svg.js';
 import { createPopper } from '@popperjs/core';
 
