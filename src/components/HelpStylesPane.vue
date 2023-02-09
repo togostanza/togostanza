@@ -69,7 +69,7 @@ const firstActiveStyleFieldGroupPath = first ? first[0].join('-') : null;
           >
             <FormField
               :input="input"
-              :path-prefix="path.join('-') + '-'"
+              :path-prefix="'--togostanza-' + path.join('-') + '-'"
               :name="style['stanza:key']"
               :type="style['stanza:type']"
               :choices="style['stanza:choice']"
