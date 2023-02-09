@@ -14,14 +14,6 @@ const { paramFieldGroups } = defineProps({
 const firstActiveParamFieldGroupPath = paramFieldGroups
   .find(([_, parameters]) => parameters && parameters.length > 0)[0]
   .join('-');
-
-function removePathPrefix(name, path) {
-  const prefix = path.join('-') + '-';
-  if (name.startsWith(prefix)) {
-    return name.slice(prefix.length);
-  }
-  return name;
-}
 </script>
 
 <template>
@@ -78,7 +70,8 @@ function removePathPrefix(name, path) {
           >
             <FormField
               :input="input"
-              :name="removePathPrefix(param['stanza:key'], path)"
+              :path-prefix="path.join('-') + '-'"
+              :name="param['stanza:key']"
               :type="param['stanza:type']"
               :choices="param['stanza:choice']"
               :required="param['stanza:required']"
