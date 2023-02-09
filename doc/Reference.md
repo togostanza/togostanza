@@ -115,6 +115,7 @@ The parameters are a property of the `stanza:parameter` key in `metadata.json`, 
 | `stanza:example`     | The value to be set as the initial value in the input field of the stanza page, given as the type corresponding to `stanza:type` (for example, `true` instead of `"true"` for Boolean).   |
 | `stanza:description` | Brief description of this parameter. It will appear below the input field.                                                                                                                |
 | `stanza:required`    | Whether this parameter is mandatory or not. If true, the field name will be prefixed with a red sign.                                                                                     |
+| `stanza:include`     | Path to “common parameter definition” file to include. If specified, all of the above settings are ignored. See “Common Parameter Definition“ section for more information.               |
 
 ##### Possible values for `stanza:type`
 
@@ -141,6 +142,49 @@ Stanzas can declare their own parameterized style variables, allowing stanza use
 | `stanza:default`     | Default value, given as the type corresponding to `stanza:type` (for example, `true` instead of `"true"` for Boolean).      |
 | `stanza:description` | Brief description of this variable. It will appear below the input field.                                                   |
 
+#### Common Parameter Definition
+
+The Common Parameter Definition function can be used to define a set of parameters that are commonly used among multiple stanzas at once.
+
+Create a JSON file of common parameter definitions in the form of an extracted array to be set in `stanza:parameter` in `metastanza.json`.
+
+Example:
+
+```json
+[
+  {
+    "stanza:key": "data-url",
+    "stanza:type": "text",
+    "stanza:example": "https://example.com/chart.json",
+    "stanza:description": "Data source URL",
+    "stanza:required": true
+  },
+  {
+    "stanza:key": "data-type",
+    "stanza:type": "single-choice",
+    "stanza:choice": [
+      "json",
+      "tsv",
+      "csv",
+      "sparql-results-json",
+      "elasticsearch"
+    ],
+    "stanza:example": "json",
+    "stanza:description": "Data type",
+    "stanza:required": true
+  }
+]
+```
+
+The common parameter definition can be loaded from other packages. If you have placed this file in `params/data-chart.json` of the `togostanza-utils` package, you can include it by adding `stanza:include` to `stanza:parameter`:
+
+```json
+"stanza:parameter": [
+  {
+    "stanza:include": "togostanza-utils/params/data-chart.json"
+  }
+// ...
+```
 
 ### Stanza class
 
