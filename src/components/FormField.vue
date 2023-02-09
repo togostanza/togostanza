@@ -87,7 +87,6 @@ export default defineComponent({
     const shortName = computed(() => {
       return removePrefix(props.name, props.pathPrefix);
     });
-    console.log('PATHPREFIX', props.pathPrefix);
     const formType = computed(() => {
       return props.type === 'datetime' ? 'datetime-local' : props.type;
     });
