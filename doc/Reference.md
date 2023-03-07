@@ -116,6 +116,7 @@ The parameters are a property of the `stanza:parameter` key in `metadata.json`, 
 | `stanza:description` | Brief description of this parameter. It will appear below the input field.                                                                                                                |
 | `stanza:required`    | Whether this parameter is mandatory or not. If true, the field name will be prefixed with a red sign.                                                                                     |
 | `stanza:include`     | Path to “common parameter definition” file to include. If specified, all of the above settings are ignored. See “Common Parameter Definition“ section for more information.               |
+| `stanza:label`       | For `boolean` parameters, a label to write what the value means when it is True. For other types, it is ignored. |
 
 ##### Possible values for `stanza:type`
 
