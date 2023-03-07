@@ -2,7 +2,7 @@
   <label class="form-label d-flex">
     <span class="me-auto">
       <span v-if="required" class="text-danger">*</span>
-      <span class="text-muted">{{ pathPrefix }}</span
+      <span class="text-muted">{{ prefix }}</span
       ><span class="fs-5">{{ shortName }} </span>
     </span>
     <small class="text-muted">{{ type || 'string' }}</small>
@@ -66,8 +66,10 @@
 import { computed, defineComponent } from 'vue';
 
 function removePrefix(str, prefix) {
-  if (str.startsWith(prefix)) {
-    return str.slice(prefix.length);
+  if (prefix === str) {
+    return '';
+  } else if (str.startsWith(prefix + '-')) {
+    return str.slice(prefix.length + 1);
   }
   return str;
 }
@@ -87,10 +89,15 @@ export default defineComponent({
     const shortName = computed(() => {
       return removePrefix(props.name, props.pathPrefix);
     });
+    const prefix = computed(() => {
+      return props.name === props.pathPrefix
+        ? props.pathPrefix
+        : props.pathPrefix + '-';
+    });
     const formType = computed(() => {
       return props.type === 'datetime' ? 'datetime-local' : props.type;
     });
-    return { ...props, formType, shortName };
+    return { ...props, formType, shortName, prefix };
   },
 });
 </script>

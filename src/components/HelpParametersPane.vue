@@ -70,7 +70,7 @@ const firstActiveParamFieldGroupPath = paramFieldGroups
           >
             <FormField
               :input="input"
-              :path-prefix="path.join('-') + '-'"
+              :path-prefix="path.join('-')"
               :name="param['stanza:key']"
               :type="param['stanza:type']"
               :choices="param['stanza:choice']"
