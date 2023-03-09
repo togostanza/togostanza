@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-auto p-3 bg-light">
+  <div class="p-3 bg-light">
     <div v-html="styleSnippet"></div>
 
     <div ref="stanzaContainer">
