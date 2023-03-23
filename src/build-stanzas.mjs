@@ -10,7 +10,6 @@ import outdent from 'outdent';
 import sass from 'sass';
 import url from '@rollup/plugin-url';
 import virtual from '@rollup/plugin-virtual';
-import { defaultOnWarn } from 'rollup/dist/es/shared/rollup.js';
 import { rollup } from 'rollup';
 import replace from '@rollup/plugin-replace';
 import JSON5 from 'json5';
@@ -147,7 +146,7 @@ export default class BuildStanzas extends BroccoliPlugin {
           return;
         }
 
-        defaultOnWarn(warn);
+        console.warn(warn.message || warn);
       },
     });
 
