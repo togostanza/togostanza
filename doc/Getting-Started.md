@@ -136,13 +136,14 @@ $ git push
 
 The stanza repository can be published via [GitHub Pages](https://pages.github.com/) with a few operations. We use [GitHub Actions](https://docs.github.com/en/actions/getting-started-with-github-actions/about-github-actions) to build and publish.
 
-Open "Actions" tab on the GitHub Repository. You will see the action "Initialize new stanza repository: example-stanza-repo" is "in progress" state (or maybe already finished). This is the workflow configured by `togostanza init`.
+Open "Actions" tab on the GitHub Repository.
+You should see a job corresponding to the commit you just pushed.
 
-Click "Initialize new stanza repository: example-stanza-repo" link to see the job details. Wait until the job is successfully completed.
+However, this job should fail because GitHub Pages has not yet been appropriately configured.
 
-Due to technical restrictions, this first deployment will fail even if the action have completed successfully. In order to resolve this problem, go "Settings" tab on the repository, select "Pages" sub menu on the left pane, and choose "gh-pages branch" as "Source" (You won't see this choice if the GitHub Actions job has never been successfully completed). See [First Deployment with GITHUB_TOKEN](https://github.com/marketplace/actions/github-pages-action#%EF%B8%8F-first-deployment-with-github_token) for details, since we use [https://github.com/marketplace/actions/github-pages-action](https://github.com/marketplace/actions/github-pages-action) for this feature.
+In order to configure that, go "Settings" tab on the repository, select "Pages" sub menu on the left pane, and choose "GitHub Actions" as "Source".
 
-After choosing "gh-pages branch" as "Source", press "Rerun-jobs" button of the job (choose the job from the list on "Actions" tab, then you'll see the button), to publish correctly.
+After choosing "GitHub Actions" as "Source", Select "Re-run all jobs" from "Re-run jobs" dropdown of the job (choose the job from the list on "Actions" tab, then you'll see the button), to publish correctly.
 
 You will see the [https://togostanza.github.io/example-stanza-repo](https://togostanza.github.io/example-stanza-repo). Note that this URL is corresponding to [https://github.com/togostanza/example-stanza-repo](https://github.com/togostanza/example-stanza-repo).
 
@@ -150,19 +151,11 @@ NOTE 1: If you forked a stanza repository, the action will not run on the forked
 
 NOTE 2: As default, the stanza repository is configured to be deployed from `main` branch, which is the recent default branch setting on GitHub. If you want to deploy from a branch other than `main` (e.g. `master`), you need to update the `branches` value on `.github/workflow/publish.yml` to change the conditions for invoking the workflow.
 
-NOTE 3: If you get the following error when you try to `git push` to the repository, it is probably because the [personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) you are using to push does not have a `workflow` scope.
-
-```
-! [remote rejected] main -> main (refusing to allow a Personal Access Token to create or update workflow `.github/workflows/publish.yml` without `workflow` scope)
-```
-
-Please refer to https://github.com/settings/tokens and add the `workflow` scope to the corresponding personal access token.
-
 
 ## Embedding stanza
 
 Now your repository is hosted by GitHub pages and publicly accessible.
-A great way to try it out is to use online IDE services like [JSFiddle](https://jsfiddle.net/) or [Codepen](https://codepen.io//).
+A great way to try it out is to use online IDE services like [JSFiddle](https://jsfiddle.net/) or [Codepen](https://codepen.io/).
 
 Open the stanza page on GitHub pages. Then copy and paste the HTML snippet shown on the stanza page into the HTML field of these services.
 
