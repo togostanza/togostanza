@@ -59,7 +59,9 @@ function createServer(distPath) {
   });
 
   app.get('*', async ({url}, res) => {
-    const fpath = (url.endsWith('/') ? `${url}/index.html` : url).replace(/\//g, path.sep);
+    const fpath = (url.endsWith('/') ? `${url}/index.html` : url)
+      .replace(/\//g, path.sep)
+      .replace(/\?.*$/, '');
 
     if (mime.getType(fpath) === 'text/html') {
       const html = await fs.readFile(path.join(distPath, fpath), 'utf8');

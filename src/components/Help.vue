@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref, computed, onMounted } from 'vue';
 
 import 'bootstrap/js/dist/tab.js';
 
@@ -241,6 +241,16 @@ export default defineComponent({
             value: input.valueStr.value,
           };
         });
+    });
+
+    // set initial parameters from query parameters if specified
+    onMounted(() => {
+      const url = new URL(window.location.href);
+      for (const [k, v] of url.searchParams.entries()) {
+        const param = paramFields.find((param) => param.key === k);
+        if (!param) continue;
+        param.input.valueStr.value = v;
+      }
     });
 
     return {
