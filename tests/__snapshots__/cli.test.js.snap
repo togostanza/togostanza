@@ -390,7 +390,7 @@ h1 {
   "license": "MIT",
   "repository": "https://github.com/ursm/some-repo.git",
   "dependencies": {
-    "togostanza": "^3.0.0-beta.55"
+    "togostanza": "^3.0.0-beta.56"
   },
   "engines": {
     "node": ">=14"
@@ -535,7 +535,7 @@ h1 {
   "license": "MIT",
   "repository": "https://github.com/ursm/some-repo.git",
   "dependencies": {
-    "togostanza": "^3.0.0-beta.55"
+    "togostanza": "^3.0.0-beta.56"
   },
   "engines": {
     "node": ">=14"
@@ -680,7 +680,7 @@ h1 {
   "license": "MIT",
   "repository": "https://github.com/ursm/some-repo.git",
   "dependencies": {
-    "togostanza": "^3.0.0-beta.55"
+    "togostanza": "^3.0.0-beta.56"
   },
   "engines": {
     "node": ">=14"
