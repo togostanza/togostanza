@@ -7,7 +7,7 @@ import fs from 'fs-extra';
 import json from 'rollup-plugin-json5';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import outdent from 'outdent';
-import sass from 'sass';
+import * as sass from 'sass';
 import url from '@rollup/plugin-url';
 import virtual from '@rollup/plugin-virtual';
 import { rollup } from 'rollup';
